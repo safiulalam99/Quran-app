@@ -1,0 +1,294 @@
+{
+  "alphabet": [
+    {
+      "letter": "ا",
+      "name": "Alif",
+      "englishName": "Alif",
+      "sound": "ah",
+      "position": "isolated",
+      "examples": ["أرنب", "أسد", "أم"],
+      "color": "#4299e1",
+      "category": "vowels"
+    },
+    {
+      "letter": "ب",
+      "name": "Baa",
+      "englishName": "Baa",
+      "sound": "b",
+      "position": "isolated",
+      "examples": ["بطة", "بطة", "بطة"],
+      "color": "#f56565",
+      "category": "consonants"
+    },
+    {
+      "letter": "ت",
+      "name": "Taa",
+      "englishName": "Taa",
+      "sound": "t",
+      "position": "isolated",
+      "examples": ["تمر", "تفاح", "تمر"],
+      "color": "#48bb78",
+      "category": "consonants"
+    },
+    {
+      "letter": "ث",
+      "name": "Thaa",
+      "englishName": "Thaa",
+      "sound": "th",
+      "position": "isolated",
+      "examples": ["ثعلب", "ثوم", "ثعلب"],
+      "color": "#ed8936",
+      "category": "consonants"
+    },
+    {
+      "letter": "ج",
+      "name": "Jeem",
+      "englishName": "Jeem",
+      "sound": "j",
+      "position": "isolated",
+      "examples": ["جمل", "جزر", "جمل"],
+      "color": "#9f7aea",
+      "category": "consonants"
+    },
+    {
+      "letter": "ح",
+      "name": "Haa",
+      "englishName": "Haa",
+      "sound": "h",
+      "position": "isolated",
+      "examples": ["حوت", "حليب", "حوت"],
+      "color": "#38a169",
+      "category": "consonants"
+    },
+    {
+      "letter": "خ",
+      "name": "Khaa",
+      "englishName": "Khaa",
+      "sound": "kh",
+      "position": "isolated",
+      "examples": ["خروف", "خيار", "خروف"],
+      "color": "#2d3748",
+      "category": "consonants"
+    },
+    {
+      "letter": "د",
+      "name": "Dal",
+      "englishName": "Dal",
+      "sound": "d",
+      "position": "isolated",
+      "examples": ["دب", "دجاج", "دب"],
+      "color": "#e53e3e",
+      "category": "consonants"
+    },
+    {
+      "letter": "ذ",
+      "name": "Thal",
+      "englishName": "Thal",
+      "sound": "th",
+      "position": "isolated",
+      "examples": ["ذئب", "ذهب", "ذئب"],
+      "color": "#d69e2e",
+      "category": "consonants"
+    },
+    {
+      "letter": "ر",
+      "name": "Raa",
+      "englishName": "Raa",
+      "sound": "r",
+      "position": "isolated",
+      "examples": ["رجل", "رمان", "رجل"],
+      "color": "#3182ce",
+      "category": "consonants"
+    },
+    {
+      "letter": "ز",
+      "name": "Zay",
+      "englishName": "Zay",
+      "sound": "z",
+      "position": "isolated",
+      "examples": ["زرافة", "زيتون", "زرافة"],
+      "color": "#805ad5",
+      "category": "consonants"
+    },
+    {
+      "letter": "س",
+      "name": "Seen",
+      "englishName": "Seen",
+      "sound": "s",
+      "position": "isolated",
+      "examples": ["سمك", "سكر", "سمك"],
+      "color": "#319795",
+      "category": "consonants"
+    },
+    {
+      "letter": "ش",
+      "name": "Sheen",
+      "englishName": "Sheen",
+      "sound": "sh",
+      "position": "isolated",
+      "examples": ["شمس", "شجرة", "شمس"],
+      "color": "#dd6b20",
+      "category": "consonants"
+    },
+    {
+      "letter": "ص",
+      "name": "Saad",
+      "englishName": "Saad",
+      "sound": "s",
+      "position": "isolated",
+      "examples": ["صقر", "صابون", "صقر"],
+      "color": "#2c5aa0",
+      "category": "consonants"
+    },
+    {
+      "letter": "ض",
+      "name": "Daad",
+      "englishName": "Daad",
+      "sound": "d",
+      "position": "isolated",
+      "examples": ["ضفدع", "ضباب", "ضفدع"],
+      "color": "#553c9a",
+      "category": "consonants"
+    },
+    {
+      "letter": "ط",
+      "name": "Taa",
+      "englishName": "Taa",
+      "sound": "t",
+      "position": "isolated",
+      "examples": ["طائر", "طماطم", "طائر"],
+      "color": "#b7791f",
+      "category": "consonants"
+    },
+    {
+      "letter": "ظ",
+      "name": "Thaa",
+      "englishName": "Thaa",
+      "sound": "th",
+      "position": "isolated",
+      "examples": ["ظبي", "ظلام", "ظبي"],
+      "color": "#742a2a",
+      "category": "consonants"
+    },
+    {
+      "letter": "ع",
+      "name": "Ayn",
+      "englishName": "Ayn",
+      "sound": "a",
+      "position": "isolated",
+      "examples": ["عين", "عسل", "عين"],
+      "color": "#22543d",
+      "category": "consonants"
+    },
+    {
+      "letter": "غ",
+      "name": "Ghayn",
+      "englishName": "Ghayn",
+      "sound": "gh",
+      "position": "isolated",
+      "examples": ["غزال", "غيمة", "غزال"],
+      "color": "#744210",
+      "category": "consonants"
+    },
+    {
+      "letter": "ف",
+      "name": "Faa",
+      "englishName": "Faa",
+      "sound": "f",
+      "position": "isolated",
+      "examples": ["فيل", "فراولة", "فيل"],
+      "color": "#c53030",
+      "category": "consonants"
+    },
+    {
+      "letter": "ق",
+      "name": "Qaaf",
+      "englishName": "Qaaf",
+      "sound": "q",
+      "position": "isolated",
+      "examples": ["قرد", "قمر", "قرد"],
+      "color": "#2a4365",
+      "category": "consonants"
+    },
+    {
+      "letter": "ك",
+      "name": "Kaaf",
+      "englishName": "Kaaf",
+      "sound": "k",
+      "position": "isolated",
+      "examples": ["كلب", "كوب", "كلب"],
+      "color": "#7c2d12",
+      "category": "consonants"
+    },
+    {
+      "letter": "ل",
+      "name": "Laam",
+      "englishName": "Laam",
+      "sound": "l",
+      "position": "isolated",
+      "examples": ["لبؤة", "ليمون", "لبؤة"],
+      "color": "#285e61",
+      "category": "consonants"
+    },
+    {
+      "letter": "م",
+      "name": "Meem",
+      "englishName": "Meem",
+      "sound": "m",
+      "position": "isolated",
+      "examples": ["ماعز", "موز", "ماعز"],
+      "color": "#521b41",
+      "category": "consonants"
+    },
+    {
+      "letter": "ن",
+      "name": "Noon",
+      "englishName": "Noon",
+      "sound": "n",
+      "position": "isolated",
+      "examples": ["نمر", "نعناع", "نمر"],
+      "color": "#1a365d",
+      "category": "consonants"
+    },
+    {
+      "letter": "ه",
+      "name": "Haa",
+      "englishName": "Haa",
+      "sound": "h",
+      "position": "isolated",
+      "examples": ["هدهد", "هندباء", "هدهد"],
+      "color": "#742a2a",
+      "category": "consonants"
+    },
+    {
+      "letter": "و",
+      "name": "Waw",
+      "englishName": "Waw",
+      "sound": "w",
+      "position": "isolated",
+      "examples": ["وزة", "وردة", "وزة"],
+      "color": "#2d3748",
+      "category": "vowels"
+    },
+    {
+      "letter": "ي",
+      "name": "Yaa",
+      "englishName": "Yaa",
+      "sound": "y",
+      "position": "isolated",
+      "examples": ["يمامة", "ياسمين", "يمامة"],
+      "color": "#744210",
+      "category": "vowels"
+    }
+  ],
+  "categories": {
+    "vowels": ["ا", "و", "ي"],
+    "consonants": ["ب", "ت", "ث", "ج", "ح", "خ", "د", "ذ", "ر", "ز", "س", "ش", "ص", "ض", "ط", "ظ", "ع", "غ", "ف", "ق", "ك", "ل", "م", "ن", "ه"]
+  },
+  "settings": {
+    "defaultLanguage": "en",
+    "audioEnabled": true,
+    "animationsEnabled": true,
+    "difficulty": "beginner"
+  }
+}

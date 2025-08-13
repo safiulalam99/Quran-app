@@ -1,0 +1,197 @@
+{
+  "letters": [
+    {
+      "id": "alif",
+      "letter": "ا",
+      "name": "Alif",
+      "sound": "a",
+      "description": "The first letter of the Arabic alphabet",
+      "examples": ["أب", "أم", "أخ"],
+      "audioFile": "/audio/letters/alif.mp3"
+    },
+    {
+      "id": "baa",
+      "letter": "ب",
+      "name": "Baa",
+      "sound": "b",
+      "description": "A letter that makes the 'b' sound",
+      "examples": ["باب", "بيت", "بنت"],
+      "audioFile": "/audio/letters/baa.mp3"
+    },
+    {
+      "id": "taa",
+      "letter": "ت",
+      "name": "Taa",
+      "sound": "t",
+      "description": "A letter that makes the 't' sound",
+      "examples": ["تمر", "تفاح", "تاج"],
+      "audioFile": "/audio/letters/taa.mp3"
+    },
+    {
+      "id": "thaa",
+      "letter": "ث",
+      "name": "Thaa",
+      "sound": "th",
+      "description": "A letter that makes the 'th' sound like in 'think'",
+      "examples": ["ثوب", "ثعلب", "ثمر"],
+      "audioFile": "/audio/letters/thaa.mp3"
+    },
+    {
+      "id": "jeem",
+      "letter": "ج",
+      "name": "Jeem",
+      "sound": "j",
+      "description": "A letter that makes the 'j' sound like in 'jam'",
+      "examples": ["جمل", "جبل", "جدار"],
+      "audioFile": "/audio/letters/jeem.mp3"
+    },
+    {
+      "id": "haa",
+      "letter": "ح",
+      "name": "Haa",
+      "sound": "h",
+      "description": "A deep 'h' sound from the throat",
+      "examples": ["حجر", "حليب", "حمار"],
+      "audioFile": "/audio/letters/haa.mp3"
+    },
+    {
+      "id": "khaa",
+      "letter": "خ",
+      "name": "Khaa",
+      "sound": "kh",
+      "description": "A sound like 'ch' in Scottish 'loch'",
+      "examples": ["خبز", "خروف", "خيمة"],
+      "audioFile": "/audio/letters/khaa.mp3"
+    },
+    {
+      "id": "dal",
+      "letter": "د",
+      "name": "Dal",
+      "sound": "d",
+      "description": "A letter that makes the 'd' sound",
+      "examples": ["دار", "دب", "دجاج"],
+      "audioFile": "/audio/letters/dal.mp3"
+    },
+    {
+      "id": "thal",
+      "letter": "ذ",
+      "name": "Thal",
+      "sound": "th",
+      "description": "A letter that makes the 'th' sound like in 'this'",
+      "examples": ["ذهب", "ذيل", "ذرة"],
+      "audioFile": "/audio/letters/thal.mp3"
+    },
+    {
+      "id": "raa",
+      "letter": "ر",
+      "name": "Raa",
+      "sound": "r",
+      "description": "A rolled 'r' sound",
+      "examples": ["رجل", "رمل", "ريح"],
+      "audioFile": "/audio/letters/raa.mp3"
+    },
+    {
+      "id": "zay",
+      "letter": "ز",
+      "name": "Zay",
+      "sound": "z",
+      "description": "A letter that makes the 'z' sound",
+      "examples": ["زيت", "زهرة", "زر"],
+      "audioFile": "/audio/letters/zay.mp3"
+    },
+    {
+      "id": "seen",
+      "letter": "س",
+      "name": "Seen",
+      "sound": "s",
+      "description": "A letter that makes the 's' sound",
+      "examples": ["سمك", "ساعة", "سفينة"],
+      "audioFile": "/audio/letters/seen.mp3"
+    }
+  ],
+  "words": [
+    {
+      "id": "allah",
+      "word": "الله",
+      "meaning": "Allah",
+      "transliteration": "Allah",
+      "description": "The name of God in Arabic",
+      "examples": ["الله أكبر", "بسم الله", "الحمد لله"],
+      "audioFile": "/audio/words/allah.mp3"
+    },
+    {
+      "id": "muhammad",
+      "word": "محمد",
+      "meaning": "Muhammad",
+      "transliteration": "Muhammad",
+      "description": "The name of the Prophet Muhammad (peace be upon him)",
+      "examples": ["محمد رسول الله", "صلى الله على محمد"],
+      "audioFile": "/audio/words/muhammad.mp3"
+    },
+    {
+      "id": "quran",
+      "word": "قرآن",
+      "meaning": "Quran",
+      "transliteration": "Quran",
+      "description": "The holy book of Islam",
+      "examples": ["قرآن كريم", "تلاوة القرآن", "حفظ القرآن"],
+      "audioFile": "/audio/words/quran.mp3"
+    },
+    {
+      "id": "masjid",
+      "word": "مسجد",
+      "meaning": "Mosque",
+      "transliteration": "Masjid",
+      "description": "A place of worship for Muslims",
+      "examples": ["مسجد النبوي", "مسجد الحرام", "صلاة في المسجد"],
+      "audioFile": "/audio/words/masjid.mp3"
+    },
+    {
+      "id": "salaam",
+      "word": "سلام",
+      "meaning": "Peace",
+      "transliteration": "Salaam",
+      "description": "A greeting meaning peace",
+      "examples": ["السلام عليكم", "سلام من الله", "دار السلام"],
+      "audioFile": "/audio/words/salaam.mp3"
+    },
+    {
+      "id": "rahmah",
+      "word": "رحمة",
+      "meaning": "Mercy",
+      "transliteration": "Rahmah",
+      "description": "Compassion and mercy",
+      "examples": ["رحمة الله", "رحمة النبي", "رحمة للعالمين"],
+      "audioFile": "/audio/words/rahmah.mp3"
+    }
+  ],
+  "verses": [
+    {
+      "id": "fatiha-1",
+      "verse": "بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ",
+      "meaning": "In the name of Allah, the Most Gracious, the Most Merciful",
+      "surah": "Al-Fatiha",
+      "ayah": 1,
+      "description": "The opening verse of the Quran",
+      "audioFile": "/audio/verses/fatiha-1.mp3"
+    },
+    {
+      "id": "fatiha-2",
+      "verse": "الْحَمْدُ لِلَّهِ رَبِّ الْعَالَمِينَ",
+      "meaning": "All praise is due to Allah, Lord of the worlds",
+      "surah": "Al-Fatiha",
+      "ayah": 2,
+      "description": "Praising Allah as the Lord of all creation",
+      "audioFile": "/audio/verses/fatiha-2.mp3"
+    },
+    {
+      "id": "fatiha-5",
+      "verse": "إِيَّاكَ نَعْبُدُ وَإِيَّاكَ نَسْتَعِينُ",
+      "meaning": "It is You we worship and You we ask for help",
+      "surah": "Al-Fatiha",
+      "ayah": 5,
+      "description": "Declaring worship and seeking help from Allah alone",
+      "audioFile": "/audio/verses/fatiha-5.mp3"
+    }
+  ]
+}
