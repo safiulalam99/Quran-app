@@ -34,7 +34,7 @@ export default function AppHeader({
           ease: "easeInOut",
         }}
       >
-        <span className="bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 bg-clip-text text-transparent">
+        <span className="bg-gradient-to-r from-[#58CC02] via-[#89E219] to-[#58CC02] bg-clip-text text-transparent">
           {title}
         </span>
       </motion.h1>
@@ -59,7 +59,7 @@ export default function AppHeader({
         >
           <div className="bg-gray-200 rounded-full h-2">
             <motion.div
-              className="bg-gradient-to-r from-green-400 to-blue-500 h-2 rounded-full"
+              className="bg-gradient-to-r from-[#58CC02] to-[#89E219] h-2 rounded-full"
               initial={{ width: 0 }}
               animate={{ width: `${progress}%` }}
               transition={{ duration: 0.8, ease: "easeOut" }}

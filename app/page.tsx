@@ -93,7 +93,7 @@ export default function Home() {
               <p className="text-gray-600 mb-6">Take a quiz to see your progress!</p>
               <button
                 onClick={() => setCurrentMode('quiz')}
-                className="bg-blue-500 text-white px-6 py-3 rounded-xl font-semibold hover:bg-blue-600 transition-colors"
+                className="bg-[#58CC02] text-white px-6 py-3 rounded-xl font-semibold hover:bg-[#89E219] transition-colors"
               >
                 Start Quiz
               </button>
@@ -112,7 +112,7 @@ export default function Home() {
       
       <Navigation currentMode={currentMode} onModeChange={handleModeChange} />
       
-      <div className={`${currentMode === 'learn' ? 'p-4' : ''}`}>
+      <div className={`${currentMode === 'learn' ? 'p-4' : ''} pb-24 md:pb-4 md:pt-20`}>
         {renderContent()}
       </div>
     </div>

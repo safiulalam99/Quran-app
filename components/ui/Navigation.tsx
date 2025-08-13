@@ -26,19 +26,19 @@ export default function Navigation({ currentMode, onModeChange }: NavigationProp
       id: 'learn',
       label: 'Learn',
       icon: '📚',
-      color: 'from-blue-500 to-blue-600'
+      color: 'from-[#58CC02] to-[#89E219]'
     },
     {
       id: 'quiz',
       label: 'Quiz',
       icon: '🎯',
-      color: 'from-green-500 to-green-600'
+      color: 'from-[#58CC02] to-[#89E219]'
     },
     {
       id: 'stats',
       label: 'Stats',
       icon: '📊',
-      color: 'from-purple-500 to-purple-600'
+      color: 'from-[#58CC02] to-[#89E219]'
     }
   ];
 
