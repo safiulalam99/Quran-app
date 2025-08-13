@@ -51,16 +51,17 @@ export default function AlphabetGrid({
     },
   };
 
-  const gridClasses = `
-    grid gap-3 md:gap-4 w-full max-w-4xl mx-auto
-    grid-cols-${cols.mobile} 
-    sm:grid-cols-${cols.tablet} 
-    lg:grid-cols-${cols.desktop}
-  `;
+  const getGridClasses = () => {
+    const mobileClass = cols.mobile === 1 ? 'grid-cols-1' : cols.mobile === 2 ? 'grid-cols-2' : 'grid-cols-3';
+    const tabletClass = cols.tablet === 3 ? 'sm:grid-cols-3' : cols.tablet === 4 ? 'sm:grid-cols-4' : 'sm:grid-cols-5';
+    const desktopClass = cols.desktop === 4 ? 'lg:grid-cols-4' : cols.desktop === 5 ? 'lg:grid-cols-5' : 'lg:grid-cols-6';
+    
+    return `grid gap-3 md:gap-4 w-full max-w-4xl mx-auto ${mobileClass} ${tabletClass} ${desktopClass}`;
+  };
 
   return (
     <motion.div
-      className={gridClasses}
+      className={getGridClasses()}
       dir="rtl"
       variants={containerVariants}
       initial="hidden"
