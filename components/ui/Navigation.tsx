@@ -5,15 +5,15 @@ import { useState } from 'react';
 import { useTheme } from '../../contexts/ThemeContext';
 
 interface NavigationProps {
-  currentMode: 'learn' | 'quiz' | 'stats';
-  onModeChange: (mode: 'learn' | 'quiz' | 'stats') => void;
+  currentMode: 'learn' | 'quiz';
+  onModeChange: (mode: 'learn' | 'quiz') => void;
 }
 
 export default function Navigation({ currentMode, onModeChange }: NavigationProps) {
   const [activeTab, setActiveTab] = useState(currentMode);
   const { theme } = useTheme();
 
-  const handleTabChange = (mode: 'learn' | 'quiz' | 'stats') => {
+  const handleTabChange = (mode: 'learn' | 'quiz') => {
     setActiveTab(mode);
     onModeChange(mode);
     
@@ -35,12 +35,6 @@ export default function Navigation({ currentMode, onModeChange }: NavigationProp
       label: 'Quiz',
       icon: '🎯',
       color: 'from-[#58CC02] to-[#89E219]'
-    },
-    {
-      id: 'stats',
-      label: 'Stats',
-      icon: '📊',
-      color: 'from-[#58CC02] to-[#89E219]'
     }
   ];
 
@@ -52,14 +46,14 @@ export default function Navigation({ currentMode, onModeChange }: NavigationProp
           ? 'bg-slate-800/80 border-b border-slate-600' 
           : 'bg-white/80 border-b border-gray-200'
       }`}>
-        <div className="max-w-4xl mx-auto px-4 py-3">
+        <div className="max-w-4xl mx-auto px-4 py-2">
           <div className="flex justify-center space-x-2">
             {tabs.map((tab) => (
               <motion.button
                 key={tab.id}
                 onClick={() => handleTabChange(tab.id as any)}
                 className={`
-                  relative px-6 py-3 rounded-xl font-semibold text-sm
+                  relative px-4 py-2 rounded-lg font-semibold text-sm
                   transition-all duration-200 flex items-center space-x-2
                   ${activeTab === tab.id 
                     ? 'text-white shadow-lg' 
@@ -73,12 +67,12 @@ export default function Navigation({ currentMode, onModeChange }: NavigationProp
               >
                 {activeTab === tab.id && (
                   <motion.div
-                    className={`absolute inset-0 bg-gradient-to-r ${tab.color} rounded-xl`}
+                    className={`absolute inset-0 bg-gradient-to-r ${tab.color} rounded-lg`}
                     layoutId="activeTabDesktop"
                     transition={{ duration: 0.3 }}
                   />
                 )}
-                <span className="relative z-10 text-xl">{tab.icon}</span>
+                <span className="relative z-10 text-lg">{tab.icon}</span>
                 <span className="relative z-10">{tab.label}</span>
               </motion.button>
             ))}
@@ -92,14 +86,14 @@ export default function Navigation({ currentMode, onModeChange }: NavigationProp
           ? 'bg-slate-800/90 border-t border-slate-600'
           : 'bg-white/90 border-t border-gray-200'
       }`}>
-        <div className="flex justify-around items-center py-2">
+        <div className="flex justify-around items-center py-1">
           {tabs.map((tab) => (
             <motion.button
               key={tab.id}
               onClick={() => handleTabChange(tab.id as any)}
               className={`
-                relative flex flex-col items-center justify-center p-3 rounded-xl
-                transition-all duration-200 min-w-[80px]
+                relative flex flex-col items-center justify-center p-2 rounded-lg
+                transition-all duration-200 min-w-[70px]
                 ${activeTab === tab.id 
                   ? 'text-white' 
                   : theme === 'dark'
@@ -112,13 +106,13 @@ export default function Navigation({ currentMode, onModeChange }: NavigationProp
             >
               {activeTab === tab.id && (
                 <motion.div
-                  className={`absolute inset-0 bg-gradient-to-r ${tab.color} rounded-xl`}
+                  className={`absolute inset-0 bg-gradient-to-r ${tab.color} rounded-lg`}
                   layoutId="activeTabMobile"
                   transition={{ duration: 0.3 }}
                 />
               )}
               <motion.span 
-                className="relative z-10 text-2xl mb-1"
+                className="relative z-10 text-xl mb-1"
                 animate={{
                   scale: activeTab === tab.id ? 1.1 : 1,
                 }}

@@ -7,7 +7,7 @@
       "sound": "ah",
       "position": "isolated",
       "examples": ["أرنب", "أسد", "أم"],
-      "color": "#4299e1",
+      "color": "#00d4ff",
       "category": "vowels"
     },
     {
@@ -17,7 +17,7 @@
       "sound": "b",
       "position": "isolated",
       "examples": ["بطة", "بطة", "بطة"],
-      "color": "#f56565",
+      "color": "#ff4757",
       "category": "consonants"
     },
     {
@@ -27,7 +27,7 @@
       "sound": "t",
       "position": "isolated",
       "examples": ["تمر", "تفاح", "تمر"],
-      "color": "#48bb78",
+      "color": "#00ff88",
       "category": "consonants"
     },
     {
@@ -37,7 +37,7 @@
       "sound": "th",
       "position": "isolated",
       "examples": ["ثعلب", "ثوم", "ثعلب"],
-      "color": "#ed8936",
+      "color": "#ff9f43",
       "category": "consonants"
     },
     {
@@ -47,7 +47,7 @@
       "sound": "j",
       "position": "isolated",
       "examples": ["جمل", "جزر", "جمل"],
-      "color": "#9f7aea",
+      "color": "#a55eea",
       "category": "consonants"
     },
     {
@@ -57,7 +57,7 @@
       "sound": "h",
       "position": "isolated",
       "examples": ["حوت", "حليب", "حوت"],
-      "color": "#38a169",
+      "color": "#26de81",
       "category": "consonants"
     },
     {
@@ -67,7 +67,7 @@
       "sound": "kh",
       "position": "isolated",
       "examples": ["خروف", "خيار", "خروف"],
-      "color": "#2d3748",
+      "color": "#ff6b6b",
       "category": "consonants"
     },
     {
@@ -77,7 +77,7 @@
       "sound": "d",
       "position": "isolated",
       "examples": ["دب", "دجاج", "دب"],
-      "color": "#e53e3e",
+      "color": "#ff3838",
       "category": "consonants"
     },
     {
@@ -87,7 +87,7 @@
       "sound": "th",
       "position": "isolated",
       "examples": ["ذئب", "ذهب", "ذئب"],
-      "color": "#d69e2e",
+      "color": "#ffd700",
       "category": "consonants"
     },
     {
@@ -97,7 +97,7 @@
       "sound": "r",
       "position": "isolated",
       "examples": ["رجل", "رمان", "رجل"],
-      "color": "#3182ce",
+      "color": "#4dabf7",
       "category": "consonants"
     },
     {
@@ -107,7 +107,7 @@
       "sound": "z",
       "position": "isolated",
       "examples": ["زرافة", "زيتون", "زرافة"],
-      "color": "#805ad5",
+      "color": "#be4bdb",
       "category": "consonants"
     },
     {
@@ -117,7 +117,7 @@
       "sound": "s",
       "position": "isolated",
       "examples": ["سمك", "سكر", "سمك"],
-      "color": "#319795",
+      "color": "#20bf6b",
       "category": "consonants"
     },
     {
@@ -127,7 +127,7 @@
       "sound": "sh",
       "position": "isolated",
       "examples": ["شمس", "شجرة", "شمس"],
-      "color": "#dd6b20",
+      "color": "#ff7675",
       "category": "consonants"
     },
     {
@@ -137,7 +137,7 @@
       "sound": "s",
       "position": "isolated",
       "examples": ["صقر", "صابون", "صقر"],
-      "color": "#2c5aa0",
+      "color": "#74b9ff",
       "category": "consonants"
     },
     {
@@ -147,7 +147,7 @@
       "sound": "d",
       "position": "isolated",
       "examples": ["ضفدع", "ضباب", "ضفدع"],
-      "color": "#553c9a",
+      "color": "#8c7ae6",
       "category": "consonants"
     },
     {
@@ -157,7 +157,7 @@
       "sound": "t",
       "position": "isolated",
       "examples": ["طائر", "طماطم", "طائر"],
-      "color": "#b7791f",
+      "color": "#f39c12",
       "category": "consonants"
     },
     {
@@ -167,7 +167,7 @@
       "sound": "th",
       "position": "isolated",
       "examples": ["ظبي", "ظلام", "ظبي"],
-      "color": "#742a2a",
+      "color": "#fd79a8",
       "category": "consonants"
     },
     {
@@ -177,7 +177,7 @@
       "sound": "a",
       "position": "isolated",
       "examples": ["عين", "عسل", "عين"],
-      "color": "#22543d",
+      "color": "#00b894",
       "category": "consonants"
     },
     {
@@ -187,7 +187,7 @@
       "sound": "gh",
       "position": "isolated",
       "examples": ["غزال", "غيمة", "غزال"],
-      "color": "#744210",
+      "color": "#fdcb6e",
       "category": "consonants"
     },
     {
@@ -197,7 +197,7 @@
       "sound": "f",
       "position": "isolated",
       "examples": ["فيل", "فراولة", "فيل"],
-      "color": "#c53030",
+      "color": "#e84393",
       "category": "consonants"
     },
     {
@@ -207,7 +207,7 @@
       "sound": "q",
       "position": "isolated",
       "examples": ["قرد", "قمر", "قرد"],
-      "color": "#2a4365",
+      "color": "#6c5ce7",
       "category": "consonants"
     },
     {
@@ -217,7 +217,7 @@
       "sound": "k",
       "position": "isolated",
       "examples": ["كلب", "كوب", "كلب"],
-      "color": "#7c2d12",
+      "color": "#ff6348",
       "category": "consonants"
     },
     {
@@ -227,7 +227,7 @@
       "sound": "l",
       "position": "isolated",
       "examples": ["لبؤة", "ليمون", "لبؤة"],
-      "color": "#285e61",
+      "color": "#00cec9",
       "category": "consonants"
     },
     {
@@ -237,7 +237,7 @@
       "sound": "m",
       "position": "isolated",
       "examples": ["ماعز", "موز", "ماعز"],
-      "color": "#521b41",
+      "color": "#e17055",
       "category": "consonants"
     },
     {
@@ -247,7 +247,7 @@
       "sound": "n",
       "position": "isolated",
       "examples": ["نمر", "نعناع", "نمر"],
-      "color": "#1a365d",
+      "color": "#0984e3",
       "category": "consonants"
     },
     {
@@ -257,7 +257,7 @@
       "sound": "h",
       "position": "isolated",
       "examples": ["هدهد", "هندباء", "هدهد"],
-      "color": "#742a2a",
+      "color": "#f8b500",
       "category": "consonants"
     },
     {
@@ -267,7 +267,7 @@
       "sound": "w",
       "position": "isolated",
       "examples": ["وزة", "وردة", "وزة"],
-      "color": "#2d3748",
+      "color": "#55a3ff",
       "category": "vowels"
     },
     {
@@ -277,7 +277,7 @@
       "sound": "y",
       "position": "isolated",
       "examples": ["يمامة", "ياسمين", "يمامة"],
-      "color": "#744210",
+      "color": "#ff9ff3",
       "category": "vowels"
     }
   ],

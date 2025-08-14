@@ -64,14 +64,22 @@ export default function LetterCard({
           flex flex-col items-center justify-center
           transition-all duration-200 relative overflow-hidden
           p-4 min-h-[100px]
-          ${theme === 'dark' ? 'bg-slate-700 hover:bg-slate-600' : 'bg-white hover:shadow-xl'}
+          ${theme === 'dark' 
+            ? 'bg-slate-700 hover:bg-slate-600 shadow-2xl' 
+            : 'bg-white hover:shadow-xl'
+          }
           ${disabled ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}
           ${isPlaying ? 'ring-4 ring-opacity-50' : ''}
         `}
         style={{ 
-          borderColor: color + '30',
-          border: `3px solid ${color}30`,
-          ...(isPlaying && { ringColor: color + '60' })
+          borderColor: theme === 'dark' ? color + '60' : color + '30',
+          border: theme === 'dark' 
+            ? `3px solid ${color}60` 
+            : `3px solid ${color}30`,
+          ...(isPlaying && { ringColor: color + '60' }),
+          ...(theme === 'dark' && {
+            boxShadow: `0 8px 32px rgba(0,0,0,0.4), 0 0 0 1px ${color}20, inset 0 1px 0 rgba(255,255,255,0.1)`
+          })
         }}
         initial={{ scale: 1 }}
         whileTap={{ scale: 0.95 }}
@@ -89,9 +97,12 @@ export default function LetterCard({
           <>
             <motion.div
               className="absolute inset-0 rounded-3xl"
-              style={{ backgroundColor: color + '20' }}
+              style={{ 
+                backgroundColor: theme === 'dark' ? color + '30' : color + '20',
+                boxShadow: theme === 'dark' ? `inset 0 0 20px ${color}40` : 'none'
+              }}
               animate={{
-                opacity: [0, 0.4, 0],
+                opacity: theme === 'dark' ? [0, 0.6, 0] : [0, 0.4, 0],
               }}
               transition={{
                 duration: 0.8,
@@ -99,9 +110,14 @@ export default function LetterCard({
                 ease: "easeInOut"
               }}
             />
-            {/* Sparkle effects */}
+            {/* Enhanced sparkle effects for dark mode */}
             <motion.div
-              className="absolute top-2 right-2 w-2 h-2 bg-yellow-400 rounded-full"
+              className={`absolute top-2 right-2 w-2 h-2 rounded-full ${
+                theme === 'dark' ? 'bg-yellow-300 shadow-lg' : 'bg-yellow-400'
+              }`}
+              style={{
+                boxShadow: theme === 'dark' ? '0 0 8px #fde047' : 'none'
+              }}
               animate={{
                 scale: [0, 1, 0],
                 rotate: [0, 180, 360],
@@ -113,7 +129,12 @@ export default function LetterCard({
               }}
             />
             <motion.div
-              className="absolute bottom-2 left-2 w-1 h-1 bg-pink-400 rounded-full"
+              className={`absolute bottom-2 left-2 w-1 h-1 rounded-full ${
+                theme === 'dark' ? 'bg-pink-300 shadow-lg' : 'bg-pink-400'
+              }`}
+              style={{
+                boxShadow: theme === 'dark' ? '0 0 6px #f9a8d4' : 'none'
+              }}
               animate={{
                 scale: [0, 1.2, 0],
                 rotate: [0, -180, -360],
@@ -134,7 +155,16 @@ export default function LetterCard({
           style={{ 
             color: color,
             fontFamily: 'Noto Sans Arabic, sans-serif',
-            filter: isPlaying ? 'brightness(1.2)' : 'none'
+            filter: theme === 'dark' 
+              ? isPlaying 
+                ? 'brightness(1.4) saturate(1.3) drop-shadow(0 0 8px currentColor)' 
+                : 'brightness(1.2) saturate(1.2) drop-shadow(0 0 4px currentColor)'
+              : isPlaying 
+                ? 'brightness(1.2)' 
+                : 'none',
+            textShadow: theme === 'dark' 
+              ? `0 0 10px ${color}40, 0 0 20px ${color}20` 
+              : 'none'
           }}
           animate={{
             scale: isPlaying ? [1, 1.1, 1] : 1,

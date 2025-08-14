@@ -22,7 +22,7 @@ interface QuizStats {
 
 export default function Home() {
   const { alphabet } = arabicAlphabet;
-  const [currentMode, setCurrentMode] = useState<'learn' | 'quiz' | 'stats'>('learn');
+  const [currentMode, setCurrentMode] = useState<'learn' | 'quiz'>('learn');
   const [quizStats, setQuizStats] = useState<QuizStats | null>(null);
   const [isQuizStarted, setIsQuizStarted] = useState(false);
   const { theme } = useTheme();
@@ -34,7 +34,7 @@ export default function Home() {
     }
   };
 
-  const handleModeChange = (mode: 'learn' | 'quiz' | 'stats') => {
+  const handleModeChange = (mode: 'learn' | 'quiz') => {
     setCurrentMode(mode);
     // Reset quiz state when changing modes
     if (mode !== 'quiz') {
@@ -48,7 +48,12 @@ export default function Home() {
 
   const handleQuizComplete = (stats: QuizStats) => {
     setQuizStats(stats);
-    setCurrentMode('stats');
+    // Show stats screen temporarily, then auto-return to learn mode
+    setTimeout(() => {
+      setCurrentMode('learn');
+      setQuizStats(null);
+      setIsQuizStarted(false);
+    }, 5000); // Show stats for 5 seconds then return to learn
   };
 
   const handlePlayAgain = () => {
@@ -64,6 +69,17 @@ export default function Home() {
   };
 
   const renderContent = () => {
+    // Show stats screen if quiz was completed
+    if (quizStats) {
+      return (
+        <StatsScreen
+          stats={quizStats}
+          onPlayAgain={handlePlayAgain}
+          onBackToMenu={handleBackToMenu}
+        />
+      );
+    }
+
     switch (currentMode) {
       case 'learn':
         return (
@@ -103,38 +119,14 @@ export default function Home() {
           />
         );
       
-      case 'stats':
-        return quizStats ? (
-          <StatsScreen
-            stats={quizStats}
-            onPlayAgain={handlePlayAgain}
-            onBackToMenu={handleBackToMenu}
-          />
-        ) : (
-          <div className="min-h-screen flex items-center justify-center">
-            <div className="text-center">
-              <div className="text-6xl mb-4">📊</div>
-              <h2 className="text-2xl font-bold text-gray-800 mb-4">No Stats Yet</h2>
-              <p className="text-gray-600 mb-6">Take a quiz to see your progress!</p>
-              <button
-                onClick={() => setCurrentMode('quiz')}
-                className="bg-[#58CC02] text-white px-6 py-3 rounded-xl font-semibold hover:bg-[#89E219] transition-colors"
-              >
-                Start Quiz
-              </button>
-            </div>
-          </div>
-        );
-      
       default:
         return null;
     }
   };
 
-  // Force quiz and stats to always use dark mode
+  // Force quiz to always use dark mode, show stats when available
   const getBackgroundClass = () => {
-    if (currentMode === 'quiz') return 'bg-slate-800';
-    if (currentMode === 'stats') return 'bg-slate-800';
+    if (currentMode === 'quiz' || quizStats) return 'bg-slate-800';
     return theme === 'dark' ? 'bg-slate-800' : 'bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50';
   };
 
