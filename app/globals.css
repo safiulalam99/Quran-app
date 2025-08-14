@@ -28,3 +28,30 @@ body {
   color: var(--foreground);
   font-family: 'Nunito', Arial, Helvetica, sans-serif;
 }
+
+/* Optimize Lottie animations for crisp rendering */
+.lottie-container,
+.lottie-canvas,
+canvas {
+  image-rendering: -webkit-optimize-contrast;
+  image-rendering: -moz-crisp-edges;
+  image-rendering: pixelated;
+  backface-visibility: hidden;
+  transform: translateZ(0);
+  will-change: transform;
+}
+
+/* Prevent blur on scaled animations */
+[class*="lottie"] {
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  perspective: 1000px;
+}
+
+/* Mobile optimization for high DPI screens */
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+  .lottie-container,
+  .lottie-canvas {
+    image-rendering: -webkit-optimize-contrast;
+  }
+}

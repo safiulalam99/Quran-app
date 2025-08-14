@@ -124,9 +124,8 @@ export default function Home() {
     }
   };
 
-  // Force quiz to always use dark mode, show stats when available
+  // Use theme consistently across all modes
   const getBackgroundClass = () => {
-    if (currentMode === 'quiz' || quizStats) return 'bg-slate-800';
     return theme === 'dark' ? 'bg-slate-800' : 'bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50';
   };
 

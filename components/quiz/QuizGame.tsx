@@ -4,6 +4,7 @@ import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { DotLottieReact } from '@lottiefiles/dotlottie-react';
 import { addQuizSession } from '../../utils/statsStorage';
+import { useTheme } from '../../contexts/ThemeContext';
 
 interface Letter {
   letter: string;
@@ -52,6 +53,9 @@ export default function QuizGame({ letters, onQuizComplete, onBackToMenu }: Quiz
   const [startTime] = useState(Date.now());
   const [currentAnimationIndex, setCurrentAnimationIndex] = useState(0);
   const audioRef = useRef<HTMLAudioElement>(null);
+  const correctAudioRef = useRef<HTMLAudioElement>(null);
+  const wrongAudioRef = useRef<HTMLAudioElement>(null);
+  const { theme } = useTheme();
 
   const animations = [
     "https://lottie.host/2e6b9316-da00-4784-86ad-4264a83058ca/z4P7vBcOZW.lottie",
@@ -97,6 +101,22 @@ export default function QuizGame({ letters, onQuizComplete, onBackToMenu }: Quiz
     }
   };
 
+  // Enhanced haptic feedback function
+  const playHapticFeedback = (pattern: number | number[]) => {
+    if (typeof window !== 'undefined' && 'vibrate' in navigator) {
+      navigator.vibrate(pattern);
+    }
+  };
+
+  // Play feedback audio and haptics
+  const playFeedbackAudio = (isCorrect: boolean) => {
+    const audioElement = isCorrect ? correctAudioRef.current : wrongAudioRef.current;
+    if (audioElement) {
+      audioElement.currentTime = 0;
+      audioElement.play().catch(console.error);
+    }
+  };
+
   // Auto-play audio when question changes
   useEffect(() => {
     if (currentQuestion) {
@@ -118,9 +138,15 @@ export default function QuizGame({ letters, onQuizComplete, onBackToMenu }: Quiz
     };
     setCurrentQuestion(updatedQuestion);
 
-    // Haptic feedback
-    if (typeof window !== 'undefined' && 'vibrate' in navigator) {
-      navigator.vibrate(correct ? [50, 50, 50] : [100]);
+    // Play feedback audio and enhanced haptics
+    playFeedbackAudio(correct);
+    
+    if (correct) {
+      // Success haptics: Triple pulse
+      playHapticFeedback([80, 50, 80, 50, 80]);
+    } else {
+      // Error haptics: Long strong pulse
+      playHapticFeedback([200]);
     }
 
     if (correct) {
@@ -204,8 +230,10 @@ export default function QuizGame({ letters, onQuizComplete, onBackToMenu }: Quiz
   if (!currentQuestion) return null;
 
   return (
-    <div className="h-screen flex flex-col bg-slate-800 p-3 pb-24 md:pb-4 pt-2 md:pt-0 overflow-hidden">
-      {/* Audio element */}
+    <div className={`h-screen flex flex-col p-3 pb-24 md:pb-4 pt-2 md:pt-0 overflow-hidden ${
+      theme === 'dark' ? 'bg-slate-800' : 'bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50'
+    }`}>
+      {/* Audio elements */}
       <audio
         ref={audioRef}
         src={`/audio/letters/${currentQuestion.targetLetter.letter}.m4a`}
@@ -214,10 +242,27 @@ export default function QuizGame({ letters, onQuizComplete, onBackToMenu }: Quiz
         onPause={() => setIsAudioPlaying(false)}
         onPlay={() => setIsAudioPlaying(true)}
       />
+      
+      {/* Feedback audio elements */}
+      <audio
+        ref={correctAudioRef}
+        src="/audio/correct.mp3"
+        preload="metadata"
+      />
+      
+      <audio
+        ref={wrongAudioRef}
+        src="/audio/wrong.mp3"
+        preload="metadata"
+      />
 
       {/* Floating Progress Bar */}
-      <div className="fixed top-0 left-0 right-0 z-50 bg-slate-700/90 backdrop-blur-sm">
-        <div className="bg-gray-600 h-3 w-full">
+      <div className={`fixed top-0 left-0 right-0 z-50 backdrop-blur-sm ${
+        theme === 'dark' ? 'bg-slate-700/90' : 'bg-white/90'
+      }`}>
+        <div className={`h-3 w-full ${
+          theme === 'dark' ? 'bg-gray-600' : 'bg-gray-200'
+        }`}>
           <motion.div
             className="bg-gradient-to-r from-[#58CC02] to-[#89E219] h-full"
             initial={{ width: 0 }}
@@ -234,7 +279,11 @@ export default function QuizGame({ letters, onQuizComplete, onBackToMenu }: Quiz
       <div className="flex justify-start mb-4">
         <button 
           onClick={onBackToMenu}
-          className="text-gray-400 hover:text-white transition-colors"
+          className={`transition-colors ${
+            theme === 'dark' 
+              ? 'text-gray-400 hover:text-white' 
+              : 'text-gray-600 hover:text-gray-800'
+          }`}
         >
           <svg width="32" height="32" viewBox="0 0 24 24" fill="currentColor">
             <path d="M18 6L6 18M6 6l12 12" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
@@ -244,7 +293,9 @@ export default function QuizGame({ letters, onQuizComplete, onBackToMenu }: Quiz
 
       {/* Title */}
       <div className="text-left mb-8">
-        <h1 className="text-white text-3xl font-bold">Tap what you hear</h1>
+        <h1 className={`text-3xl font-bold ${
+          theme === 'dark' ? 'text-white' : 'text-gray-800'
+        }`}>Tap what you hear</h1>
       </div>
 
       {/* Main Content Area */}
@@ -252,15 +303,29 @@ export default function QuizGame({ letters, onQuizComplete, onBackToMenu }: Quiz
         <div className="w-full flex items-center justify-between">
           {/* Left side - Character Animation */}
           <div className="w-1/2 flex justify-center">
-            <div className="w-32 h-32">
+            <div 
+              className="w-36 h-36"
+              style={{
+                // Ensure crisp rendering
+                imageRendering: 'crisp-edges',
+                backfaceVisibility: 'hidden',
+                transform: 'translateZ(0)', // Force hardware acceleration
+              }}
+            >
               <DotLottieReact
                 key={currentAnimationIndex} // Force re-render when animation changes
                 src={animations[currentAnimationIndex]}
                 loop
                 autoplay
+                className="w-full h-full"
                 style={{
                   width: '100%',
                   height: '100%',
+                  // High quality rendering settings
+                  imageRendering: 'pixelated' as const,
+                  // Prevent blur on scaling
+                  willChange: 'transform',
+                  backfaceVisibility: 'hidden',
                 }}
               />
             </div>
@@ -270,7 +335,11 @@ export default function QuizGame({ letters, onQuizComplete, onBackToMenu }: Quiz
           <div className="w-1/2 flex justify-center">
             <motion.button
               onClick={playAudio}
-              className="bg-slate-700 border-2 border-slate-600 rounded-xl p-8 flex items-center justify-center hover:bg-slate-600 transition-colors w-32 h-20"
+              className={`border-2 rounded-xl p-8 flex items-center justify-center transition-colors w-32 h-20 ${
+                theme === 'dark' 
+                  ? 'bg-slate-700 border-slate-600 hover:bg-slate-600' 
+                  : 'bg-white border-gray-300 hover:bg-gray-50 shadow-md'
+              }`}
               whileTap={{ scale: 0.95 }}
               whileHover={{ scale: 1.02 }}
               initial={{ opacity: 0, x: 50 }}
@@ -288,22 +357,32 @@ export default function QuizGame({ letters, onQuizComplete, onBackToMenu }: Quiz
       {/* Answer Choices at Bottom */}
       <div className="pb-8">
         <div className="grid grid-cols-2 gap-3 w-full max-w-md mx-auto px-4">
-          <AnimatePresence mode="wait">
-            {currentQuestion.choices.map((choice, index) => (
-              <motion.button
-                key={choice.letter}
-                onClick={() => handleAnswer(choice)}
-                disabled={showFeedback}
+          {currentQuestion.choices.map((choice, index) => (
+            <motion.button
+              key={`${currentQuestion.targetLetter.letter}-${choice.letter}`}
+              onClick={() => handleAnswer(choice)}
+              disabled={showFeedback}
                 className={`
-                  relative aspect-square p-4 bg-slate-700 border-2 border-slate-600 rounded-xl
-                  overflow-hidden flex items-center justify-center
-                  ${showFeedback ? 'pointer-events-none' : 'hover:bg-slate-600 cursor-pointer'}
+                  relative aspect-square p-4 border-2 rounded-xl
+                  overflow-hidden flex items-center justify-center transition-all duration-200
+                  ${theme === 'dark' 
+                    ? 'bg-slate-700 border-slate-600' 
+                    : 'bg-white border-gray-300 shadow-md'
+                  }
+                  ${showFeedback ? 'pointer-events-none' : theme === 'dark' 
+                    ? 'hover:bg-slate-600 cursor-pointer' 
+                    : 'hover:bg-gray-50 cursor-pointer'
+                  }
                   ${showFeedback && choice.letter === currentQuestion.targetLetter.letter
-                    ? 'ring-2 ring-[#58CC02] bg-green-800'
+                    ? theme === 'dark'
+                      ? 'ring-4 ring-[#58CC02] bg-green-800 shadow-lg shadow-green-500/50'
+                      : 'ring-4 ring-[#58CC02] bg-green-100 shadow-lg shadow-green-500/30'
                     : ''
                   }
                   ${showFeedback && isCorrect === false && choice.letter !== currentQuestion.targetLetter.letter
-                    ? 'ring-2 ring-red-400 bg-red-800'
+                    ? theme === 'dark'
+                      ? 'ring-4 ring-red-400 bg-red-800 shadow-lg shadow-red-500/50'
+                      : 'ring-4 ring-red-400 bg-red-100 shadow-lg shadow-red-500/30'
                     : ''
                   }
                 `}
@@ -324,16 +403,41 @@ export default function QuizGame({ letters, onQuizComplete, onBackToMenu }: Quiz
                 {/* Success/Error overlay */}
                 {showFeedback && choice.letter === currentQuestion.targetLetter.letter && (
                   <motion.div
-                    className="absolute inset-0 bg-[#58CC02] opacity-20 rounded-xl"
+                    className="absolute inset-0 bg-[#58CC02] rounded-xl"
+                    initial={{ opacity: 0, scale: 0.8 }}
+                    animate={{ 
+                      opacity: [0, 0.3, 0.2], 
+                      scale: [0.8, 1.05, 1]
+                    }}
+                    transition={{ 
+                      duration: 0.6,
+                      times: [0, 0.3, 1],
+                      ease: "easeOut"
+                    }}
+                  />
+                )}
+                
+                {showFeedback && isCorrect === false && choice.letter !== currentQuestion.targetLetter.letter && (
+                  <motion.div
+                    className="absolute inset-0 bg-red-500 rounded-xl"
                     initial={{ opacity: 0 }}
-                    animate={{ opacity: 0.2 }}
-                    transition={{ duration: 0.2 }}
+                    animate={{ 
+                      opacity: [0, 0.25, 0.15],
+                      scale: [1, 0.95, 1]
+                    }}
+                    transition={{ 
+                      duration: 0.4,
+                      times: [0, 0.5, 1],
+                      ease: "easeOut"
+                    }}
                   />
                 )}
 
                 {/* Letter */}
                 <motion.div
-                  className="text-6xl font-bold pointer-events-none select-none text-white"
+                  className={`text-6xl font-bold pointer-events-none select-none ${
+                    theme === 'dark' ? 'text-white' : 'text-gray-800'
+                  }`}
                   style={{
                     fontFamily: 'Noto Sans Arabic, sans-serif'
                   }}
@@ -361,7 +465,6 @@ export default function QuizGame({ letters, onQuizComplete, onBackToMenu }: Quiz
                 )}
               </motion.button>
             ))}
-          </AnimatePresence>
         </div>
       </div>
 
