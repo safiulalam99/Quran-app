@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import "./globals.css";
 import { ThemeProvider } from "../contexts/ThemeContext";
 
@@ -7,8 +7,6 @@ export const metadata: Metadata = {
   description: "Interactive Arabic alphabet learning app for children ages 3-8. Learn letters with fun animations, sounds, and games!",
   keywords: ["Arabic", "alphabet", "learning", "children", "kids", "education", "interactive"],
   authors: [{ name: "Arabic Learning Team" }],
-  viewport: "width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no",
-  themeColor: "#4299e1",
   manifest: "/manifest.json",
   appleWebApp: {
     capable: true,
@@ -20,6 +18,14 @@ export const metadata: Metadata = {
     email: false,
     address: false
   }
+};
+
+export const viewport: Viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  maximumScale: 1,
+  userScalable: false,
+  themeColor: '#4299e1'
 };
 
 export default function RootLayout({
@@ -41,7 +47,7 @@ export default function RootLayout({
         <meta name="msapplication-tap-highlight" content="no" />
         <link rel="apple-touch-icon" href="/icon-192x192.png" />
         <link rel="icon" type="image/png" sizes="32x32" href="/icon-32x32.png" />
-        <link rel="icon" type="image/png" sizes="16x16" href="/icon-16x32.png" />
+        <link rel="icon" type="image/png" sizes="16x16" href="/icon-16x16.png" />
       </head>
       <body className="antialiased">
         <ThemeProvider>

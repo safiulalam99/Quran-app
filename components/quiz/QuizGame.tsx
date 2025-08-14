@@ -321,12 +321,11 @@ export default function QuizGame({ letters, onQuizComplete, onBackToMenu }: Quiz
                 style={{
                   width: '100%',
                   height: '100%',
-                  // High quality rendering settings
-                  imageRendering: 'pixelated' as const,
-                  // Prevent blur on scaling
-                  willChange: 'transform',
-                  backfaceVisibility: 'hidden',
                 }}
+                onError={(error) => {
+                  console.warn('Lottie animation error:', error);
+                }}
+                speed={1}
               />
             </div>
           </div>
