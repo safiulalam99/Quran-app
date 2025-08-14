@@ -7,6 +7,7 @@ import AppHeader from '../components/ui/AppHeader';
 import LottieBackground from '../components/ui/LottieBackground';
 import Navigation from '../components/ui/Navigation';
 import QuizGame from '../components/quiz/QuizGame';
+import QuizStartScreen from '../components/quiz/QuizStartScreen';
 import StatsScreen from '../components/quiz/StatsScreen';
 import ThemeToggle from '../components/ui/ThemeToggle';
 import { useTheme } from '../contexts/ThemeContext';
@@ -23,6 +24,7 @@ export default function Home() {
   const { alphabet } = arabicAlphabet;
   const [currentMode, setCurrentMode] = useState<'learn' | 'quiz' | 'stats'>('learn');
   const [quizStats, setQuizStats] = useState<QuizStats | null>(null);
+  const [isQuizStarted, setIsQuizStarted] = useState(false);
   const { theme } = useTheme();
 
   const handleLetterPlay = () => {
@@ -34,6 +36,14 @@ export default function Home() {
 
   const handleModeChange = (mode: 'learn' | 'quiz' | 'stats') => {
     setCurrentMode(mode);
+    // Reset quiz state when changing modes
+    if (mode !== 'quiz') {
+      setIsQuizStarted(false);
+    }
+  };
+
+  const handleStartQuiz = () => {
+    setIsQuizStarted(true);
   };
 
   const handleQuizComplete = (stats: QuizStats) => {
@@ -44,11 +54,13 @@ export default function Home() {
   const handlePlayAgain = () => {
     setCurrentMode('quiz');
     setQuizStats(null);
+    setIsQuizStarted(false); // Go back to start screen
   };
 
   const handleBackToMenu = () => {
     setCurrentMode('learn');
     setQuizStats(null);
+    setIsQuizStarted(false);
   };
 
   const renderContent = () => {
@@ -78,10 +90,15 @@ export default function Home() {
         );
       
       case 'quiz':
-        return (
+        return isQuizStarted ? (
           <QuizGame
             letters={alphabet}
             onQuizComplete={handleQuizComplete}
+            onBackToMenu={handleBackToMenu}
+          />
+        ) : (
+          <QuizStartScreen
+            onStartQuiz={handleStartQuiz}
             onBackToMenu={handleBackToMenu}
           />
         );

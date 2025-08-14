@@ -132,10 +132,18 @@ export default function QuizGame({ letters, onQuizComplete, onBackToMenu }: Quiz
         accuracy: ((prev.correctAnswers + 1) / (prev.totalQuestions + 1)) * 100
       }));
 
-      // Move to next question after delay
+      // Play the audio again for confirmation
+      setTimeout(() => {
+        if (audioRef.current) {
+          audioRef.current.currentTime = 0;
+          audioRef.current.play().catch(console.error);
+        }
+      }, 800); // Play audio after celebration
+
+      // Wait longer to let audio finish and celebrate
       setTimeout(() => {
         nextQuestion();
-      }, 1500);
+      }, 2500); // Increased from 1500ms to 2500ms
     } else {
       // Add to wrong answers for retry later
       if (!wrongAnswers.find(l => l.letter === currentQuestion.targetLetter.letter)) {
