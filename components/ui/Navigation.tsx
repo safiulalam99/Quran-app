@@ -2,6 +2,7 @@
 
 import { motion } from 'framer-motion';
 import { useState } from 'react';
+import { useTheme } from '../../contexts/ThemeContext';
 
 interface NavigationProps {
   currentMode: 'learn' | 'quiz' | 'stats';
@@ -10,6 +11,7 @@ interface NavigationProps {
 
 export default function Navigation({ currentMode, onModeChange }: NavigationProps) {
   const [activeTab, setActiveTab] = useState(currentMode);
+  const { theme } = useTheme();
 
   const handleTabChange = (mode: 'learn' | 'quiz' | 'stats') => {
     setActiveTab(mode);
@@ -45,7 +47,11 @@ export default function Navigation({ currentMode, onModeChange }: NavigationProp
   return (
     <>
       {/* Desktop Navigation - Top */}
-      <nav className="hidden md:block w-full bg-white/80 backdrop-blur-md border-b border-gray-200 sticky top-0 z-50">
+      <nav className={`hidden md:block w-full backdrop-blur-md sticky top-0 z-50 ${
+        theme === 'dark' 
+          ? 'bg-slate-800/80 border-b border-slate-600' 
+          : 'bg-white/80 border-b border-gray-200'
+      }`}>
         <div className="max-w-4xl mx-auto px-4 py-3">
           <div className="flex justify-center space-x-2">
             {tabs.map((tab) => (
@@ -57,7 +63,9 @@ export default function Navigation({ currentMode, onModeChange }: NavigationProp
                   transition-all duration-200 flex items-center space-x-2
                   ${activeTab === tab.id 
                     ? 'text-white shadow-lg' 
-                    : 'text-gray-600 hover:text-gray-800 hover:bg-gray-50'
+                    : theme === 'dark'
+                      ? 'text-gray-300 hover:text-white hover:bg-slate-700'
+                      : 'text-gray-600 hover:text-gray-800 hover:bg-gray-50'
                   }
                 `}
                 whileTap={{ scale: 0.95 }}
@@ -79,7 +87,11 @@ export default function Navigation({ currentMode, onModeChange }: NavigationProp
       </nav>
 
       {/* Mobile Navigation - Bottom */}
-      <nav className="md:hidden fixed bottom-0 left-0 right-0 bg-white/90 backdrop-blur-md border-t border-gray-200 z-50">
+      <nav className={`md:hidden fixed bottom-0 left-0 right-0 backdrop-blur-md z-50 ${
+        theme === 'dark'
+          ? 'bg-slate-800/90 border-t border-slate-600'
+          : 'bg-white/90 border-t border-gray-200'
+      }`}>
         <div className="flex justify-around items-center py-2">
           {tabs.map((tab) => (
             <motion.button
@@ -90,7 +102,9 @@ export default function Navigation({ currentMode, onModeChange }: NavigationProp
                 transition-all duration-200 min-w-[80px]
                 ${activeTab === tab.id 
                   ? 'text-white' 
-                  : 'text-gray-600'
+                  : theme === 'dark'
+                    ? 'text-gray-300'
+                    : 'text-gray-600'
                 }
               `}
               whileTap={{ scale: 0.95 }}

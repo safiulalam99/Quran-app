@@ -2,6 +2,7 @@
 
 import { useState, useRef } from 'react';
 import { motion } from 'framer-motion';
+import { useTheme } from '../../contexts/ThemeContext';
 
 interface LetterCardProps {
   letter: string;
@@ -22,6 +23,7 @@ export default function LetterCard({
 }: LetterCardProps) {
   const [isPlaying, setIsPlaying] = useState(false);
   const audioRef = useRef<HTMLAudioElement>(null);
+  const { theme } = useTheme();
 
   const handleClick = async () => {
     if (disabled || isPlaying) return;
@@ -58,11 +60,12 @@ export default function LetterCard({
         onClick={handleClick}
         disabled={disabled}
         className={`
-          w-full aspect-square bg-white rounded-3xl shadow-lg 
+          w-full aspect-square rounded-3xl shadow-lg 
           flex flex-col items-center justify-center
           transition-all duration-200 relative overflow-hidden
           p-4 min-h-[100px]
-          ${disabled ? 'opacity-50 cursor-not-allowed' : 'hover:shadow-xl cursor-pointer'}
+          ${theme === 'dark' ? 'bg-slate-700 hover:bg-slate-600' : 'bg-white hover:shadow-xl'}
+          ${disabled ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}
           ${isPlaying ? 'ring-4 ring-opacity-50' : ''}
         `}
         style={{ 
@@ -146,7 +149,9 @@ export default function LetterCard({
 
         {/* English name */}
         <motion.span 
-          className="text-sm text-gray-600 text-center select-none mt-2 font-medium"
+          className={`text-sm text-center select-none mt-2 font-medium ${
+            theme === 'dark' ? 'text-gray-300' : 'text-gray-600'
+          }`}
           animate={{
             opacity: isPlaying ? 0.7 : 1,
           }}

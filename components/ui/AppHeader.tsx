@@ -1,6 +1,7 @@
 'use client';
 
 import { motion } from 'framer-motion';
+import { useTheme } from '../../contexts/ThemeContext';
 
 interface AppHeaderProps {
   title: string;
@@ -15,6 +16,7 @@ export default function AppHeader({
   showProgress = false,
   progress = 0,
 }: AppHeaderProps) {
+  const { theme } = useTheme();
   return (
     <motion.header
       className="text-center py-6 px-4"
@@ -23,7 +25,9 @@ export default function AppHeader({
       transition={{ duration: 0.6, ease: "easeOut" }}
     >
       <motion.h1
-        className="text-3xl md:text-4xl font-bold text-gray-800 mb-2"
+        className={`text-3xl md:text-4xl font-bold mb-2 ${
+          theme === 'dark' ? 'text-white' : 'text-gray-800'
+        }`}
         animate={{
           scale: [1, 1.02, 1],
         }}
@@ -41,7 +45,9 @@ export default function AppHeader({
       
       {subtitle && (
         <motion.p
-          className="text-gray-600 text-lg"
+          className={`text-lg ${
+            theme === 'dark' ? 'text-gray-300' : 'text-gray-600'
+          }`}
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.3, duration: 0.5 }}
@@ -57,7 +63,9 @@ export default function AppHeader({
           animate={{ opacity: 1, scale: 1 }}
           transition={{ delay: 0.5, duration: 0.4 }}
         >
-          <div className="bg-gray-200 rounded-full h-2">
+          <div className={`rounded-full h-2 ${
+            theme === 'dark' ? 'bg-slate-600' : 'bg-gray-200'
+          }`}>
             <motion.div
               className="bg-gradient-to-r from-[#58CC02] to-[#89E219] h-2 rounded-full"
               initial={{ width: 0 }}
@@ -65,7 +73,9 @@ export default function AppHeader({
               transition={{ duration: 0.8, ease: "easeOut" }}
             />
           </div>
-          <span className="text-sm text-gray-500 mt-1 block">
+          <span className={`text-sm mt-1 block ${
+            theme === 'dark' ? 'text-gray-400' : 'text-gray-500'
+          }`}>
             {Math.round(progress)}% Complete
           </span>
         </motion.div>

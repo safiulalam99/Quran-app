@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import { ThemeProvider } from "../contexts/ThemeContext";
 
 export const metadata: Metadata = {
   title: "Arabic Alphabet Learning - Fun for Kids!",
@@ -43,7 +44,9 @@ export default function RootLayout({
         <link rel="icon" type="image/png" sizes="16x16" href="/icon-16x32.png" />
       </head>
       <body className="antialiased">
-        {children}
+        <ThemeProvider>
+          {children}
+        </ThemeProvider>
       </body>
     </html>
   );

@@ -8,6 +8,8 @@ import LottieBackground from '../components/ui/LottieBackground';
 import Navigation from '../components/ui/Navigation';
 import QuizGame from '../components/quiz/QuizGame';
 import StatsScreen from '../components/quiz/StatsScreen';
+import ThemeToggle from '../components/ui/ThemeToggle';
+import { useTheme } from '../contexts/ThemeContext';
 
 interface QuizStats {
   totalQuestions: number;
@@ -21,6 +23,7 @@ export default function Home() {
   const { alphabet } = arabicAlphabet;
   const [currentMode, setCurrentMode] = useState<'learn' | 'quiz' | 'stats'>('learn');
   const [quizStats, setQuizStats] = useState<QuizStats | null>(null);
+  const { theme } = useTheme();
 
   const handleLetterPlay = () => {
     // Add haptic feedback for mobile devices
@@ -58,6 +61,10 @@ export default function Home() {
               subtitle="🎵 Tap a letter to hear its sound"
               showProgress={false}
             />
+            {/* Theme Toggle */}
+            <div className="absolute top-24 right-4 z-20">
+              <ThemeToggle />
+            </div>
             <main className="pb-8 relative z-10">
               <div className="flex justify-center">
                 <AlphabetGrid
@@ -75,6 +82,7 @@ export default function Home() {
           <QuizGame
             letters={alphabet}
             onQuizComplete={handleQuizComplete}
+            onBackToMenu={handleBackToMenu}
           />
         );
       
@@ -106,8 +114,15 @@ export default function Home() {
     }
   };
 
+  // Force quiz and stats to always use dark mode
+  const getBackgroundClass = () => {
+    if (currentMode === 'quiz') return 'bg-slate-800';
+    if (currentMode === 'stats') return 'bg-slate-800';
+    return theme === 'dark' ? 'bg-slate-800' : 'bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50';
+  };
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50 relative overflow-hidden">
+    <div className={`min-h-screen ${getBackgroundClass()} relative overflow-hidden`}>
       {currentMode === 'learn' && <LottieBackground animationType="floating-stars" />}
       
       <Navigation currentMode={currentMode} onModeChange={handleModeChange} />
