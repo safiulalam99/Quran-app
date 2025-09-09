@@ -29,39 +29,53 @@ export default function ArabicFormsPage() {
   const [playingForm, setPlayingForm] = useState<string | null>(null);
   const [showFeedback, setShowFeedback] = useState<string | null>(null);
   const [isDragging, setIsDragging] = useState(false);
+  const navRef = useRef<HTMLDivElement>(null);
   const { theme } = useTheme();
   const audioRef = useRef<HTMLAudioElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
-  const scrubberRef = useRef<HTMLDivElement>(null);
 
   const letters = arabicLetterForms.letterForms as LetterForm[];
   const currentLetter = letters[currentLetterIndex];
 
-  // Handle scroll navigation
+  // Better scroll detection using Intersection Observer
   useEffect(() => {
-    const handleScroll = () => {
-      if (!containerRef.current || isDragging) return; // Don't update during scrubbing
-      
-      const scrollTop = containerRef.current.scrollTop;
-      const screenHeight = window.innerHeight;
-      // More accurate scroll detection with proper rounding
-      const rawIndex = scrollTop / screenHeight;
-      const newIndex = Math.min(
-        Math.max(0, Math.round(rawIndex)),
-        letters.length - 1
-      );
-      
-      if (newIndex !== currentLetterIndex) {
-        setCurrentLetterIndex(newIndex);
-      }
-    };
+    if (!containerRef.current) return;
 
-    const container = containerRef.current;
-    if (container) {
-      container.addEventListener('scroll', handleScroll, { passive: true });
-      return () => container.removeEventListener('scroll', handleScroll);
-    }
-  }, [currentLetterIndex, letters.length, isDragging]);
+    const observer = new IntersectionObserver(
+      (entries) => {
+        // Find the entry that's most visible (highest intersection ratio)
+        let mostVisible = entries[0];
+        for (const entry of entries) {
+          if (entry.intersectionRatio > mostVisible.intersectionRatio) {
+            mostVisible = entry;
+          }
+        }
+
+        if (mostVisible && mostVisible.intersectionRatio > 0.5 && !isDragging) {
+          const letterIndex = parseInt(mostVisible.target.id.replace('letter-', ''));
+          if (!isNaN(letterIndex) && letterIndex !== currentLetterIndex) {
+            setCurrentLetterIndex(letterIndex);
+          }
+        }
+      },
+      {
+        root: containerRef.current,
+        threshold: [0, 0.25, 0.5, 0.75, 1.0]
+      }
+    );
+
+    // Observe all letter elements
+    letters.forEach((_, index) => {
+      const element = document.getElementById(`letter-${index}`);
+      if (element) {
+        observer.observe(element);
+      }
+    });
+
+    return () => {
+      observer.disconnect();
+    };
+  }, [letters.length, currentLetterIndex, isDragging]);
 
   // Play audio for letter forms
   const playFormAudio = async (formType: 'isolated' | 'initial' | 'medial' | 'final') => {
@@ -107,156 +121,112 @@ export default function ArabicFormsPage() {
     return labels[formType as keyof typeof labels];
   };
 
-  // Smooth scroll to specific letter
+  // Use scrollIntoView instead of manual calculations
   const scrollToLetter = (index: number) => {
-    if (containerRef.current) {
-      containerRef.current.scrollTo({
-        top: index * window.innerHeight,
-        behavior: 'smooth'
+    const letterElement = document.getElementById(`letter-${index}`);
+    const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+    
+    if (letterElement) {
+      letterElement.scrollIntoView({
+        behavior: isMobile ? 'auto' : 'smooth',
+        block: 'start',
+        inline: 'nearest'
       });
     }
   };
 
-  // Handle scrubber drag/touch events
-  const handleScrubberInteraction = (event: React.MouseEvent | React.TouchEvent) => {
-    if (!scrubberRef.current) return;
-
-    const rect = scrubberRef.current.getBoundingClientRect();
-    const clientY = 'touches' in event ? event.touches[0].clientY : event.clientY;
+  // Scrollbar-like navigation handlers
+  const getLetterFromPosition = (clientY: number) => {
+    if (!navRef.current) return currentLetterIndex;
+    
+    const rect = navRef.current.getBoundingClientRect();
     const relativeY = clientY - rect.top;
+    const percentage = Math.max(0, Math.min(1, relativeY / rect.height));
     
-    // Account for the 24px padding on top and bottom
-    const padding = 24;
-    const effectiveHeight = rect.height - (padding * 2);
-    const effectiveY = relativeY - padding;
-    
-    // Calculate percentage within the effective area
-    const percentage = Math.max(0, Math.min(1, effectiveY / effectiveHeight));
-    
-    // Find the closest letter index
-    const letterIndex = Math.min(
-      Math.max(0, Math.round(percentage * (letters.length - 1))),
-      letters.length - 1
-    );
-    
-    console.log('Click debug:', {
-      eventType: 'touches' in event ? 'touch' : 'mouse',
-      relativeY,
-      effectiveY,
-      height: rect.height,
-      effectiveHeight,
-      percentage,
-      letterIndex,
-      selectedLetter: letters[letterIndex]?.forms.isolated,
-      selectedLetterName: letters[letterIndex]?.englishName,
-      totalLetters: letters.length,
-      clientY: 'touches' in event ? event.touches[0].clientY : event.clientY,
-      rectTop: rect.top
-    });
-    
-    if (letterIndex !== currentLetterIndex) {
-      setCurrentLetterIndex(letterIndex);
-      scrollToLetter(letterIndex);
-      
-      // Haptic feedback during scrubbing
+    // Map percentage to letter index
+    const letterIndex = Math.round(percentage * (letters.length - 1));
+    return Math.max(0, Math.min(letters.length - 1, letterIndex));
+  };
+
+  const handleTouchStart = (e: React.TouchEvent) => {
+    setIsDragging(true);
+    const newIndex = getLetterFromPosition(e.touches[0].clientY);
+    if (newIndex !== currentLetterIndex) {
+      setCurrentLetterIndex(newIndex);
+      scrollToLetter(newIndex);
       if (typeof window !== 'undefined' && 'vibrate' in navigator) {
-        navigator.vibrate(15); // Shorter vibration for scrubbing
+        navigator.vibrate(15);
       }
     }
   };
 
-  const handleMouseDown = (event: React.MouseEvent) => {
-    setIsDragging(true);
-    handleScrubberInteraction(event);
+  const handleTouchMove = (e: React.TouchEvent) => {
+    if (!isDragging) return;
+    e.preventDefault();
+
+    const newIndex = getLetterFromPosition(e.touches[0].clientY);
+    if (newIndex !== currentLetterIndex) {
+      setCurrentLetterIndex(newIndex);
+      scrollToLetter(newIndex);
+      if (typeof window !== 'undefined' && 'vibrate' in navigator) {
+        navigator.vibrate(8);
+      }
+    }
   };
 
-  const handleMouseMove = (event: React.MouseEvent) => {
-    if (isDragging) {
-      handleScrubberInteraction(event);
+  const handleTouchEnd = () => {
+    setTimeout(() => setIsDragging(false), 100); // Small delay to prevent interference
+  };
+
+  const handleMouseDown = (e: React.MouseEvent) => {
+    setIsDragging(true);
+    const newIndex = getLetterFromPosition(e.clientY);
+    if (newIndex !== currentLetterIndex) {
+      setCurrentLetterIndex(newIndex);
+      scrollToLetter(newIndex);
+    }
+  };
+
+  const handleMouseMove = (e: React.MouseEvent) => {
+    if (!isDragging) return;
+
+    const newIndex = getLetterFromPosition(e.clientY);
+    if (newIndex !== currentLetterIndex) {
+      setCurrentLetterIndex(newIndex);
+      scrollToLetter(newIndex);
     }
   };
 
   const handleMouseUp = () => {
-    setIsDragging(false);
+    setTimeout(() => setIsDragging(false), 100);
   };
 
-  const handleTouchStart = (event: React.TouchEvent) => {
-    event.preventDefault(); // Prevent default touch behavior
-    setIsDragging(true);
-    handleScrubberInteraction(event);
-  };
-
-  const handleTouchMove = (event: React.TouchEvent) => {
-    if (isDragging) {
-      event.preventDefault(); // Prevent page scrolling during scrubbing
-      event.stopPropagation(); // Stop event bubbling
-      handleScrubberInteraction(event);
-    }
-  };
-
-  const handleTouchEnd = (event: React.TouchEvent) => {
-    event.preventDefault(); // Prevent default touch behavior
-    setIsDragging(false);
-  };
-
-  // Add global mouse and touch events for smooth dragging
+  // Global mouse events for better drag experience
   useEffect(() => {
-    const handleGlobalMove = (clientY: number) => {
-      if (isDragging && scrubberRef.current) {
-        const rect = scrubberRef.current.getBoundingClientRect();
-        const relativeY = clientY - rect.top;
-        
-        // Account for the 20px padding on top and bottom
-        const padding = 20;
-        const effectiveHeight = rect.height - (padding * 2);
-        const effectiveY = relativeY - padding;
-        
-        // Calculate percentage within the effective area
-        const percentage = Math.max(0, Math.min(1, effectiveY / effectiveHeight));
-        
-        // Find the closest letter index
-        const letterIndex = Math.min(
-          Math.max(0, Math.round(percentage * (letters.length - 1))),
-          letters.length - 1
-        );
-        
-        if (letterIndex !== currentLetterIndex) {
-          setCurrentLetterIndex(letterIndex);
-          scrollToLetter(letterIndex);
-          
-          if (typeof window !== 'undefined' && 'vibrate' in navigator) {
-            navigator.vibrate(15);
-          }
+    const handleGlobalMouseMove = (e: MouseEvent) => {
+      if (isDragging) {
+        const newIndex = getLetterFromPosition(e.clientY);
+        if (newIndex !== currentLetterIndex) {
+          setCurrentLetterIndex(newIndex);
+          scrollToLetter(newIndex);
         }
       }
     };
 
-    const handleGlobalMouseMove = (event: MouseEvent) => {
-      handleGlobalMove(event.clientY);
-    };
-
-    const handleGlobalTouchMove = (event: TouchEvent) => {
-      if (event.touches.length > 0) {
-        handleGlobalMove(event.touches[0].clientY);
+    const handleGlobalMouseUp = () => {
+      if (isDragging) {
+        setTimeout(() => setIsDragging(false), 100);
       }
     };
 
-    const handleGlobalEnd = () => {
-      setIsDragging(false);
-    };
-
     if (isDragging) {
-      document.addEventListener('mousemove', handleGlobalMouseMove, { passive: false });
-      document.addEventListener('mouseup', handleGlobalEnd);
-      document.addEventListener('touchmove', handleGlobalTouchMove, { passive: true });
-      document.addEventListener('touchend', handleGlobalEnd);
+      document.addEventListener('mousemove', handleGlobalMouseMove);
+      document.addEventListener('mouseup', handleGlobalMouseUp);
     }
 
     return () => {
       document.removeEventListener('mousemove', handleGlobalMouseMove);
-      document.removeEventListener('mouseup', handleGlobalEnd);
-      document.removeEventListener('touchmove', handleGlobalTouchMove);
-      document.removeEventListener('touchend', handleGlobalEnd);
+      document.removeEventListener('mouseup', handleGlobalMouseUp);
     };
   }, [isDragging, currentLetterIndex, letters.length]);
 
@@ -279,6 +249,7 @@ export default function ArabicFormsPage() {
         {letters.map((letter, letterIndex) => (
           <motion.div
             key={letter.letter}
+            id={`letter-${letterIndex}`} // Add ID for scrollIntoView
             className={`h-screen flex flex-col snap-start relative ${
               theme === 'dark' 
                 ? 'bg-slate-800' 
@@ -543,62 +514,41 @@ export default function ArabicFormsPage() {
         ))}
       </div>
 
-      {/* Right Side Arabic Letter Scrubber */}
-      <div className="fixed right-4 md:right-6 top-1/2 transform -translate-y-1/2 z-20 h-[75vh] flex flex-col items-center">
-        <div 
-          ref={scrubberRef}
-          className="relative h-full w-12 flex flex-col justify-start cursor-pointer select-none touch-none"
-          onMouseDown={handleMouseDown}
-          onTouchStart={handleTouchStart}
-          onTouchMove={handleTouchMove}
-          onTouchEnd={handleTouchEnd}
-          style={{ 
-            touchAction: 'none',
-            paddingTop: '24px',
-            paddingBottom: '24px',
-            WebkitTouchCallout: 'none',
-            WebkitUserSelect: 'none'
-          }}
-        >
-          {letters.map((letter, index) => {
-            const isActive = index === currentLetterIndex;
-            // Calculate exact position for each letter (0% to 100% of available space)
-            const totalLetters = letters.length;
-            const positionPercent = totalLetters === 1 ? 50 : (index / (totalLetters - 1)) * 100;
-            
-            return (
-              <motion.div
-                key={letter.letter}
-                className="absolute w-full h-6 flex items-center justify-center touch-none"
-                style={{
-                  top: `${positionPercent}%`,
-                  left: '50%',
-                  transform: 'translate(-50%, -50%)'
-                }}
-                animate={{
-                  scale: isActive ? 1.4 : 1,
-                }}
-                transition={{ duration: 0.2, ease: "easeOut" }}
-              >
-                <span 
-                  className={`text-sm md:text-base font-bold transition-all duration-200 pointer-events-none ${
-                    isActive 
-                      ? 'drop-shadow-lg' 
-                      : theme === 'dark' 
-                        ? 'text-gray-500' 
-                        : 'text-gray-400'
-                  }`}
-                  style={{ 
-                    color: isActive ? letter.color : undefined,
-                    fontFamily: 'Noto Sans Arabic, sans-serif',
-                    textShadow: isActive ? `0 0 8px ${letter.color}60` : 'none'
-                  }}
-                >
-                  {letter.forms.isolated}
-                </span>
-              </motion.div>
-            );
-          })}
+      {/* Scrollbar-like Navigation */}
+      <div 
+        ref={navRef}
+        className="fixed right-3 top-1/2 transform -translate-y-1/2 z-20 h-[70vh] flex items-center"
+        onTouchStart={handleTouchStart}
+        onTouchMove={handleTouchMove}
+        onTouchEnd={handleTouchEnd}
+        onMouseDown={handleMouseDown}
+        onMouseMove={handleMouseMove}
+        onMouseUp={handleMouseUp}
+        style={{ touchAction: 'none' }}
+      >
+        {/* Clean Letter Navigation */}
+        <div className="h-full flex flex-col justify-between py-4">
+          {letters.map((letter, index) => (
+            <div
+              key={letter.letter}
+              className={`w-5 h-5 flex items-center justify-center pointer-events-none transition-all duration-200 ${
+                currentLetterIndex === index ? 'scale-150' : 'scale-100 opacity-60'
+              }`}
+              style={{
+                fontFamily: 'Noto Sans Arabic, sans-serif',
+                color: currentLetterIndex === index 
+                  ? (theme === 'dark' ? '#60A5FA' : '#3B82F6')
+                  : (theme === 'dark' ? '#9CA3AF' : '#6B7280'),
+                fontSize: '14px',
+                fontWeight: currentLetterIndex === index ? 'bold' : 'normal',
+                textShadow: currentLetterIndex === index 
+                  ? '0 0 8px currentColor' 
+                  : 'none'
+              }}
+            >
+              {letter.forms.isolated}
+            </div>
+          ))}
         </div>
       </div>
     </div>
