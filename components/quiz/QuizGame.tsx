@@ -2,7 +2,6 @@
 
 import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { DotLottieReact } from '@lottiefiles/dotlottie-react';
 import { addQuizSession } from '../../utils/statsStorage';
 import { useTheme } from '../../contexts/ThemeContext';
 
@@ -51,17 +50,10 @@ export default function QuizGame({ letters, onQuizComplete, onBackToMenu }: Quiz
   });
   const [wrongAnswers, setWrongAnswers] = useState<Letter[]>([]);
   const [startTime] = useState(Date.now());
-  const [currentAnimationIndex, setCurrentAnimationIndex] = useState(0);
   const audioRef = useRef<HTMLAudioElement>(null);
   const correctAudioRef = useRef<HTMLAudioElement>(null);
   const wrongAudioRef = useRef<HTMLAudioElement>(null);
   const { theme } = useTheme();
-
-  const animations = [
-    "https://lottie.host/2e6b9316-da00-4784-86ad-4264a83058ca/z4P7vBcOZW.lottie",
-    "https://lottie.host/5f1da134-5a5b-4879-9022-5a06a01e3990/zOK36Of9iM.lottie",
-    "https://lottie.host/40c9f475-d6ef-408e-9750-c5f790eeedcf/h7GveJPGuo.lottie"
-  ];
 
   const totalQuestions = 10; // Quiz length
 
@@ -198,15 +190,11 @@ export default function QuizGame({ letters, onQuizComplete, onBackToMenu }: Quiz
       setQuestionIndex(prev => prev + 1);
       setProgress(((questionIndex + 1) / totalQuestions) * 100);
       setCurrentQuestion(generateQuestion());
-      // Cycle to next animation
-      setCurrentAnimationIndex(prev => (prev + 1) % animations.length);
     } else if (wrongAnswers.length > 0) {
       // Retry wrong answers
       const wrongLetter = wrongAnswers[0];
       setWrongAnswers(prev => prev.slice(1));
       setCurrentQuestion(generateQuestion(wrongLetter));
-      // Cycle to next animation
-      setCurrentAnimationIndex(prev => (prev + 1) % animations.length);
     } else {
       // Quiz complete
       const finalStats = {
@@ -301,32 +289,17 @@ export default function QuizGame({ letters, onQuizComplete, onBackToMenu }: Quiz
       {/* Main Content Area */}
       <div className="flex-1 flex items-center px-4">
         <div className="w-full flex items-center justify-between">
-          {/* Left side - Character Animation */}
+          {/* Left side - Simple Visual */}
           <div className="w-1/2 flex justify-center">
-            <div 
-              className="w-36 h-36"
-              style={{
-                // Ensure crisp rendering
-                imageRendering: 'crisp-edges',
-                backfaceVisibility: 'hidden',
-                transform: 'translateZ(0)', // Force hardware acceleration
-              }}
-            >
-              <DotLottieReact
-                key={currentAnimationIndex} // Force re-render when animation changes
-                src={animations[currentAnimationIndex]}
-                loop
-                autoplay
-                className="w-full h-full"
-                style={{
-                  width: '100%',
-                  height: '100%',
-                }}
-                onError={(error) => {
-                  console.warn('Lottie animation error:', error);
-                }}
-                speed={1}
-              />
+            <div className="w-36 h-36 flex items-center justify-center">
+              {/* Simple static visual - no animations to prevent infinite loops */}
+              <div className={`w-32 h-32 rounded-full flex items-center justify-center ${
+                theme === 'dark' 
+                  ? 'bg-slate-700 border-2 border-slate-600' 
+                  : 'bg-white border-2 border-gray-200 shadow-md'
+              }`}>
+                <span className="text-6xl">👂</span>
+              </div>
             </div>
           </div>
 

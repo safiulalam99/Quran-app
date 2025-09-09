@@ -55,3 +55,51 @@ canvas {
     image-rendering: -webkit-optimize-contrast;
   }
 }
+
+/* Hide scrollbar for Arabic Forms page */
+.scrollbar-hide {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;     /* Firefox */
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;             /* Safari and Chrome */
+}
+
+/* Smooth scroll snap behavior */
+.snap-y {
+  scroll-snap-type: y mandatory;
+}
+
+.snap-start {
+  scroll-snap-align: start;
+}
+
+/* Arabic text rendering improvements */
+[dir="rtl"] {
+  text-align: right;
+}
+
+/* Letter form animations */
+@keyframes letterPulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+}
+
+.letter-pulse {
+  animation: letterPulse 2s ease-in-out infinite;
+}
+
+/* Floating navigation backdrop */
+.backdrop-blur-custom {
+  backdrop-filter: blur(12px) saturate(180%);
+  background-color: rgba(255, 255, 255, 0.8);
+}
+
+.dark .backdrop-blur-custom {
+  background-color: rgba(15, 23, 42, 0.8);
+}

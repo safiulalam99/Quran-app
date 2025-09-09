@@ -1,0 +1,568 @@
+{
+  "letterForms": [
+    {
+      "letter": "ا",
+      "name": "Alif",
+      "englishName": "Alif",
+      "sound": "ah",
+      "color": "#00d4ff",
+      "category": "vowels",
+      "forms": {
+        "isolated": "ا",
+        "initial": "ا",
+        "medial": "ا",
+        "final": "ا"
+      },
+      "connects": {
+        "before": false,
+        "after": true
+      }
+    },
+    {
+      "letter": "ب",
+      "name": "Baa",
+      "englishName": "Baa", 
+      "sound": "b",
+      "color": "#ff4757",
+      "category": "consonants",
+      "forms": {
+        "isolated": "ب",
+        "initial": "بـ",
+        "medial": "ـبـ",
+        "final": "ـب"
+      },
+      "connects": {
+        "before": true,
+        "after": true
+      }
+    },
+    {
+      "letter": "ت",
+      "name": "Taa",
+      "englishName": "Taa",
+      "sound": "t", 
+      "color": "#00ff88",
+      "category": "consonants",
+      "forms": {
+        "isolated": "ت",
+        "initial": "تـ",
+        "medial": "ـتـ",
+        "final": "ـت"
+      },
+      "connects": {
+        "before": true,
+        "after": true
+      }
+    },
+    {
+      "letter": "ث",
+      "name": "Thaa",
+      "englishName": "Thaa",
+      "sound": "th",
+      "color": "#ff9f43", 
+      "category": "consonants",
+      "forms": {
+        "isolated": "ث",
+        "initial": "ثـ",
+        "medial": "ـثـ",
+        "final": "ـث"
+      },
+      "connects": {
+        "before": true,
+        "after": true
+      }
+    },
+    {
+      "letter": "ج",
+      "name": "Jeem",
+      "englishName": "Jeem",
+      "sound": "j",
+      "color": "#a55eea",
+      "category": "consonants", 
+      "forms": {
+        "isolated": "ج",
+        "initial": "جـ",
+        "medial": "ـجـ",
+        "final": "ـج"
+      },
+      "connects": {
+        "before": true,
+        "after": true
+      }
+    },
+    {
+      "letter": "ح", 
+      "name": "Haa",
+      "englishName": "Haa",
+      "sound": "h",
+      "color": "#26de81",
+      "category": "consonants",
+      "forms": {
+        "isolated": "ح",
+        "initial": "حـ",
+        "medial": "ـحـ", 
+        "final": "ـح"
+      },
+      "connects": {
+        "before": true,
+        "after": true
+      }
+    },
+    {
+      "letter": "خ",
+      "name": "Khaa", 
+      "englishName": "Khaa",
+      "sound": "kh",
+      "color": "#ff6b6b",
+      "category": "consonants",
+      "forms": {
+        "isolated": "خ",
+        "initial": "خـ",
+        "medial": "ـخـ",
+        "final": "ـخ"
+      },
+      "connects": {
+        "before": true,
+        "after": true
+      }
+    },
+    {
+      "letter": "د",
+      "name": "Dal",
+      "englishName": "Dal", 
+      "sound": "d",
+      "color": "#ff3838",
+      "category": "consonants",
+      "forms": {
+        "isolated": "د",
+        "initial": "د",
+        "medial": "د",
+        "final": "ـد"
+      },
+      "connects": {
+        "before": true,
+        "after": false
+      }
+    },
+    {
+      "letter": "ذ",
+      "name": "Thal",
+      "englishName": "Thal",
+      "sound": "th",
+      "color": "#ffd700",
+      "category": "consonants",
+      "forms": {
+        "isolated": "ذ",
+        "initial": "ذ", 
+        "medial": "ذ",
+        "final": "ـذ"
+      },
+      "connects": {
+        "before": true,
+        "after": false
+      }
+    },
+    {
+      "letter": "ر",
+      "name": "Raa",
+      "englishName": "Raa",
+      "sound": "r",
+      "color": "#4dabf7",
+      "category": "consonants",
+      "forms": {
+        "isolated": "ر",
+        "initial": "ر",
+        "medial": "ر", 
+        "final": "ـر"
+      },
+      "connects": {
+        "before": true,
+        "after": false
+      }
+    },
+    {
+      "letter": "ز",
+      "name": "Zay",
+      "englishName": "Zay",
+      "sound": "z",
+      "color": "#be4bdb",
+      "category": "consonants",
+      "forms": {
+        "isolated": "ز",
+        "initial": "ز",
+        "medial": "ز",
+        "final": "ـز"
+      },
+      "connects": {
+        "before": true,
+        "after": false
+      }
+    },
+    {
+      "letter": "س",
+      "name": "Seen",
+      "englishName": "Seen", 
+      "sound": "s",
+      "color": "#20bf6b",
+      "category": "consonants",
+      "forms": {
+        "isolated": "س",
+        "initial": "سـ",
+        "medial": "ـسـ",
+        "final": "ـس"
+      },
+      "connects": {
+        "before": true,
+        "after": true
+      }
+    },
+    {
+      "letter": "ش",
+      "name": "Sheen",
+      "englishName": "Sheen",
+      "sound": "sh",
+      "color": "#ff7675", 
+      "category": "consonants",
+      "forms": {
+        "isolated": "ش",
+        "initial": "شـ",
+        "medial": "ـشـ",
+        "final": "ـش"
+      },
+      "connects": {
+        "before": true,
+        "after": true
+      }
+    },
+    {
+      "letter": "ص",
+      "name": "Saad",
+      "englishName": "Saad",
+      "sound": "s",
+      "color": "#74b9ff",
+      "category": "consonants",
+      "forms": {
+        "isolated": "ص",
+        "initial": "صـ",
+        "medial": "ـصـ",
+        "final": "ـص"
+      },
+      "connects": {
+        "before": true,
+        "after": true
+      }
+    },
+    {
+      "letter": "ض",
+      "name": "Daad",
+      "englishName": "Daad",
+      "sound": "d",
+      "color": "#8c7ae6",
+      "category": "consonants",
+      "forms": {
+        "isolated": "ض",
+        "initial": "ضـ", 
+        "medial": "ـضـ",
+        "final": "ـض"
+      },
+      "connects": {
+        "before": true,
+        "after": true
+      }
+    },
+    {
+      "letter": "ط",
+      "name": "Taa",
+      "englishName": "Taa", 
+      "sound": "t",
+      "color": "#f39c12",
+      "category": "consonants",
+      "forms": {
+        "isolated": "ط",
+        "initial": "طـ",
+        "medial": "ـطـ",
+        "final": "ـط"
+      },
+      "connects": {
+        "before": true,
+        "after": true
+      }
+    },
+    {
+      "letter": "ظ",
+      "name": "Thaa",
+      "englishName": "Thaa",
+      "sound": "th",
+      "color": "#fd79a8", 
+      "category": "consonants",
+      "forms": {
+        "isolated": "ظ",
+        "initial": "ظـ",
+        "medial": "ـظـ",
+        "final": "ـظ"
+      },
+      "connects": {
+        "before": true,
+        "after": true
+      }
+    },
+    {
+      "letter": "ع",
+      "name": "Ayn", 
+      "englishName": "Ayn",
+      "sound": "a",
+      "color": "#00b894",
+      "category": "consonants",
+      "forms": {
+        "isolated": "ع",
+        "initial": "عـ",
+        "medial": "ـعـ",
+        "final": "ـع"
+      },
+      "connects": {
+        "before": true,
+        "after": true
+      }
+    },
+    {
+      "letter": "غ",
+      "name": "Ghayn",
+      "englishName": "Ghayn",
+      "sound": "gh", 
+      "color": "#fdcb6e",
+      "category": "consonants",
+      "forms": {
+        "isolated": "غ",
+        "initial": "غـ",
+        "medial": "ـغـ",
+        "final": "ـغ"
+      },
+      "connects": {
+        "before": true,
+        "after": true
+      }
+    },
+    {
+      "letter": "ف",
+      "name": "Faa",
+      "englishName": "Faa",
+      "sound": "f",
+      "color": "#e84393",
+      "category": "consonants",
+      "forms": {
+        "isolated": "ف",
+        "initial": "فـ",
+        "medial": "ـفـ",
+        "final": "ـف"
+      },
+      "connects": {
+        "before": true,
+        "after": true
+      }
+    },
+    {
+      "letter": "ق", 
+      "name": "Qaaf",
+      "englishName": "Qaaf",
+      "sound": "q",
+      "color": "#6c5ce7",
+      "category": "consonants",
+      "forms": {
+        "isolated": "ق",
+        "initial": "قـ",
+        "medial": "ـقـ",
+        "final": "ـق"
+      },
+      "connects": {
+        "before": true,
+        "after": true
+      }
+    },
+    {
+      "letter": "ك",
+      "name": "Kaaf", 
+      "englishName": "Kaaf",
+      "sound": "k",
+      "color": "#ff6348",
+      "category": "consonants",
+      "forms": {
+        "isolated": "ك",
+        "initial": "كـ",
+        "medial": "ـكـ",
+        "final": "ـك"
+      },
+      "connects": {
+        "before": true,
+        "after": true
+      }
+    },
+    {
+      "letter": "ل",
+      "name": "Laam",
+      "englishName": "Laam",
+      "sound": "l",
+      "color": "#00cec9",
+      "category": "consonants",
+      "forms": {
+        "isolated": "ل",
+        "initial": "لـ", 
+        "medial": "ـلـ",
+        "final": "ـل"
+      },
+      "connects": {
+        "before": true,
+        "after": true
+      }
+    },
+    {
+      "letter": "م",
+      "name": "Meem",
+      "englishName": "Meem",
+      "sound": "m",
+      "color": "#e17055",
+      "category": "consonants",
+      "forms": {
+        "isolated": "م",
+        "initial": "مـ",
+        "medial": "ـمـ",
+        "final": "ـم"
+      },
+      "connects": {
+        "before": true,
+        "after": true
+      }
+    },
+    {
+      "letter": "ن",
+      "name": "Noon",
+      "englishName": "Noon",
+      "sound": "n", 
+      "color": "#0984e3",
+      "category": "consonants",
+      "forms": {
+        "isolated": "ن",
+        "initial": "نـ",
+        "medial": "ـنـ",
+        "final": "ـن"
+      },
+      "connects": {
+        "before": true,
+        "after": true
+      }
+    },
+    {
+      "letter": "ه",
+      "name": "Haa",
+      "englishName": "Haa",
+      "sound": "h",
+      "color": "#f8b500",
+      "category": "consonants",
+      "forms": {
+        "isolated": "ه",
+        "initial": "هـ",
+        "medial": "ـهـ",
+        "final": "ـه"
+      },
+      "connects": {
+        "before": true,
+        "after": true
+      }
+    },
+    {
+      "letter": "و",
+      "name": "Waw", 
+      "englishName": "Waw",
+      "sound": "w",
+      "color": "#55a3ff",
+      "category": "vowels",
+      "forms": {
+        "isolated": "و",
+        "initial": "و",
+        "medial": "و",
+        "final": "ـو"
+      },
+      "connects": {
+        "before": true,
+        "after": false
+      }
+    },
+    {
+      "letter": "ي",
+      "name": "Yaa",
+      "englishName": "Yaa",
+      "sound": "y",
+      "color": "#ff9ff3",
+      "category": "vowels",
+      "forms": {
+        "isolated": "ي",
+        "initial": "يـ",
+        "medial": "ـيـ", 
+        "final": "ـي"
+      },
+      "connects": {
+        "before": true,
+        "after": true
+      }
+    }
+  ],
+  "formTypes": {
+    "isolated": {
+      "name": "Isolated",
+      "arabicName": "منفصل",
+      "description": "Letter stands alone, not connected to other letters"
+    },
+    "initial": {
+      "name": "Initial", 
+      "arabicName": "أول",
+      "description": "Letter at the beginning of a word, connects to the next letter"
+    },
+    "medial": {
+      "name": "Medial",
+      "arabicName": "وسط", 
+      "description": "Letter in the middle of a word, connects to both previous and next letters"
+    },
+    "final": {
+      "name": "Final",
+      "arabicName": "آخر",
+      "description": "Letter at the end of a word, connects to the previous letter"
+    }
+  },
+  "connectionRules": {
+    "nonConnectingLetters": ["ا", "د", "ذ", "ر", "ز", "و"],
+    "description": "These letters do not connect to the letter that comes after them"
+  },
+  "practiceExamples": {
+    "beginnerWords": [
+      {
+        "word": "بيت",
+        "meaning": "house",
+        "letterBreakdown": [
+          {"letter": "ب", "form": "initial", "position": 1},
+          {"letter": "ي", "form": "medial", "position": 2}, 
+          {"letter": "ت", "form": "final", "position": 3}
+        ]
+      },
+      {
+        "word": "كتاب",
+        "meaning": "book",
+        "letterBreakdown": [
+          {"letter": "ك", "form": "initial", "position": 1},
+          {"letter": "ت", "form": "medial", "position": 2},
+          {"letter": "ا", "form": "medial", "position": 3},
+          {"letter": "ب", "form": "final", "position": 4}
+        ]
+      },
+      {
+        "word": "مدرسة", 
+        "meaning": "school",
+        "letterBreakdown": [
+          {"letter": "م", "form": "initial", "position": 1},
+          {"letter": "د", "form": "isolated", "position": 2},
+          {"letter": "ر", "form": "isolated", "position": 3}, 
+          {"letter": "س", "form": "medial", "position": 4},
+          {"letter": "ة", "form": "final", "position": 5}
+        ]
+      }
+    ]
+  }
+}

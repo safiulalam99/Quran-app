@@ -1,7 +1,8 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import Lottie from 'lottie-react';
+import LottieErrorBoundary from './LottieErrorBoundary';
 
 interface LottieBackgroundProps {
   animationType?: 'floating-stars' | 'gentle-bubbles' | 'rainbow-particles';
@@ -128,6 +129,7 @@ export default function LottieBackground({
   className = '',
 }: LottieBackgroundProps) {
   const lottieRef = useRef(null);
+  const [hasError, setHasError] = useState(false);
 
   const getAnimationData = () => {
     switch (animationType) {
@@ -138,22 +140,32 @@ export default function LottieBackground({
     }
   };
 
+  if (hasError) {
+    return null; // Don't render anything if there's an error
+  }
+
   return (
     <div className={`absolute inset-0 pointer-events-none overflow-hidden ${className}`}>
-      <Lottie
-        lottieRef={lottieRef}
-        animationData={getAnimationData()}
-        loop
-        autoplay
-        style={{
-          width: '100%',
-          height: '100%',
-          opacity: 0.3,
-        }}
-        rendererSettings={{
-          preserveAspectRatio: 'xMidYMid slice'
-        }}
-      />
+      <LottieErrorBoundary fallback={null}>
+        <Lottie
+          lottieRef={lottieRef}
+          animationData={getAnimationData()}
+          loop
+          autoplay
+          style={{
+            width: '100%',
+            height: '100%',
+            opacity: 0.3,
+          }}
+          rendererSettings={{
+            preserveAspectRatio: 'xMidYMid slice'
+          }}
+          onError={() => {
+            console.warn('LottieBackground animation error');
+            setHasError(true);
+          }}
+        />
+      </LottieErrorBoundary>
     </div>
   );
 }

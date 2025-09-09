@@ -87,9 +87,13 @@ export default function StatsScreen({ stats, onPlayAgain, onBackToMenu }: StatsS
   };
 
   return (
-    <div className="min-h-screen bg-slate-800 p-4 pb-24 md:pb-4 pt-4 md:pt-0 flex items-center justify-center">
+    <div className={`min-h-screen p-4 pb-24 md:pb-4 pt-4 md:pt-0 flex items-center justify-center ${
+      theme === 'dark' ? 'bg-slate-800' : 'bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50'
+    }`}>
       <motion.div
-        className="max-w-2xl w-full bg-slate-700 rounded-3xl shadow-2xl p-8 text-center"
+        className={`max-w-2xl w-full rounded-3xl shadow-2xl p-8 text-center ${
+          theme === 'dark' ? 'bg-slate-700' : 'bg-white'
+        }`}
         initial={{ scale: 0, opacity: 0 }}
         animate={{ scale: 1, opacity: 1 }}
         transition={{ duration: 0.5, ease: "easeOut" }}
@@ -104,10 +108,14 @@ export default function StatsScreen({ stats, onPlayAgain, onBackToMenu }: StatsS
           <div className="text-8xl mb-4">
             {getPerformanceEmoji()}
           </div>
-          <h1 className="text-3xl md:text-4xl font-bold text-white mb-2">
+          <h1 className={`text-3xl md:text-4xl font-bold mb-2 ${
+            theme === 'dark' ? 'text-white' : 'text-gray-800'
+          }`}>
             Quiz Complete!
           </h1>
-          <p className="text-xl text-gray-300">
+          <p className={`text-xl ${
+            theme === 'dark' ? 'text-gray-300' : 'text-gray-600'
+          }`}>
             {getPerformanceMessage()}
           </p>
         </motion.div>
@@ -208,28 +216,32 @@ export default function StatsScreen({ stats, onPlayAgain, onBackToMenu }: StatsS
 
         {/* Overall Progress */}
         <motion.div
-          className="mb-8 bg-slate-600 rounded-2xl p-6"
+          className={`mb-8 rounded-2xl p-6 ${
+            theme === 'dark' ? 'bg-slate-600' : 'bg-gray-100'
+          }`}
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 1.2, duration: 0.5 }}
         >
-          <h3 className="text-xl font-bold text-white mb-4 text-center">Your Journey</h3>
+          <h3 className={`text-xl font-bold mb-4 text-center ${
+            theme === 'dark' ? 'text-white' : 'text-gray-800'
+          }`}>Your Journey</h3>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
             <div>
               <div className="text-2xl font-bold text-[#58CC02]">{userStats.totalSessions}</div>
-              <div className="text-sm text-gray-300">Total Quizzes</div>
+              <div className={`text-sm ${theme === 'dark' ? 'text-gray-300' : 'text-gray-500'}`}>Total Quizzes</div>
             </div>
             <div>
               <div className="text-2xl font-bold text-[#58CC02]">{Math.round(userStats.averageAccuracy)}%</div>
-              <div className="text-sm text-gray-300">Average Score</div>
+              <div className={`text-sm ${theme === 'dark' ? 'text-gray-300' : 'text-gray-500'}`}>Average Score</div>
             </div>
             <div>
               <div className="text-2xl font-bold text-[#58CC02]">{userStats.currentStreak}</div>
-              <div className="text-sm text-gray-300">Current Streak</div>
+              <div className={`text-sm ${theme === 'dark' ? 'text-gray-300' : 'text-gray-500'}`}>Current Streak</div>
             </div>
             <div>
               <div className="text-2xl font-bold text-[#58CC02]">{userStats.totalCorrectAnswers}</div>
-              <div className="text-sm text-gray-300">Letters Learned</div>
+              <div className={`text-sm ${theme === 'dark' ? 'text-gray-300' : 'text-gray-500'}`}>Letters Learned</div>
             </div>
           </div>
         </motion.div>
@@ -242,7 +254,9 @@ export default function StatsScreen({ stats, onPlayAgain, onBackToMenu }: StatsS
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 1.4, duration: 0.5 }}
           >
-            <h3 className="text-xl font-bold text-white mb-4 text-center">Achievements</h3>
+            <h3 className={`text-xl font-bold mb-4 text-center ${
+              theme === 'dark' ? 'text-white' : 'text-gray-800'
+            }`}>Achievements</h3>
             <div className="flex flex-wrap justify-center gap-3">
               {achievements.map((achievement, index) => (
                 <motion.div
@@ -278,7 +292,11 @@ export default function StatsScreen({ stats, onPlayAgain, onBackToMenu }: StatsS
           
           <motion.button
             onClick={onBackToMenu}
-            className="bg-slate-600 border-2 border-slate-500 text-white px-8 py-4 rounded-2xl font-bold text-lg shadow-lg hover:shadow-xl hover:bg-slate-500 transition-all duration-200"
+            className={`border-2 px-8 py-4 rounded-2xl font-bold text-lg shadow-lg hover:shadow-xl transition-all duration-200 ${
+              theme === 'dark' 
+                ? 'bg-slate-600 border-slate-500 text-white hover:bg-slate-500'
+                : 'bg-gray-100 border-gray-300 text-gray-800 hover:bg-gray-200'
+            }`}
             whileTap={{ scale: 0.95 }}
             whileHover={{ scale: 1.05 }}
           >

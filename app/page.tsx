@@ -10,6 +10,8 @@ import QuizGame from '../components/quiz/QuizGame';
 import QuizStartScreen from '../components/quiz/QuizStartScreen';
 import StatsScreen from '../components/quiz/StatsScreen';
 import ThemeToggle from '../components/ui/ThemeToggle';
+import FloatingSidebar from '../components/ui/FloatingSidebar';
+import ArabicFormsPage from '../components/forms/ArabicFormsPage';
 import { useTheme } from '../contexts/ThemeContext';
 
 interface QuizStats {
@@ -22,6 +24,7 @@ interface QuizStats {
 
 export default function Home() {
   const { alphabet } = arabicAlphabet;
+  const [currentModule, setCurrentModule] = useState<'learn' | 'forms' | 'quiz'>('learn');
   const [currentMode, setCurrentMode] = useState<'learn' | 'quiz'>('learn');
   const [quizStats, setQuizStats] = useState<QuizStats | null>(null);
   const [isQuizStarted, setIsQuizStarted] = useState(false);
@@ -34,8 +37,23 @@ export default function Home() {
     }
   };
 
+  const handleModuleChange = (moduleId: string) => {
+    setCurrentModule(moduleId as 'learn' | 'forms' | 'quiz');
+    
+    // Handle legacy mode changes for existing components
+    if (moduleId === 'learn' || moduleId === 'quiz') {
+      setCurrentMode(moduleId as 'learn' | 'quiz');
+    }
+    
+    // Reset quiz state when changing modules
+    if (moduleId !== 'quiz') {
+      setIsQuizStarted(false);
+    }
+  };
+
   const handleModeChange = (mode: 'learn' | 'quiz') => {
     setCurrentMode(mode);
+    setCurrentModule(mode);
     // Reset quiz state when changing modes
     if (mode !== 'quiz') {
       setIsQuizStarted(false);
@@ -64,6 +82,7 @@ export default function Home() {
 
   const handleBackToMenu = () => {
     setCurrentMode('learn');
+    setCurrentModule('learn');
     setQuizStats(null);
     setIsQuizStarted(false);
   };
@@ -80,7 +99,7 @@ export default function Home() {
       );
     }
 
-    switch (currentMode) {
+    switch (currentModule) {
       case 'learn':
         return (
           <>
@@ -104,6 +123,9 @@ export default function Home() {
             </main>
           </>
         );
+      
+      case 'forms':
+        return <ArabicFormsPage />;
       
       case 'quiz':
         return isQuizStarted ? (
@@ -131,11 +153,22 @@ export default function Home() {
 
   return (
     <div className={`min-h-screen ${getBackgroundClass()} relative overflow-hidden`}>
-      {currentMode === 'learn' && <LottieBackground animationType="floating-stars" />}
+      {currentModule === 'learn' && <LottieBackground animationType="floating-stars" />}
       
-      <Navigation currentMode={currentMode} onModeChange={handleModeChange} />
+      {/* Floating Sidebar Navigation */}
+      <FloatingSidebar 
+        currentModule={currentModule}
+        onModuleChange={handleModuleChange}
+      />
       
-      <div className={`${currentMode === 'learn' ? 'p-4' : ''} pb-24 md:pb-4 md:pt-20`}>
+      {/* Legacy Navigation for Learn/Quiz modes only */}
+      {(currentModule === 'learn' || currentModule === 'quiz') && (
+        <Navigation currentMode={currentMode} onModeChange={handleModeChange} />
+      )}
+      
+      <div className={`${currentModule === 'learn' ? 'p-4' : ''} ${
+        (currentModule === 'learn' || currentModule === 'quiz') ? 'pb-24 md:pb-4 md:pt-20' : ''
+      }`}>
         {renderContent()}
       </div>
     </div>
