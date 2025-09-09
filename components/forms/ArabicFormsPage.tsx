@@ -28,9 +28,11 @@ export default function ArabicFormsPage() {
   const [currentLetterIndex, setCurrentLetterIndex] = useState(0);
   const [playingForm, setPlayingForm] = useState<string | null>(null);
   const [showFeedback, setShowFeedback] = useState<string | null>(null);
+  const [isDragging, setIsDragging] = useState(false);
   const { theme } = useTheme();
   const audioRef = useRef<HTMLAudioElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
+  const scrubberRef = useRef<HTMLDivElement>(null);
 
   const letters = arabicLetterForms.letterForms as LetterForm[];
   const currentLetter = letters[currentLetterIndex];
@@ -38,23 +40,28 @@ export default function ArabicFormsPage() {
   // Handle scroll navigation
   useEffect(() => {
     const handleScroll = () => {
-      if (!containerRef.current) return;
+      if (!containerRef.current || isDragging) return; // Don't update during scrubbing
       
       const scrollTop = containerRef.current.scrollTop;
       const screenHeight = window.innerHeight;
-      const newIndex = Math.round(scrollTop / screenHeight);
+      // More accurate scroll detection with proper rounding
+      const rawIndex = scrollTop / screenHeight;
+      const newIndex = Math.min(
+        Math.max(0, Math.round(rawIndex)),
+        letters.length - 1
+      );
       
-      if (newIndex !== currentLetterIndex && newIndex >= 0 && newIndex < letters.length) {
+      if (newIndex !== currentLetterIndex) {
         setCurrentLetterIndex(newIndex);
       }
     };
 
     const container = containerRef.current;
     if (container) {
-      container.addEventListener('scroll', handleScroll);
+      container.addEventListener('scroll', handleScroll, { passive: true });
       return () => container.removeEventListener('scroll', handleScroll);
     }
-  }, [currentLetterIndex, letters.length]);
+  }, [currentLetterIndex, letters.length, isDragging]);
 
   // Play audio for letter forms
   const playFormAudio = async (formType: 'isolated' | 'initial' | 'medial' | 'final') => {
@@ -109,6 +116,149 @@ export default function ArabicFormsPage() {
       });
     }
   };
+
+  // Handle scrubber drag/touch events
+  const handleScrubberInteraction = (event: React.MouseEvent | React.TouchEvent) => {
+    if (!scrubberRef.current) return;
+
+    const rect = scrubberRef.current.getBoundingClientRect();
+    const clientY = 'touches' in event ? event.touches[0].clientY : event.clientY;
+    const relativeY = clientY - rect.top;
+    
+    // Account for the 16px padding on top and bottom
+    const padding = 16;
+    const effectiveHeight = rect.height - (padding * 2);
+    const effectiveY = relativeY - padding;
+    
+    // Calculate percentage within the effective area
+    const percentage = Math.max(0, Math.min(1, effectiveY / effectiveHeight));
+    
+    // Find the closest letter index
+    const letterIndex = Math.min(
+      Math.max(0, Math.round(percentage * (letters.length - 1))),
+      letters.length - 1
+    );
+    
+    console.log('Click debug:', {
+      eventType: 'touches' in event ? 'touch' : 'mouse',
+      relativeY,
+      effectiveY,
+      height: rect.height,
+      effectiveHeight,
+      percentage,
+      letterIndex,
+      selectedLetter: letters[letterIndex]?.forms.isolated,
+      selectedLetterName: letters[letterIndex]?.englishName,
+      totalLetters: letters.length,
+      clientY: 'touches' in event ? event.touches[0].clientY : event.clientY,
+      rectTop: rect.top
+    });
+    
+    if (letterIndex !== currentLetterIndex) {
+      setCurrentLetterIndex(letterIndex);
+      scrollToLetter(letterIndex);
+      
+      // Haptic feedback during scrubbing
+      if (typeof window !== 'undefined' && 'vibrate' in navigator) {
+        navigator.vibrate(15); // Shorter vibration for scrubbing
+      }
+    }
+  };
+
+  const handleMouseDown = (event: React.MouseEvent) => {
+    setIsDragging(true);
+    handleScrubberInteraction(event);
+  };
+
+  const handleMouseMove = (event: React.MouseEvent) => {
+    if (isDragging) {
+      handleScrubberInteraction(event);
+    }
+  };
+
+  const handleMouseUp = () => {
+    setIsDragging(false);
+  };
+
+  const handleTouchStart = (event: React.TouchEvent) => {
+    event.preventDefault(); // Prevent default touch behavior
+    setIsDragging(true);
+    handleScrubberInteraction(event);
+  };
+
+  const handleTouchMove = (event: React.TouchEvent) => {
+    if (isDragging) {
+      event.preventDefault(); // Prevent page scrolling during scrubbing
+      event.stopPropagation(); // Stop event bubbling
+      handleScrubberInteraction(event);
+    }
+  };
+
+  const handleTouchEnd = (event: React.TouchEvent) => {
+    event.preventDefault(); // Prevent default touch behavior
+    setIsDragging(false);
+  };
+
+  // Add global mouse and touch events for smooth dragging
+  useEffect(() => {
+    const handleGlobalMove = (clientY: number) => {
+      if (isDragging && scrubberRef.current) {
+        const rect = scrubberRef.current.getBoundingClientRect();
+        const relativeY = clientY - rect.top;
+        
+        // Account for the 16px padding on top and bottom
+        const padding = 16;
+        const effectiveHeight = rect.height - (padding * 2);
+        const effectiveY = relativeY - padding;
+        
+        // Calculate percentage within the effective area
+        const percentage = Math.max(0, Math.min(1, effectiveY / effectiveHeight));
+        
+        // Find the closest letter index
+        const letterIndex = Math.min(
+          Math.max(0, Math.round(percentage * (letters.length - 1))),
+          letters.length - 1
+        );
+        
+        if (letterIndex !== currentLetterIndex) {
+          setCurrentLetterIndex(letterIndex);
+          scrollToLetter(letterIndex);
+          
+          if (typeof window !== 'undefined' && 'vibrate' in navigator) {
+            navigator.vibrate(15);
+          }
+        }
+      }
+    };
+
+    const handleGlobalMouseMove = (event: MouseEvent) => {
+      handleGlobalMove(event.clientY);
+    };
+
+    const handleGlobalTouchMove = (event: TouchEvent) => {
+      if (event.touches.length > 0) {
+        handleGlobalMove(event.touches[0].clientY);
+      }
+    };
+
+    const handleGlobalEnd = () => {
+      setIsDragging(false);
+    };
+
+    if (isDragging) {
+      document.addEventListener('mousemove', handleGlobalMouseMove, { passive: false });
+      document.addEventListener('mouseup', handleGlobalEnd);
+      document.addEventListener('touchmove', handleGlobalTouchMove, { passive: true });
+      document.addEventListener('touchend', handleGlobalEnd);
+    }
+
+    return () => {
+      document.removeEventListener('mousemove', handleGlobalMouseMove);
+      document.removeEventListener('mouseup', handleGlobalEnd);
+      document.removeEventListener('touchmove', handleGlobalTouchMove);
+      document.removeEventListener('touchend', handleGlobalEnd);
+    };
+  }, [isDragging, currentLetterIndex, letters.length]);
 
   return (
     <div className="relative">
@@ -401,83 +551,62 @@ export default function ArabicFormsPage() {
         ))}
       </div>
 
-      {/* Progress Bar at Bottom - Responsive */}
-      <div className={`fixed bottom-4 left-1/2 transform -translate-x-1/2 z-20 px-3 md:px-4 py-2 rounded-full backdrop-blur-md shadow-lg max-w-[90vw] ${
-        theme === 'dark' 
-          ? 'bg-slate-800/90 border border-slate-600' 
-          : 'bg-white/90 border border-gray-200'
-      }`}>
-        <div className="flex items-center space-x-2 md:space-x-3">
-          {/* Current letter indicator */}
-          <div className="flex items-center space-x-2">
-            <span 
-              className="text-xl md:text-2xl font-bold"
-              style={{ 
-                color: currentLetter.color,
-                fontFamily: 'Noto Sans Arabic, sans-serif'
-              }}
-            >
-              {currentLetter.forms.isolated}
-            </span>
-            <div className="text-xs md:text-sm">
-              <div className={`font-medium ${theme === 'dark' ? 'text-white' : 'text-gray-800'}`}>
-                {currentLetter.englishName}
-              </div>
-              <div className={`${theme === 'dark' ? 'text-gray-400' : 'text-gray-500'}`}>
-                {currentLetterIndex + 1} / {letters.length}
-              </div>
-            </div>
-          </div>
-          
-          {/* Mini progress bar - responsive width */}
-          <div className={`w-20 md:w-32 h-2 rounded-full ${
-            theme === 'dark' ? 'bg-slate-600' : 'bg-gray-200'
-          }`}>
-            <motion.div
-              className="bg-gradient-to-r from-[#58CC02] to-[#89E219] h-2 rounded-full"
-              animate={{ width: `${((currentLetterIndex + 1) / letters.length) * 100}%` }}
-              transition={{ duration: 0.3 }}
-            />
-          </div>
-
-          {/* Navigation arrows - larger touch targets on mobile */}
-          <div className="flex space-x-1">
-            <motion.button
-              onClick={() => scrollToLetter(Math.max(0, currentLetterIndex - 1))}
-              disabled={currentLetterIndex === 0}
-              className={`w-8 h-8 md:w-9 md:h-9 rounded-full flex items-center justify-center transition-colors ${
-                currentLetterIndex === 0
-                  ? 'opacity-30 cursor-not-allowed'
-                  : theme === 'dark'
-                    ? 'bg-slate-700 hover:bg-slate-600 text-gray-300'
-                    : 'bg-gray-100 hover:bg-gray-200 text-gray-600'
-              }`}
-              whileHover={currentLetterIndex > 0 ? { scale: 1.1 } : {}}
-              whileTap={currentLetterIndex > 0 ? { scale: 0.9 } : {}}
-            >
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
-                <path d="M15 18l-6-6 6-6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-              </svg>
-            </motion.button>
+      {/* Right Side Arabic Letter Scrubber */}
+      <div className="fixed right-3 md:right-4 top-1/2 transform -translate-y-1/2 z-20 h-[75vh] flex flex-col items-center">
+        <div 
+          ref={scrubberRef}
+          className="relative h-full w-8 flex flex-col justify-start cursor-pointer select-none touch-none"
+          onMouseDown={handleMouseDown}
+          onTouchStart={handleTouchStart}
+          onTouchMove={handleTouchMove}
+          onTouchEnd={handleTouchEnd}
+          style={{ 
+            touchAction: 'none',
+            paddingTop: '16px',
+            paddingBottom: '16px',
+            WebkitTouchCallout: 'none',
+            WebkitUserSelect: 'none'
+          }}
+        >
+          {letters.map((letter, index) => {
+            const isActive = index === currentLetterIndex;
+            // Calculate exact position for each letter (0% to 100% of available space)
+            const totalLetters = letters.length;
+            const positionPercent = totalLetters === 1 ? 50 : (index / (totalLetters - 1)) * 100;
             
-            <motion.button
-              onClick={() => scrollToLetter(Math.min(letters.length - 1, currentLetterIndex + 1))}
-              disabled={currentLetterIndex === letters.length - 1}
-              className={`w-8 h-8 md:w-9 md:h-9 rounded-full flex items-center justify-center transition-colors ${
-                currentLetterIndex === letters.length - 1
-                  ? 'opacity-30 cursor-not-allowed'
-                  : theme === 'dark'
-                    ? 'bg-slate-700 hover:bg-slate-600 text-gray-300'
-                    : 'bg-gray-100 hover:bg-gray-200 text-gray-600'
-              }`}
-              whileHover={currentLetterIndex < letters.length - 1 ? { scale: 1.1 } : {}}
-              whileTap={currentLetterIndex < letters.length - 1 ? { scale: 0.9 } : {}}
-            >
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
-                <path d="M9 18l6-6-6-6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-              </svg>
-            </motion.button>
-          </div>
+            return (
+              <motion.div
+                key={letter.letter}
+                className="absolute flex items-center justify-center touch-none"
+                style={{
+                  top: `${positionPercent}%`,
+                  left: '50%',
+                  transform: 'translate(-50%, -50%)'
+                }}
+                animate={{
+                  scale: isActive ? 1.4 : 1,
+                }}
+                transition={{ duration: 0.2, ease: "easeOut" }}
+              >
+                <span 
+                  className={`text-sm md:text-base font-bold transition-all duration-200 pointer-events-none ${
+                    isActive 
+                      ? 'drop-shadow-lg' 
+                      : theme === 'dark' 
+                        ? 'text-gray-500' 
+                        : 'text-gray-400'
+                  }`}
+                  style={{ 
+                    color: isActive ? letter.color : undefined,
+                    fontFamily: 'Noto Sans Arabic, sans-serif',
+                    textShadow: isActive ? `0 0 8px ${letter.color}60` : 'none'
+                  }}
+                >
+                  {letter.forms.isolated}
+                </span>
+              </motion.div>
+            );
+          })}
         </div>
       </div>
     </div>
