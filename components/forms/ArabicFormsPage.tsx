@@ -250,7 +250,7 @@ export default function ArabicFormsPage() {
           <motion.div
             key={letter.letter}
             id={`letter-${letterIndex}`} // Add ID for scrollIntoView
-            className={`h-screen flex flex-col snap-start relative ${
+            className={`h-screen flex flex-col snap-start relative justify-center ${
               theme === 'dark' 
                 ? 'bg-slate-800' 
                 : 'bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50'
@@ -261,7 +261,7 @@ export default function ArabicFormsPage() {
           >
 
             {/* Main Letter Display */}
-            <div className="flex-1 flex items-center justify-center px-4 md:px-8">
+            <div className="flex items-center justify-center px-4 md:px-8 mb-8">
               <motion.div
                 className={`w-60 h-60 md:w-64 md:h-64 rounded-3xl shadow-2xl flex items-center justify-center relative overflow-hidden ${
                   theme === 'dark' 
@@ -334,7 +334,7 @@ export default function ArabicFormsPage() {
             </div>
 
             {/* Form Buttons */}
-            <div className="pb-12 px-4 md:px-6">
+            <div className="px-4 md:px-6">
               <motion.div
                 className="grid grid-cols-3 gap-2 md:gap-3 max-w-xs md:max-w-sm mx-auto"
                 initial={{ opacity: 0, y: 50 }}
@@ -479,7 +479,7 @@ export default function ArabicFormsPage() {
 
               {/* Connection info */}
               <motion.div
-                className={`text-center mt-4 text-sm ${
+                className={`text-center mt-6 mb-8 text-sm ${
                   theme === 'dark' ? 'text-gray-400' : 'text-gray-500'
                 }`}
                 initial={{ opacity: 0 }}
@@ -498,7 +498,7 @@ export default function ArabicFormsPage() {
             {/* Scroll hint for first letter */}
             {letterIndex === 0 && (
               <motion.div
-                className={`absolute bottom-4 left-1/2 transform -translate-x-1/2 flex items-center space-x-2 text-sm ${
+                className={`absolute bottom-8 left-1/2 transform -translate-x-1/2 flex items-center space-x-2 text-sm ${
                   theme === 'dark' ? 'text-gray-400' : 'text-gray-500'
                 }`}
                 animate={{ y: [0, 5, 0] }}
