@@ -288,14 +288,6 @@ export default function ArabicFormsPage() {
             animate={{ opacity: 1 }}
             transition={{ duration: 0.5 }}
           >
-            {/* Letter Progress Indicator */}
-            <div className={`fixed top-4 right-4 z-20 px-3 py-1 rounded-full text-sm font-medium ${
-              theme === 'dark' 
-                ? 'bg-slate-700 text-gray-300' 
-                : 'bg-white/80 text-gray-600'
-            }`}>
-              {letterIndex + 1} / {letters.length}
-            </div>
 
             {/* Main Letter Display */}
             <div className="flex-1 flex items-center justify-center px-4 md:px-8">
