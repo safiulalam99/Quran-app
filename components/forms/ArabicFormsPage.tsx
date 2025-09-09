@@ -125,8 +125,8 @@ export default function ArabicFormsPage() {
     const clientY = 'touches' in event ? event.touches[0].clientY : event.clientY;
     const relativeY = clientY - rect.top;
     
-    // Account for the 16px padding on top and bottom
-    const padding = 16;
+    // Account for the 24px padding on top and bottom
+    const padding = 24;
     const effectiveHeight = rect.height - (padding * 2);
     const effectiveY = relativeY - padding;
     
@@ -206,8 +206,8 @@ export default function ArabicFormsPage() {
         const rect = scrubberRef.current.getBoundingClientRect();
         const relativeY = clientY - rect.top;
         
-        // Account for the 16px padding on top and bottom
-        const padding = 16;
+        // Account for the 20px padding on top and bottom
+        const padding = 20;
         const effectiveHeight = rect.height - (padding * 2);
         const effectiveY = relativeY - padding;
         
@@ -300,7 +300,7 @@ export default function ArabicFormsPage() {
             {/* Main Letter Display */}
             <div className="flex-1 flex items-center justify-center px-4 md:px-8">
               <motion.div
-                className={`w-72 h-72 md:w-80 md:h-80 rounded-3xl shadow-2xl flex items-center justify-center relative overflow-hidden ${
+                className={`w-60 h-60 md:w-64 md:h-64 rounded-3xl shadow-2xl flex items-center justify-center relative overflow-hidden ${
                   theme === 'dark' 
                     ? 'bg-slate-700 border border-slate-600' 
                     : 'bg-white border border-gray-200'
@@ -332,7 +332,7 @@ export default function ArabicFormsPage() {
 
                 {/* Letter */}
                 <motion.span
-                  className="text-7xl md:text-9xl font-bold select-none leading-none relative z-10"
+                  className="text-5xl md:text-6xl font-bold select-none leading-none relative z-10"
                   style={{ 
                     color: letter.color,
                     fontFamily: 'Noto Sans Arabic, sans-serif',
@@ -364,8 +364,8 @@ export default function ArabicFormsPage() {
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.8, duration: 0.5 }}
                 >
-                  <div className="text-xl font-bold mb-1">{letter.englishName}</div>
-                  <div className="text-sm opacity-75">/{letter.sound}/</div>
+                  <div className="text-lg font-bold mb-1">{letter.englishName}</div>
+                  <div className="text-xs opacity-75">/{letter.sound}/</div>
                 </motion.div>
               </motion.div>
             </div>
@@ -373,7 +373,7 @@ export default function ArabicFormsPage() {
             {/* Form Buttons */}
             <div className="pb-12 px-4 md:px-6">
               <motion.div
-                className="grid grid-cols-3 gap-3 md:gap-4 max-w-sm md:max-w-md mx-auto"
+                className="grid grid-cols-3 gap-2 md:gap-3 max-w-xs md:max-w-sm mx-auto"
                 initial={{ opacity: 0, y: 50 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.5, duration: 0.6 }}
@@ -382,7 +382,7 @@ export default function ArabicFormsPage() {
                 <motion.button
                   onClick={() => playFormAudio('final')}
                   disabled={playingForm !== null}
-                  className={`relative aspect-square rounded-2xl shadow-lg flex flex-col items-center justify-center p-3 md:p-4 transition-all duration-200 ${
+                  className={`relative aspect-square rounded-xl shadow-lg flex flex-col items-center justify-center p-2 md:p-3 transition-all duration-200 ${
                     theme === 'dark' 
                       ? 'bg-slate-700 hover:bg-slate-600 border border-slate-600' 
                       : 'bg-white hover:bg-gray-50 border border-gray-200 shadow-md'
@@ -408,7 +408,7 @@ export default function ArabicFormsPage() {
                   )}
 
                   <span 
-                    className="text-3xl md:text-4xl font-bold mb-1 md:mb-2 relative z-10"
+                    className="text-2xl md:text-3xl font-bold mb-1 relative z-10"
                     style={{ 
                       color: letter.color,
                       fontFamily: 'Noto Sans Arabic, sans-serif'
@@ -427,7 +427,7 @@ export default function ArabicFormsPage() {
                 <motion.button
                   onClick={() => playFormAudio('medial')}
                   disabled={playingForm !== null}
-                  className={`relative aspect-square rounded-2xl shadow-lg flex flex-col items-center justify-center p-3 md:p-4 transition-all duration-200 ${
+                  className={`relative aspect-square rounded-xl shadow-lg flex flex-col items-center justify-center p-2 md:p-3 transition-all duration-200 ${
                     theme === 'dark' 
                       ? 'bg-slate-700 hover:bg-slate-600 border border-slate-600' 
                       : 'bg-white hover:bg-gray-50 border border-gray-200 shadow-md'
@@ -453,7 +453,7 @@ export default function ArabicFormsPage() {
                   )}
 
                   <span 
-                    className="text-3xl md:text-4xl font-bold mb-1 md:mb-2 relative z-10"
+                    className="text-2xl md:text-3xl font-bold mb-1 relative z-10"
                     style={{ 
                       color: letter.color,
                       fontFamily: 'Noto Sans Arabic, sans-serif'
@@ -472,7 +472,7 @@ export default function ArabicFormsPage() {
                 <motion.button
                   onClick={() => playFormAudio('initial')}
                   disabled={playingForm !== null}
-                  className={`relative aspect-square rounded-2xl shadow-lg flex flex-col items-center justify-center p-3 md:p-4 transition-all duration-200 ${
+                  className={`relative aspect-square rounded-xl shadow-lg flex flex-col items-center justify-center p-2 md:p-3 transition-all duration-200 ${
                     theme === 'dark' 
                       ? 'bg-slate-700 hover:bg-slate-600 border border-slate-600' 
                       : 'bg-white hover:bg-gray-50 border border-gray-200 shadow-md'
@@ -498,7 +498,7 @@ export default function ArabicFormsPage() {
                   )}
 
                   <span 
-                    className="text-3xl md:text-4xl font-bold mb-1 md:mb-2 relative z-10"
+                    className="text-2xl md:text-3xl font-bold mb-1 relative z-10"
                     style={{ 
                       color: letter.color,
                       fontFamily: 'Noto Sans Arabic, sans-serif'
@@ -552,18 +552,18 @@ export default function ArabicFormsPage() {
       </div>
 
       {/* Right Side Arabic Letter Scrubber */}
-      <div className="fixed right-3 md:right-4 top-1/2 transform -translate-y-1/2 z-20 h-[75vh] flex flex-col items-center">
+      <div className="fixed right-4 md:right-6 top-1/2 transform -translate-y-1/2 z-20 h-[75vh] flex flex-col items-center">
         <div 
           ref={scrubberRef}
-          className="relative h-full w-8 flex flex-col justify-start cursor-pointer select-none touch-none"
+          className="relative h-full w-12 flex flex-col justify-start cursor-pointer select-none touch-none"
           onMouseDown={handleMouseDown}
           onTouchStart={handleTouchStart}
           onTouchMove={handleTouchMove}
           onTouchEnd={handleTouchEnd}
           style={{ 
             touchAction: 'none',
-            paddingTop: '16px',
-            paddingBottom: '16px',
+            paddingTop: '24px',
+            paddingBottom: '24px',
             WebkitTouchCallout: 'none',
             WebkitUserSelect: 'none'
           }}
@@ -577,7 +577,7 @@ export default function ArabicFormsPage() {
             return (
               <motion.div
                 key={letter.letter}
-                className="absolute flex items-center justify-center touch-none"
+                className="absolute w-full h-6 flex items-center justify-center touch-none"
                 style={{
                   top: `${positionPercent}%`,
                   left: '50%',
