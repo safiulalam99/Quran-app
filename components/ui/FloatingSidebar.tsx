@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useTheme } from '../../contexts/ThemeContext';
+import ThemeToggle from './ThemeToggle';
 
 interface Module {
   id: string;
@@ -152,20 +153,23 @@ export default function FloatingSidebar({ currentModule, onModuleChange }: Float
                 }`}>
                   Let's Learn!
                 </h2>
-                <motion.button
-                  onClick={() => setIsOpen(false)}
-                  className={`w-8 h-8 rounded-full flex items-center justify-center transition-colors ${
-                    theme === 'dark' 
-                      ? 'hover:bg-slate-700 text-gray-400 hover:text-white' 
-                      : 'hover:bg-gray-100 text-gray-500 hover:text-gray-700'
-                  }`}
-                  whileHover={{ scale: 1.1 }}
-                  whileTap={{ scale: 0.9 }}
-                >
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
-                    <path d="M18 6L6 18M6 6l12 12" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
-                  </svg>
-                </motion.button>
+                <div className="flex items-center space-x-3">
+                  <ThemeToggle />
+                  <motion.button
+                    onClick={() => setIsOpen(false)}
+                    className={`w-8 h-8 rounded-full flex items-center justify-center transition-colors ${
+                      theme === 'dark' 
+                        ? 'hover:bg-slate-700 text-gray-400 hover:text-white' 
+                        : 'hover:bg-gray-100 text-gray-500 hover:text-gray-700'
+                    }`}
+                    whileHover={{ scale: 1.1 }}
+                    whileTap={{ scale: 0.9 }}
+                  >
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+                      <path d="M18 6L6 18M6 6l12 12" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
+                    </svg>
+                  </motion.button>
+                </div>
               </div>
 
               {/* Current Module */}

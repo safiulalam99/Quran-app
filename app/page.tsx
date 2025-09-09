@@ -9,7 +9,6 @@ import Navigation from '../components/ui/Navigation';
 import QuizGame from '../components/quiz/QuizGame';
 import QuizStartScreen from '../components/quiz/QuizStartScreen';
 import StatsScreen from '../components/quiz/StatsScreen';
-import ThemeToggle from '../components/ui/ThemeToggle';
 import FloatingSidebar from '../components/ui/FloatingSidebar';
 import ArabicFormsPage from '../components/forms/ArabicFormsPage';
 import { useTheme } from '../contexts/ThemeContext';
@@ -108,10 +107,6 @@ export default function Home() {
               subtitle="🎵 Tap a letter to hear its sound"
               showProgress={false}
             />
-            {/* Theme Toggle */}
-            <div className="absolute top-24 right-4 z-20">
-              <ThemeToggle />
-            </div>
             <main className="pb-8 relative z-10">
               <div className="flex justify-center">
                 <AlphabetGrid

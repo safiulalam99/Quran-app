@@ -47,8 +47,9 @@ export default function Navigation({ currentMode, onModeChange }: NavigationProp
           : 'bg-white/80 border-b border-gray-200'
       }`}>
         <div className="max-w-4xl mx-auto px-4 py-2">
-          <div className="flex justify-center space-x-2">
-            {tabs.map((tab) => (
+          <div className="flex items-center justify-between">
+            <div className="flex justify-center space-x-2 flex-1">
+              {tabs.map((tab) => (
               <motion.button
                 key={tab.id}
                 onClick={() => handleTabChange(tab.id as any)}
@@ -76,6 +77,7 @@ export default function Navigation({ currentMode, onModeChange }: NavigationProp
                 <span className="relative z-10">{tab.label}</span>
               </motion.button>
             ))}
+            </div>
           </div>
         </div>
       </nav>
@@ -86,42 +88,44 @@ export default function Navigation({ currentMode, onModeChange }: NavigationProp
           ? 'bg-slate-800/90 border-t border-slate-600'
           : 'bg-white/90 border-t border-gray-200'
       }`}>
-        <div className="flex justify-around items-center py-1">
-          {tabs.map((tab) => (
-            <motion.button
-              key={tab.id}
-              onClick={() => handleTabChange(tab.id as any)}
-              className={`
-                relative flex flex-col items-center justify-center p-2 rounded-lg
-                transition-all duration-200 min-w-[70px]
-                ${activeTab === tab.id 
-                  ? 'text-white' 
-                  : theme === 'dark'
-                    ? 'text-gray-300'
-                    : 'text-gray-600'
-                }
-              `}
-              whileTap={{ scale: 0.95 }}
-              whileHover={{ scale: 1.05 }}
-            >
-              {activeTab === tab.id && (
-                <motion.div
-                  className={`absolute inset-0 bg-gradient-to-r ${tab.color} rounded-lg`}
-                  layoutId="activeTabMobile"
-                  transition={{ duration: 0.3 }}
-                />
-              )}
-              <motion.span 
-                className="relative z-10 text-xl mb-1"
-                animate={{
-                  scale: activeTab === tab.id ? 1.1 : 1,
-                }}
+        <div className="flex justify-center items-center py-1 space-x-2">
+          <div className="flex justify-around items-center flex-1">
+            {tabs.map((tab) => (
+              <motion.button
+                key={tab.id}
+                onClick={() => handleTabChange(tab.id as any)}
+                className={`
+                  relative flex flex-col items-center justify-center p-2 rounded-lg
+                  transition-all duration-200 min-w-[70px]
+                  ${activeTab === tab.id 
+                    ? 'text-white' 
+                    : theme === 'dark'
+                      ? 'text-gray-300'
+                      : 'text-gray-600'
+                  }
+                `}
+                whileTap={{ scale: 0.95 }}
+                whileHover={{ scale: 1.05 }}
               >
-                {tab.icon}
-              </motion.span>
-              <span className="relative z-10 text-xs font-medium">{tab.label}</span>
-            </motion.button>
-          ))}
+                {activeTab === tab.id && (
+                  <motion.div
+                    className={`absolute inset-0 bg-gradient-to-r ${tab.color} rounded-lg`}
+                    layoutId="activeTabMobile"
+                    transition={{ duration: 0.3 }}
+                  />
+                )}
+                <motion.span 
+                  className="relative z-10 text-xl mb-1"
+                  animate={{
+                    scale: activeTab === tab.id ? 1.1 : 1,
+                  }}
+                >
+                  {tab.icon}
+                </motion.span>
+                <span className="relative z-10 text-xs font-medium">{tab.label}</span>
+              </motion.button>
+            ))}
+          </div>
         </div>
       </nav>
     </>
