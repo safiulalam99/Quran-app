@@ -79,15 +79,28 @@ export default function ArabicFormsPage() {
 
   // Play audio for letter forms
   const playFormAudio = async (formType: 'isolated' | 'initial' | 'medial' | 'final') => {
-    if (playingForm) return;
-
     try {
+      // Stop any currently playing audio first
+      if (audioRef.current) {
+        audioRef.current.pause();
+        audioRef.current.currentTime = 0;
+      }
+
+      // Set new playing state
       setPlayingForm(formType);
       setShowFeedback(formType);
 
-      // Play main letter audio
+      // Update audio source to current letter and load it
       if (audioRef.current) {
-        audioRef.current.currentTime = 0;
+        const audioSrc = `/audio/letters/${currentLetter.letter}.m4a`;
+        console.log('Playing audio for:', currentLetter.englishName, 'src:', audioSrc);
+        
+        // Only update src if it's different to avoid unnecessary reloads
+        if (audioRef.current.src !== audioSrc) {
+          audioRef.current.src = audioSrc;
+          audioRef.current.load(); // Reload the audio element with new source
+        }
+        
         await audioRef.current.play();
       }
 
@@ -102,7 +115,10 @@ export default function ArabicFormsPage() {
       }, 1000);
 
     } catch (error) {
-      console.error('Audio playback failed:', error);
+      console.error('Audio playback failed:', error, 'for letter:', currentLetter.englishName);
+      // Clear states if audio fails
+      setPlayingForm(null);
+      setShowFeedback(null);
     }
   };
 
@@ -235,9 +251,8 @@ export default function ArabicFormsPage() {
       {/* Audio element */}
       <audio
         ref={audioRef}
-        src={`/audio/letters/${currentLetter.letter}.m4a`}
         onEnded={handleAudioEnd}
-        preload="metadata"
+        preload="none"
       />
 
       {/* Scroll container */}
@@ -344,7 +359,6 @@ export default function ArabicFormsPage() {
                 {/* Final Form */}
                 <motion.button
                   onClick={() => playFormAudio('final')}
-                  disabled={playingForm !== null}
                   className={`relative aspect-square rounded-xl shadow-lg flex flex-col items-center justify-center p-2 md:p-3 transition-all duration-200 ${
                     theme === 'dark' 
                       ? 'bg-slate-700 hover:bg-slate-600 border border-slate-600' 
@@ -389,7 +403,6 @@ export default function ArabicFormsPage() {
                 {/* Medial Form */}
                 <motion.button
                   onClick={() => playFormAudio('medial')}
-                  disabled={playingForm !== null}
                   className={`relative aspect-square rounded-xl shadow-lg flex flex-col items-center justify-center p-2 md:p-3 transition-all duration-200 ${
                     theme === 'dark' 
                       ? 'bg-slate-700 hover:bg-slate-600 border border-slate-600' 
@@ -434,7 +447,6 @@ export default function ArabicFormsPage() {
                 {/* Initial Form */}
                 <motion.button
                   onClick={() => playFormAudio('initial')}
-                  disabled={playingForm !== null}
                   className={`relative aspect-square rounded-xl shadow-lg flex flex-col items-center justify-center p-2 md:p-3 transition-all duration-200 ${
                     theme === 'dark' 
                       ? 'bg-slate-700 hover:bg-slate-600 border border-slate-600' 
