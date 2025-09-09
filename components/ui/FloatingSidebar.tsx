@@ -172,31 +172,6 @@ export default function FloatingSidebar({ currentModule, onModuleChange }: Float
                 </div>
               </div>
 
-              {/* Current Module */}
-              {getCurrentModule() && (
-                <motion.div
-                  className={`p-4 rounded-xl ${
-                    theme === 'dark' ? 'bg-slate-700' : 'bg-gray-50'
-                  }`}
-                  initial={{ scale: 0.9, opacity: 0 }}
-                  animate={{ scale: 1, opacity: 1 }}
-                  transition={{ delay: 0.2 }}
-                >
-                  <div className="flex items-center space-x-3">
-                    <div className={`w-10 h-10 rounded-lg bg-gradient-to-r ${getCurrentModule()?.color} flex items-center justify-center`}>
-                      <span className="text-lg">{getCurrentModule()?.icon}</span>
-                    </div>
-                    <div>
-                      <div className={`font-medium ${theme === 'dark' ? 'text-white' : 'text-gray-800'}`}>
-                        Now Playing: {getCurrentModule()?.name}
-                      </div>
-                      <div className={`text-sm ${theme === 'dark' ? 'text-gray-400' : 'text-gray-500'}`}>
-                        {getCurrentModule()?.description}
-                      </div>
-                    </div>
-                  </div>
-                </motion.div>
-              )}
             </div>
 
             {/* Module List */}
