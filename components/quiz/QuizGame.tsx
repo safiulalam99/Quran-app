@@ -4,6 +4,7 @@ import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { addQuizSession } from '../../utils/statsStorage';
 import { useTheme } from '../../contexts/ThemeContext';
+import Navigation from '../ui/Navigation';
 
 interface Letter {
   letter: string;
@@ -218,9 +219,11 @@ export default function QuizGame({ letters, onQuizComplete, onBackToMenu }: Quiz
   if (!currentQuestion) return null;
 
   return (
-    <div className={`h-screen flex flex-col p-3 pb-24 md:pb-4 pt-2 md:pt-0 overflow-hidden ${
-      theme === 'dark' ? 'bg-slate-800' : 'bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50'
-    }`}>
+    <>
+      <Navigation currentMode="quiz" onModeChange={() => {}} />
+      <div className={`h-screen flex flex-col p-3 pb-24 md:pb-4 pt-12 md:pt-8 overflow-hidden ${
+        theme === 'dark' ? 'bg-slate-800' : 'bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50'
+      }`}>
       {/* Audio elements */}
       <audio
         ref={audioRef}
@@ -500,5 +503,6 @@ export default function QuizGame({ letters, onQuizComplete, onBackToMenu }: Quiz
         </div>
       )}
     </div>
+    </>
   );
 }

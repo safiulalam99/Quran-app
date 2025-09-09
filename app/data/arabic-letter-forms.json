@@ -10,7 +10,7 @@
       "forms": {
         "isolated": "ا",
         "initial": "ا",
-        "medial": "ا",
+        "medial": "ـا",
         "final": "ا"
       },
       "connects": {
@@ -136,7 +136,7 @@
       "forms": {
         "isolated": "د",
         "initial": "د",
-        "medial": "د",
+        "medial": "ـد",
         "final": "ـد"
       },
       "connects": {
@@ -154,7 +154,7 @@
       "forms": {
         "isolated": "ذ",
         "initial": "ذ", 
-        "medial": "ذ",
+        "medial": "ـذ",
         "final": "ـذ"
       },
       "connects": {
@@ -172,7 +172,7 @@
       "forms": {
         "isolated": "ر",
         "initial": "ر",
-        "medial": "ر", 
+        "medial": "ـر", 
         "final": "ـر"
       },
       "connects": {
@@ -190,7 +190,7 @@
       "forms": {
         "isolated": "ز",
         "initial": "ز",
-        "medial": "ز",
+        "medial": "ـز",
         "final": "ـز"
       },
       "connects": {
@@ -478,7 +478,7 @@
       "forms": {
         "isolated": "و",
         "initial": "و",
-        "medial": "و",
+        "medial": "ـو",
         "final": "ـو"
       },
       "connects": {

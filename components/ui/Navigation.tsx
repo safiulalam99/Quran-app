@@ -36,13 +36,13 @@ export default function Navigation({ currentMode, onModeChange }: NavigationProp
     {
       id: 'learn',
       label: 'Learn',
-      icon: '📚',
+      icon: '📖',
       color: 'from-[#58CC02] to-[#89E219]'
     },
     {
       id: 'quiz',
       label: 'Quiz',
-      icon: '🎯',
+      icon: '✨',
       color: 'from-[#58CC02] to-[#89E219]'
     }
   ];
@@ -55,16 +55,15 @@ export default function Navigation({ currentMode, onModeChange }: NavigationProp
           ? 'bg-slate-800/80 border-b border-slate-600' 
           : 'bg-white/80 border-b border-gray-200'
       }`}>
-        <div className="max-w-4xl mx-auto px-4 py-2">
-          <div className="flex items-center justify-between">
-            <div className="flex justify-center space-x-2 flex-1">
+        <div className="flex justify-center py-1">
+          <div className="flex space-x-1">
               {tabs.map((tab) => (
               <motion.button
                 key={tab.id}
                 onClick={() => handleTabChange(tab.id as any)}
                 className={`
-                  relative px-4 py-2 rounded-lg font-semibold text-sm
-                  transition-all duration-200 flex items-center space-x-2
+                  relative px-1.5 py-0.5 rounded font-medium text-xs
+                  transition-all duration-200 flex items-center space-x-1
                   ${activeTab === tab.id 
                     ? 'text-white shadow-lg' 
                     : theme === 'dark'
@@ -82,11 +81,10 @@ export default function Navigation({ currentMode, onModeChange }: NavigationProp
                     transition={{ duration: 0.3 }}
                   />
                 )}
-                <span className="relative z-10 text-lg">{tab.icon}</span>
+                <span className="relative z-10 text-xs">{tab.icon}</span>
                 <span className="relative z-10">{tab.label}</span>
               </motion.button>
             ))}
-            </div>
           </div>
         </div>
       </nav>
@@ -97,15 +95,15 @@ export default function Navigation({ currentMode, onModeChange }: NavigationProp
           ? 'bg-slate-800/90 border-t border-slate-600'
           : 'bg-white/90 border-t border-gray-200'
       }`}>
-        <div className="flex justify-center items-center py-1 space-x-2">
+        <div className="flex justify-center items-center py-0.5 space-x-1">
           <div className="flex justify-around items-center flex-1">
             {tabs.map((tab) => (
               <motion.button
                 key={tab.id}
                 onClick={() => handleTabChange(tab.id as any)}
                 className={`
-                  relative flex flex-col items-center justify-center p-2 rounded-lg
-                  transition-all duration-200 min-w-[70px]
+                  relative flex flex-col items-center justify-center p-1 rounded
+                  transition-all duration-200 min-w-[50px]
                   ${activeTab === tab.id 
                     ? 'text-white' 
                     : theme === 'dark'
@@ -124,14 +122,14 @@ export default function Navigation({ currentMode, onModeChange }: NavigationProp
                   />
                 )}
                 <motion.span 
-                  className="relative z-10 text-xl mb-1"
+                  className="relative z-10 text-sm mb-0.5"
                   animate={{
-                    scale: activeTab === tab.id ? 1.1 : 1,
+                    scale: activeTab === tab.id ? 1.05 : 1,
                   }}
                 >
                   {tab.icon}
                 </motion.span>
-                <span className="relative z-10 text-xs font-medium">{tab.label}</span>
+                <span className="relative z-10 text-[10px] font-medium">{tab.label}</span>
               </motion.button>
             ))}
           </div>

@@ -3,6 +3,7 @@
 import { motion } from 'framer-motion';
 import { DotLottieReact } from '@lottiefiles/dotlottie-react';
 import { useTheme } from '../../contexts/ThemeContext';
+import Navigation from '../ui/Navigation';
 
 interface QuizStartScreenProps {
   onStartQuiz: () => void;
@@ -13,9 +14,11 @@ export default function QuizStartScreen({ onStartQuiz, onBackToMenu }: QuizStart
   const { theme } = useTheme();
   
   return (
-    <div className={`h-screen flex flex-col p-4 pb-24 md:pb-4 pt-4 md:pt-0 overflow-hidden ${
-      theme === 'dark' ? 'bg-slate-800' : 'bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50'
-    }`}>
+    <>
+      <Navigation currentMode="quiz" onModeChange={() => {}} />
+      <div className={`h-screen flex flex-col p-4 pb-24 md:pb-4 pt-12 md:pt-8 overflow-hidden ${
+        theme === 'dark' ? 'bg-slate-800' : 'bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50'
+      }`}>
       {/* Close button */}
       <div className="flex justify-start mb-4">
         <button 
@@ -89,5 +92,6 @@ export default function QuizStartScreen({ onStartQuiz, onBackToMenu }: QuizStart
         </motion.button>
       </div>
     </div>
+    </>
   );
 }
