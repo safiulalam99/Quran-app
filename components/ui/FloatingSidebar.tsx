@@ -53,7 +53,18 @@ export default function FloatingSidebar({ currentModule, onModuleChange }: Float
   const handleModuleSelect = (moduleId: string) => {
     const module = modules.find(m => m.id === moduleId);
     if (module?.isActive) {
-      onModuleChange(moduleId);
+      // Navigate to proper routes
+      if (moduleId === 'forms') {
+        window.location.href = '/forms';
+      } else if (moduleId === 'quiz') {
+        window.location.href = '/quiz';
+      } else if (moduleId === 'learn') {
+        window.location.href = '/';
+      } else {
+        // Fallback to the old method for any other modules
+        onModuleChange(moduleId);
+      }
+      
       setIsOpen(false);
       
       // Haptic feedback

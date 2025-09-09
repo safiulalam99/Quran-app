@@ -15,7 +15,16 @@ export default function Navigation({ currentMode, onModeChange }: NavigationProp
 
   const handleTabChange = (mode: 'learn' | 'quiz') => {
     setActiveTab(mode);
-    onModeChange(mode);
+    
+    // Navigate to proper routes
+    if (mode === 'quiz') {
+      window.location.href = '/quiz';
+    } else if (mode === 'learn') {
+      window.location.href = '/';
+    } else {
+      // Fallback to the old method
+      onModeChange(mode);
+    }
     
     // Haptic feedback
     if (typeof window !== 'undefined' && 'vibrate' in navigator) {

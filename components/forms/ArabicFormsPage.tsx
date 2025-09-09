@@ -3,6 +3,7 @@
 import { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useTheme } from '../../contexts/ThemeContext';
+import Navigation from '../ui/Navigation';
 import arabicLetterForms from '../../app/data/arabic-letter-forms.json';
 
 interface LetterForm {
@@ -29,6 +30,8 @@ export default function ArabicFormsPage() {
   const [playingForm, setPlayingForm] = useState<string | null>(null);
   const [showFeedback, setShowFeedback] = useState<string | null>(null);
   const [isDragging, setIsDragging] = useState(false);
+  // Set mode based on current route - forms page should show 'learn' as active
+  const [currentMode, setCurrentMode] = useState<'learn' | 'quiz'>('learn');
   const navRef = useRef<HTMLDivElement>(null);
   const { theme } = useTheme();
   const audioRef = useRef<HTMLAudioElement>(null);
@@ -246,14 +249,28 @@ export default function ArabicFormsPage() {
     };
   }, [isDragging, currentLetterIndex, letters.length]);
 
+  const handleModeChange = (mode: 'learn' | 'quiz') => {
+    setCurrentMode(mode);
+    // Navigation component will handle the actual routing
+  };
+
   return (
-    <div className="relative">
+    <div className="relative pb-24 md:pb-4 md:pt-20">
       {/* Audio element */}
       <audio
         ref={audioRef}
         onEnded={handleAudioEnd}
         preload="none"
       />
+
+      {/* Simple Title */}
+      <div className="fixed top-4 left-1/2 transform -translate-x-1/2 z-50">
+        <h1 className={`text-2xl font-bold ${
+          theme === 'dark' ? 'text-white' : 'text-gray-800'
+        }`}>
+          Forms
+        </h1>
+      </div>
 
       {/* Scroll container */}
       <div
@@ -561,8 +578,11 @@ export default function ArabicFormsPage() {
               {letter.forms.isolated}
             </div>
           ))}
-        </div>
+          </div>
       </div>
+
+      {/* Bottom Navigation */}
+      <Navigation currentMode={currentMode} onModeChange={handleModeChange} />
     </div>
   );
 }
