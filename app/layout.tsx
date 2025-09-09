@@ -45,9 +45,9 @@ export default function RootLayout({
         <meta name="mobile-web-app-capable" content="yes" />
         <meta name="msapplication-TileColor" content="#4299e1" />
         <meta name="msapplication-tap-highlight" content="no" />
-        <link rel="apple-touch-icon" href="/icon-192x192.png" />
-        <link rel="icon" type="image/png" sizes="32x32" href="/icon-32x32.png" />
-        <link rel="icon" type="image/png" sizes="16x16" href="/icon-16x16.png" />
+        <link rel="apple-touch-icon" href="/icon.png" />
+        <link rel="icon" type="image/png" sizes="32x32" href="/icon.png" />
+        <link rel="icon" type="image/png" sizes="16x16" href="/icon.png" />
       </head>
       <body className="antialiased">
         <ThemeProvider>
