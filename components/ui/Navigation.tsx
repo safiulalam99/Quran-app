@@ -129,8 +129,10 @@ const units: Unit[] = [
 
 export default function Navigation({ currentMode, onModeChange }: NavigationProps) {
   const [activeTab, setActiveTab] = useState(currentMode);
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
   const { theme } = useTheme();
+  
+  const isDesktop = typeof window !== 'undefined' && window.innerWidth >= 768;
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const handleTabChange = (mode: 'learn' | 'quiz') => {
     setActiveTab(mode);
@@ -153,7 +155,9 @@ export default function Navigation({ currentMode, onModeChange }: NavigationProp
 
   const handleNavigate = (route: string) => {
     window.location.href = route;
-    setIsMenuOpen(false);
+    if (!isDesktop) {
+      setIsMenuOpen(false);
+    }
     
     // Haptic feedback
     if (typeof window !== 'undefined' && 'vibrate' in navigator) {
@@ -175,30 +179,19 @@ export default function Navigation({ currentMode, onModeChange }: NavigationProp
     return '💪';
   };
 
-  const getCurrentItem = () => {
-    if (typeof window !== 'undefined') {
-      const path = window.location.pathname;
-      
-      // Find the current lesson or quiz
-      for (const unit of units) {
-        for (const lesson of unit.lessons) {
-          if (lesson.route === path) {
-            return { unit, lesson, type: 'lesson' };
-          }
-          
-          for (const quiz of lesson.quizzes) {
-            if (quiz.route === path) {
-              return { unit, lesson, quiz, type: 'quiz' };
-            }
-          }
-        }
-      }
+
+  const handleMenuToggle = () => {
+    setIsMenuOpen(!isMenuOpen);
+  };
+
+  const handleMenuClose = () => {
+    if (!isDesktop) {
+      setIsMenuOpen(false);
     }
-    
-    // Default to first active lesson
-    const defaultUnit = units[0];
-    const defaultLesson = defaultUnit.lessons.find(l => l.isActive);
-    return defaultUnit && defaultLesson ? { unit: defaultUnit, lesson: defaultLesson, type: 'lesson' } : null;
+  };
+
+  const handleOverlayClick = () => {
+    setIsMenuOpen(false);
   };
 
   const tabs = [
@@ -218,9 +211,26 @@ export default function Navigation({ currentMode, onModeChange }: NavigationProp
           ? 'bg-slate-800/80 border-b border-slate-600' 
           : 'bg-white/80 border-b border-gray-200'
       }`}>
-        <div className="flex justify-center py-1">
+        <div className="flex justify-between items-center py-1 px-4">
+          {/* Hamburger Menu Button for Desktop */}
+          <motion.button
+            onClick={handleMenuToggle}
+            className={`flex flex-col items-center justify-center p-2 rounded transition-all duration-200 ${
+              theme === 'dark' ? 'text-gray-300 hover:text-white hover:bg-slate-700' : 'text-gray-600 hover:text-gray-800 hover:bg-gray-100'
+            }`}
+            whileTap={{ scale: 0.95 }}
+            whileHover={{ scale: 1.05 }}
+          >
+            <div className="flex flex-col space-y-1">
+              <div className="w-4 h-0.5 bg-current rounded-full"></div>
+              <div className="w-4 h-0.5 bg-current rounded-full"></div>
+              <div className="w-4 h-0.5 bg-current rounded-full"></div>
+            </div>
+          </motion.button>
+
+          {/* Quiz Button */}
           <div className="flex space-x-1">
-              {tabs.map((tab) => (
+            {tabs.map((tab) => (
               <motion.button
                 key={tab.id}
                 onClick={() => handleTabChange(tab.id as any)}
@@ -261,7 +271,7 @@ export default function Navigation({ currentMode, onModeChange }: NavigationProp
         <div className="flex justify-around items-center py-0.5 px-4">
           {/* Hamburger Menu Button */}
           <motion.button
-            onClick={() => setIsMenuOpen(true)}
+            onClick={handleMenuToggle}
             className={`flex flex-col items-center justify-center p-2 rounded transition-all duration-200 ${
               theme === 'dark' ? 'text-gray-300 hover:text-white' : 'text-gray-600 hover:text-gray-800'
             }`}
@@ -319,12 +329,16 @@ export default function Navigation({ currentMode, onModeChange }: NavigationProp
       <AnimatePresence>
         {isMenuOpen && (
           <motion.div
-            className="fixed inset-0 bg-black/50 backdrop-blur-sm z-40"
+            className={`fixed inset-0 z-40 ${
+              isDesktop 
+                ? 'bg-transparent' 
+                : 'bg-black/50 backdrop-blur-sm'
+            }`}
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.3 }}
-            onClick={() => setIsMenuOpen(false)}
+            onClick={handleOverlayClick}
           />
         )}
       </AnimatePresence>
@@ -347,6 +361,7 @@ export default function Navigation({ currentMode, onModeChange }: NavigationProp
               damping: 30,
               duration: 0.4
             }}
+            onClick={(e) => e.stopPropagation()}
           >
             {/* Header */}
             <div className={`flex-shrink-0 p-4 border-b ${
@@ -355,8 +370,8 @@ export default function Navigation({ currentMode, onModeChange }: NavigationProp
               <div className="flex items-center justify-between">
                 <ThemeToggle />
                 <motion.button
-                  onClick={() => setIsMenuOpen(false)}
-                  className={`w-8 h-8 rounded-full flex items-center justify-center transition-colors ${
+                  onClick={handleMenuClose}
+                  className={`md:hidden w-8 h-8 rounded-full flex items-center justify-center transition-colors ${
                     theme === 'dark' 
                       ? 'hover:bg-slate-700 text-gray-400 hover:text-white' 
                       : 'hover:bg-gray-100 text-gray-500 hover:text-gray-700'
