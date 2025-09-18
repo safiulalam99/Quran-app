@@ -9,7 +9,6 @@ import Navigation from '../components/ui/Navigation';
 import QuizGame from '../components/quiz/QuizGame';
 import QuizStartScreen from '../components/quiz/QuizStartScreen';
 import StatsScreen from '../components/quiz/StatsScreen';
-import FloatingSidebar from '../components/ui/FloatingSidebar';
 import ArabicFormsPage from '../components/forms/ArabicFormsPage';
 import { useTheme } from '../contexts/ThemeContext';
 
@@ -149,12 +148,6 @@ export default function Home() {
   return (
     <div className={`min-h-screen ${getBackgroundClass()} relative overflow-hidden`}>
       {currentModule === 'learn' && <LottieBackground animationType="floating-stars" />}
-      
-      {/* Floating Sidebar Navigation */}
-      <FloatingSidebar 
-        currentModule={currentModule}
-        onModuleChange={handleModuleChange}
-      />
       
       {/* Legacy Navigation for Learn/Quiz modes only */}
       {(currentModule === 'learn' || currentModule === 'quiz') && (
