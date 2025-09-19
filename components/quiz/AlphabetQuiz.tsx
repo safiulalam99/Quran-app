@@ -164,7 +164,7 @@ export default function AlphabetQuiz({ quizId, onQuizComplete }: AlphabetQuizPro
 
   return (
     <>
-      <div className={`min-h-screen flex flex-col p-4 pb-24 md:pb-4 ${
+      <div className={`min-h-screen flex flex-col p-3 md:p-4 pb-24 md:pb-4 ${
         theme === 'dark' ? 'bg-slate-800' : 'bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50'
       }`}>
         
@@ -172,20 +172,20 @@ export default function AlphabetQuiz({ quizId, onQuizComplete }: AlphabetQuizPro
         <audio ref={audioRef} preload="metadata" />
 
         {/* Header */}
-        <div className="text-center mb-8">
-          <h1 className={`text-2xl md:text-3xl font-bold mb-2 ${
+        <div className="text-center mb-2">
+          <h1 className={`text-2xl md:text-3xl font-bold mb-1 ${
             theme === 'dark' ? 'text-white' : 'text-gray-800'
           }`}>
             {config.title}
           </h1>
-          <div className={`text-sm ${
+          <div className={`text-sm md:text-sm ${
             theme === 'dark' ? 'text-gray-400' : 'text-gray-600'
           }`}>
             Question {currentQuestionIndex + 1} of {questions.length}
           </div>
           
           {/* Progress bar */}
-          <div className={`w-full max-w-md mx-auto mt-4 h-2 rounded-full overflow-hidden ${
+          <div className={`w-full max-w-md mx-auto mt-3 h-2 md:h-2 rounded-full overflow-hidden ${
             theme === 'dark' ? 'bg-slate-700' : 'bg-gray-200'
           }`}>
             <motion.div
@@ -198,14 +198,14 @@ export default function AlphabetQuiz({ quizId, onQuizComplete }: AlphabetQuizPro
         </div>
 
         {/* Question Display */}
-        <div className="flex-1 flex flex-col items-center justify-center max-w-2xl mx-auto">
+        <div className="flex-1 flex flex-col items-center justify-center max-w-2xl mx-auto py-2 md:py-0">
           
           {/* Question Letter/Audio */}
-          <div className="mb-12">
+          <div className="mb-4 md:mb-12">
             {currentQuestion.questionType === 'visual' ? (
               /* Visual Question - Show letter */
               <motion.div
-                className={`w-60 h-60 md:w-80 md:h-80 rounded-3xl shadow-2xl flex items-center justify-center relative overflow-hidden ${
+                className={`w-56 h-56 md:w-80 md:h-80 rounded-3xl shadow-2xl flex items-center justify-center relative overflow-hidden ${
                   theme === 'dark' 
                     ? 'bg-slate-700 border border-slate-600' 
                     : 'bg-white border border-gray-200'
@@ -231,7 +231,7 @@ export default function AlphabetQuiz({ quizId, onQuizComplete }: AlphabetQuizPro
 
                 {/* Letter */}
                 <motion.span
-                  className="text-6xl md:text-8xl font-bold select-none leading-none relative z-10"
+                  className="text-5xl md:text-8xl font-bold select-none leading-none relative z-10"
                   style={{ 
                     color: currentQuestion.correctLetter.color,
                     fontFamily: 'Noto Sans Arabic, sans-serif',
@@ -247,20 +247,20 @@ export default function AlphabetQuiz({ quizId, onQuizComplete }: AlphabetQuizPro
 
                 {/* Question prompt */}
                 <motion.div
-                  className={`absolute bottom-6 left-0 right-0 text-center ${
+                  className={`absolute bottom-4 left-0 right-0 text-center ${
                     theme === 'dark' ? 'text-gray-300' : 'text-gray-600'
                   }`}
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.8, duration: 0.5 }}
                 >
-                  <div className="text-sm font-medium">What is this letter called?</div>
+                  <div className="text-sm md:text-sm font-medium">What is this letter called?</div>
                 </motion.div>
               </motion.div>
             ) : (
               /* Audio Question - Show speaker */
               <motion.div
-                className={`w-60 h-60 md:w-80 md:h-80 rounded-3xl shadow-2xl flex flex-col items-center justify-center relative overflow-hidden ${
+                className={`w-56 h-56 md:w-80 md:h-80 rounded-3xl shadow-2xl flex flex-col items-center justify-center relative overflow-hidden ${
                   theme === 'dark' 
                     ? 'bg-slate-700 border border-slate-600' 
                     : 'bg-white border border-gray-200'
@@ -280,14 +280,14 @@ export default function AlphabetQuiz({ quizId, onQuizComplete }: AlphabetQuizPro
                   whileTap={{ scale: 0.95 }}
                   whileHover={{ scale: 1.05 }}
                 >
-                  <svg width="32" height="32" viewBox="0 0 24 24" fill="currentColor">
+                  <svg width="28" height="28" viewBox="0 0 24 24" fill="currentColor">
                     <path d="M8 5v14l11-7z"/>
                   </svg>
                 </motion.button>
 
                 <div className={`text-center ${theme === 'dark' ? 'text-gray-300' : 'text-gray-600'}`}>
-                  <div className="text-lg font-medium mb-1">Listen and choose</div>
-                  <div className="text-sm opacity-75">Tap to play sound</div>
+                  <div className="text-base md:text-lg font-medium mb-1">Listen and choose</div>
+                  <div className="text-sm md:text-sm opacity-75">Tap to play sound</div>
                 </div>
               </motion.div>
             )}
@@ -295,7 +295,7 @@ export default function AlphabetQuiz({ quizId, onQuizComplete }: AlphabetQuizPro
 
           {/* Answer Options */}
           <motion.div
-            className="grid grid-cols-2 gap-4 w-full max-w-md"
+            className="grid grid-cols-2 gap-4 w-full max-w-md md:max-w-md"
             initial={{ opacity: 0, y: 50 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.5, duration: 0.6 }}
@@ -305,7 +305,7 @@ export default function AlphabetQuiz({ quizId, onQuizComplete }: AlphabetQuizPro
                 key={option.letter}
                 onClick={() => handleAnswerSelect(option)}
                 disabled={showFeedback}
-                className={`relative aspect-square rounded-2xl shadow-lg flex flex-col items-center justify-center p-4 transition-all duration-200 ${
+                className={`relative aspect-square rounded-2xl shadow-lg flex flex-col items-center justify-center p-3 md:p-4 transition-all duration-200 ${
                   showFeedback && selectedAnswer?.letter === option.letter
                     ? isCorrect
                       ? 'bg-green-500 text-white ring-4 ring-green-300'
@@ -337,7 +337,7 @@ export default function AlphabetQuiz({ quizId, onQuizComplete }: AlphabetQuizPro
                 </span>
 
                 {/* Name */}
-                <span className="text-xs md:text-sm font-medium text-center">
+                <span className="text-sm md:text-sm font-medium text-center">
                   {option.englishName}
                 </span>
 
