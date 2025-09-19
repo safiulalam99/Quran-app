@@ -38,8 +38,9 @@ interface Unit {
 // Mock function to get quiz scores - replace with actual storage later
 const getQuizScore = (quizId: string) => {
   const scores = {
-    'letter-recognition': { bestScore: 85, attempts: 3 },
-    'sound-matching': { bestScore: 92, attempts: 1 },
+    'alphabet-1': { bestScore: 89, attempts: 2 },
+    'alphabet-2': { bestScore: 94, attempts: 1 },
+    'alphabet-3': { bestScore: 76, attempts: 3 },
     'forms-recognition': { bestScore: 78, attempts: 2 },
   };
   return scores[quizId as keyof typeof scores];
@@ -59,24 +60,25 @@ const units: Unit[] = [
         isActive: true,
         quizzes: [
           {
-            id: 'letter-recognition',
-            name: 'Letter Recognition',
-            route: '/quiz/letters',
+            id: 'alphabet-1',
+            name: 'Alphabet Quiz 1',
+            route: '/quiz/alphabet-1',
             isActive: true,
-            ...getQuizScore('letter-recognition')
+            ...getQuizScore('alphabet-1')
           },
           {
-            id: 'sound-matching',
-            name: 'Sound Matching',
-            route: '/quiz/sounds',
-            isActive: false,
-            ...getQuizScore('sound-matching')
+            id: 'alphabet-2',
+            name: 'Alphabet Quiz 2',
+            route: '/quiz/alphabet-2',
+            isActive: true,
+            ...getQuizScore('alphabet-2')
           },
           {
-            id: 'spelling',
-            name: 'Spelling',
-            route: '/quiz/spelling',
-            isActive: false
+            id: 'alphabet-3',
+            name: 'Alphabet Quiz 3',
+            route: '/quiz/alphabet-3',
+            isActive: true,
+            ...getQuizScore('alphabet-3')
           }
         ]
       },
