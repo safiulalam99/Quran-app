@@ -18,7 +18,7 @@ interface Letter {
 interface QuizQuestion {
   correctLetter: Letter;
   options: Letter[];
-  questionType: 'audio' | 'visual';
+  questionType: 'audio';
 }
 
 interface AlphabetQuizProps {
@@ -76,6 +76,7 @@ export default function AlphabetQuiz({ quizId, onQuizComplete }: AlphabetQuizPro
     timeSpent: 0
   });
   const [startTime] = useState(Date.now());
+  const [isAudioPlaying, setIsAudioPlaying] = useState(false);
 
   const config = quizConfigs[quizId];
   const alphabet = arabicAlphabet.alphabet as Letter[];
@@ -97,7 +98,7 @@ export default function AlphabetQuiz({ quizId, onQuizComplete }: AlphabetQuizPro
         return {
           correctLetter: letter,
           options,
-          questionType: Math.random() > 0.5 ? 'audio' : 'visual'
+          questionType: 'audio' // Always use audio questions
         };
       });
       
@@ -115,12 +116,25 @@ export default function AlphabetQuiz({ quizId, onQuizComplete }: AlphabetQuizPro
     if (audioRef.current) {
       audioRef.current.src = `/audio/letters/${letter}.m4a`;
       try {
+        setIsAudioPlaying(true);
+        audioRef.current.currentTime = 0;
         await audioRef.current.play();
       } catch (error) {
         console.log('Audio play failed:', error);
+        setIsAudioPlaying(false);
       }
     }
   };
+
+  // Auto-play audio for audio questions when question changes
+  useEffect(() => {
+    if (currentQuestion && currentQuestion.questionType === 'audio') {
+      // Delay slightly to allow UI to render
+      setTimeout(() => {
+        playAudio(currentQuestion.correctLetter.letter);
+      }, 300);
+    }
+  }, [currentQuestionIndex, questions]); // Depend on index and questions array
 
   const handleAnswerSelect = (selectedLetter: Letter) => {
     if (showFeedback) return;
@@ -144,6 +158,14 @@ export default function AlphabetQuiz({ quizId, onQuizComplete }: AlphabetQuizPro
         setSelectedAnswer(null);
         setIsCorrect(null);
         setShowFeedback(false);
+
+        // Ensure audio plays for the next question
+        setTimeout(() => {
+          const nextQuestion = questions[currentQuestionIndex + 1];
+          if (nextQuestion) {
+            playAudio(nextQuestion.correctLetter.letter);
+          }
+        }, 400); // Small delay after state updates
       } else {
         // Quiz complete
         const finalStats = {
@@ -169,7 +191,13 @@ export default function AlphabetQuiz({ quizId, onQuizComplete }: AlphabetQuizPro
       }`}>
         
         {/* Audio element */}
-        <audio ref={audioRef} preload="metadata" />
+        <audio
+          ref={audioRef}
+          preload="metadata"
+          onEnded={() => setIsAudioPlaying(false)}
+          onPause={() => setIsAudioPlaying(false)}
+          onPlay={() => setIsAudioPlaying(true)}
+        />
 
         {/* Header */}
         <div className="text-center mb-2">
@@ -200,97 +228,122 @@ export default function AlphabetQuiz({ quizId, onQuizComplete }: AlphabetQuizPro
         {/* Question Display */}
         <div className="flex-1 flex flex-col items-center justify-center max-w-2xl mx-auto py-2 md:py-0">
           
-          {/* Question Letter/Audio */}
+          {/* Audio Question - Show speaker icon */}
           <div className="mb-4 md:mb-12">
-            {currentQuestion.questionType === 'visual' ? (
-              /* Visual Question - Show letter */
-              <motion.div
-                className={`w-56 h-56 md:w-80 md:h-80 rounded-3xl shadow-2xl flex items-center justify-center relative overflow-hidden ${
-                  theme === 'dark' 
-                    ? 'bg-slate-700 border border-slate-600' 
-                    : 'bg-white border border-gray-200'
-                }`}
-                style={{
-                  boxShadow: theme === 'dark' 
-                    ? `0 25px 50px -12px rgba(0,0,0,0.5), 0 0 0 1px ${currentQuestion.correctLetter.color}20`
-                    : `0 25px 50px -12px rgba(0,0,0,0.25), 0 0 0 1px ${currentQuestion.correctLetter.color}30`
-                }}
-                initial={{ scale: 0.8, opacity: 0 }}
-                animate={{ scale: 1, opacity: 1 }}
-                transition={{ duration: 0.6, ease: "easeOut" }}
-              >
-                {/* Background glow */}
+            <motion.div
+              className={`w-56 h-56 md:w-80 md:h-80 rounded-3xl shadow-2xl flex flex-col items-center justify-center relative overflow-hidden ${
+                theme === 'dark'
+                  ? 'bg-slate-700 border border-slate-600'
+                  : 'bg-white border border-gray-200'
+              } ${isAudioPlaying ? 'ring-4 ring-[#58CC02] ring-opacity-60' : ''}`}
+              initial={{ scale: 0.8, opacity: 0 }}
+              animate={{
+                scale: 1,
+                opacity: 1,
+                ...(isAudioPlaying && {
+                  scale: [1, 1.05, 1],
+                })
+              }}
+              transition={{
+                duration: isAudioPlaying ? 0.8 : 0.6,
+                repeat: isAudioPlaying ? Infinity : 0,
+                ease: "easeInOut"
+              }}
+            >
+              {/* Pulsing background when playing */}
+              {isAudioPlaying && (
                 <motion.div
-                  className="absolute inset-0 rounded-3xl opacity-20"
-                  style={{ 
-                    background: `radial-gradient(circle at center, ${currentQuestion.correctLetter.color}40 0%, transparent 70%)`
+                  className="absolute inset-0 rounded-3xl bg-[#58CC02]"
+                  animate={{
+                    opacity: [0, 0.2, 0],
+                    scale: [0.95, 1.05, 0.95],
                   }}
-                  animate={{ scale: [1, 1.1, 1] }}
-                  transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+                  transition={{
+                    duration: 1,
+                    repeat: Infinity,
+                    ease: "easeInOut"
+                  }}
                 />
+              )}
 
-                {/* Letter */}
-                <motion.span
-                  className="text-5xl md:text-8xl font-bold select-none leading-none relative z-10"
-                  style={{ 
-                    color: currentQuestion.correctLetter.color,
-                    fontFamily: 'Noto Sans Arabic, sans-serif',
-                    textShadow: theme === 'dark' 
-                      ? `0 0 20px ${currentQuestion.correctLetter.color}60, 0 0 40px ${currentQuestion.correctLetter.color}30` 
-                      : `0 0 10px ${currentQuestion.correctLetter.color}40`,
-                  }}
-                  animate={{ scale: [1, 1.05, 1] }}
-                  transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut" }}
-                >
-                  {currentQuestion.correctLetter.letter}
-                </motion.span>
-
-                {/* Question prompt */}
-                <motion.div
-                  className={`absolute bottom-4 left-0 right-0 text-center ${
-                    theme === 'dark' ? 'text-gray-300' : 'text-gray-600'
-                  }`}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.8, duration: 0.5 }}
-                >
-                  <div className="text-sm md:text-sm font-medium">What is this letter called?</div>
-                </motion.div>
-              </motion.div>
-            ) : (
-              /* Audio Question - Show speaker */
-              <motion.div
-                className={`w-56 h-56 md:w-80 md:h-80 rounded-3xl shadow-2xl flex flex-col items-center justify-center relative overflow-hidden ${
-                  theme === 'dark' 
-                    ? 'bg-slate-700 border border-slate-600' 
-                    : 'bg-white border border-gray-200'
-                }`}
-                initial={{ scale: 0.8, opacity: 0 }}
-                animate={{ scale: 1, opacity: 1 }}
-                transition={{ duration: 0.6, ease: "easeOut" }}
+              {/* Large Audio Icon */}
+              <motion.button
+                onClick={() => playAudio(currentQuestion.correctLetter.letter)}
+                className="relative z-10 mb-4"
+                whileTap={{ scale: 0.95 }}
+                whileHover={{ scale: 1.05 }}
+                animate={{
+                  scale: isAudioPlaying ? [1, 1.1, 1] : 1,
+                }}
+                transition={{
+                  duration: 0.8,
+                  repeat: isAudioPlaying ? Infinity : 0,
+                  ease: "easeInOut"
+                }}
               >
-                {/* Play button */}
-                <motion.button
-                  onClick={() => playAudio(currentQuestion.correctLetter.letter)}
-                  className={`w-20 h-20 md:w-24 md:h-24 rounded-full flex items-center justify-center mb-4 ${
-                    theme === 'dark' 
-                      ? 'bg-slate-600 hover:bg-slate-500 text-white' 
-                      : 'bg-gray-100 hover:bg-gray-200 text-gray-700'
-                  }`}
-                  whileTap={{ scale: 0.95 }}
-                  whileHover={{ scale: 1.05 }}
+                <svg
+                  width="80"
+                  height="80"
+                  viewBox="0 0 24 24"
+                  fill={theme === 'dark' ? '#60A5FA' : '#3B82F6'}
+                  className="drop-shadow-lg"
                 >
-                  <svg width="28" height="28" viewBox="0 0 24 24" fill="currentColor">
-                    <path d="M8 5v14l11-7z"/>
-                  </svg>
-                </motion.button>
+                  <path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/>
+                </svg>
+              </motion.button>
 
-                <div className={`text-center ${theme === 'dark' ? 'text-gray-300' : 'text-gray-600'}`}>
-                  <div className="text-base md:text-lg font-medium mb-1">Listen and choose</div>
-                  <div className="text-sm md:text-sm opacity-75">Tap to play sound</div>
+              {/* Sound waves animation when playing */}
+              {isAudioPlaying && (
+                <div className="absolute right-8 top-1/2 transform -translate-y-1/2 flex space-x-1">
+                  <motion.div
+                    className={`w-1 h-8 rounded-full ${
+                      theme === 'dark' ? 'bg-blue-400' : 'bg-blue-500'
+                    }`}
+                    animate={{
+                      scaleY: [0.5, 1.5, 0.5],
+                    }}
+                    transition={{
+                      duration: 0.6,
+                      repeat: Infinity,
+                      ease: "easeInOut"
+                    }}
+                  />
+                  <motion.div
+                    className={`w-1 h-6 rounded-full ${
+                      theme === 'dark' ? 'bg-blue-400' : 'bg-blue-500'
+                    }`}
+                    animate={{
+                      scaleY: [1, 0.5, 1],
+                    }}
+                    transition={{
+                      duration: 0.6,
+                      repeat: Infinity,
+                      ease: "easeInOut",
+                      delay: 0.2
+                    }}
+                  />
+                  <motion.div
+                    className={`w-1 h-4 rounded-full ${
+                      theme === 'dark' ? 'bg-blue-400' : 'bg-blue-500'
+                    }`}
+                    animate={{
+                      scaleY: [0.7, 1.3, 0.7],
+                    }}
+                    transition={{
+                      duration: 0.6,
+                      repeat: Infinity,
+                      ease: "easeInOut",
+                      delay: 0.4
+                    }}
+                  />
                 </div>
-              </motion.div>
-            )}
+              )}
+
+              <div className={`text-center relative z-10 ${theme === 'dark' ? 'text-gray-300' : 'text-gray-600'}`}>
+                <div className="text-base md:text-lg font-medium mb-1">Listen and choose</div>
+                <div className="text-sm md:text-sm opacity-75">Tap to replay sound</div>
+              </div>
+            </motion.div>
           </div>
 
           {/* Answer Options */}
