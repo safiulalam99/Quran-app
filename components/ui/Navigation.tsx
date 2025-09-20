@@ -483,7 +483,7 @@ export default function Navigation({ currentMode, onModeChange }: NavigationProp
 
                               {/* Quiz Items for this lesson */}
                               {lesson.quizzes.length > 0 && (
-                                <div className={`border-t px-4 py-3 space-y-1 rounded-b-xl ${
+                                <div className={`border-t px-3 py-3 space-y-2 rounded-b-xl ${
                                   theme === 'dark'
                                     ? 'border-slate-700 bg-slate-900/30'
                                     : 'border-gray-200 bg-gray-50/50'
@@ -496,57 +496,83 @@ export default function Navigation({ currentMode, onModeChange }: NavigationProp
                                         key={quiz.id}
                                         onClick={() => handleNavigate(quiz.route)}
                                         disabled={!quiz.isActive}
-                                        className={`w-full text-left px-3 py-2 rounded-lg transition-all duration-200 text-sm group ${
+                                        className={`w-full text-left px-4 py-3 rounded-lg transition-all duration-200 group relative min-h-[52px] ${
                                           isCurrentQuiz
-                                            ? 'bg-orange-500 text-white shadow-sm'
+                                            ? 'bg-gradient-to-r from-orange-500 to-orange-600 text-white shadow-md'
                                             : quiz.isActive
                                               ? theme === 'dark'
-                                                ? 'hover:bg-slate-700/60 text-gray-300'
-                                                : 'hover:bg-white/80 text-gray-600 hover:shadow-sm'
+                                                ? 'bg-slate-700 hover:bg-slate-600 text-white shadow-sm hover:shadow-md'
+                                                : 'bg-white hover:bg-orange-50 text-gray-700 shadow-sm hover:shadow-md border border-orange-100'
                                               : theme === 'dark'
-                                                ? 'text-gray-600 cursor-not-allowed'
-                                                : 'text-gray-400 cursor-not-allowed'
+                                                ? 'bg-slate-800 text-gray-500 cursor-not-allowed'
+                                                : 'bg-gray-100 text-gray-400 cursor-not-allowed'
                                         }`}
                                         initial={{ x: -10, opacity: 0 }}
                                         animate={{ x: 0, opacity: 1 }}
                                         transition={{ delay: 0.1 + unitIndex * 0.1 + lessonIndex * 0.05 + quizIndex * 0.02 }}
-                                        whileHover={quiz.isActive ? { x: 2 } : {}}
+                                        whileHover={quiz.isActive ? { scale: 1.02 } : {}}
                                         whileTap={quiz.isActive ? { scale: 0.98 } : {}}
                                       >
                                         <div className="flex items-center justify-between">
-                                          <div className="flex items-center space-x-2">
-                                            {/* Quiz indicator */}
-                                            <div className={`w-1.5 h-1.5 rounded-full ${
+                                          <div className="flex items-center space-x-3">
+                                            {/* Enhanced Quiz icon */}
+                                            <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${
                                               isCurrentQuiz
-                                                ? 'bg-white'
+                                                ? 'bg-white/20'
                                                 : quiz.isActive
-                                                  ? 'bg-orange-400'
-                                                  : theme === 'dark' ? 'bg-slate-600' : 'bg-gray-300'
-                                            }`} />
-                                            <span className="font-medium">{quiz.name}</span>
-                                            {!quiz.isActive && (
-                                              <span className={`text-xs px-1.5 py-0.5 rounded ${
-                                                theme === 'dark' ? 'bg-slate-700 text-gray-500' : 'bg-gray-200 text-gray-500'
-                                              }`}>
-                                                Soon
-                                              </span>
-                                            )}
-                                          </div>
-
-                                          {/* Score display */}
-                                          <div className="flex items-center space-x-2">
-                                            {quiz.bestScore && quiz.isActive && (
-                                              <div className={`flex items-center space-x-1 ${
+                                                  ? theme === 'dark'
+                                                    ? 'bg-slate-600'
+                                                    : 'bg-orange-100'
+                                                  : theme === 'dark'
+                                                    ? 'bg-slate-700'
+                                                    : 'bg-gray-200'
+                                            }`}>
+                                              <span className={`text-lg ${
                                                 isCurrentQuiz
                                                   ? 'text-white'
-                                                  : theme === 'dark'
-                                                    ? 'text-gray-400'
-                                                    : 'text-orange-600'
+                                                  : quiz.isActive
+                                                    ? theme === 'dark' ? 'text-white' : 'text-orange-600'
+                                                    : 'text-gray-400'
                                               }`}>
-                                                <span className="text-xs">{getScoreIcon(quiz.bestScore)}</span>
-                                                <span className="font-medium text-xs">
+                                                🧠
+                                              </span>
+                                            </div>
+
+                                            <div className="flex flex-col">
+                                              <span className="font-semibold text-base">{quiz.name}</span>
+                                              {!quiz.isActive && (
+                                                <span className={`text-xs px-2 py-1 rounded-full mt-1 w-fit ${
+                                                  theme === 'dark' ? 'bg-slate-700 text-gray-400' : 'bg-gray-200 text-gray-500'
+                                                }`}>
+                                                  Coming Soon
+                                                </span>
+                                              )}
+                                            </div>
+                                          </div>
+
+                                          {/* Enhanced Score display */}
+                                          <div className="flex flex-col items-end space-y-1">
+                                            {quiz.bestScore && quiz.isActive && (
+                                              <div className={`flex items-center space-x-1 px-2 py-1 rounded-lg ${
+                                                isCurrentQuiz
+                                                  ? 'bg-white/20 text-white'
+                                                  : theme === 'dark'
+                                                    ? 'bg-slate-600 text-gray-200'
+                                                    : 'bg-orange-100 text-orange-700'
+                                              }`}>
+                                                <span className="text-sm">{getScoreIcon(quiz.bestScore)}</span>
+                                                <span className="font-bold text-sm">
                                                   {quiz.bestScore}%
                                                 </span>
+                                              </div>
+                                            )}
+                                            {quiz.attempts && quiz.attempts > 1 && (
+                                              <div className={`text-xs ${
+                                                isCurrentQuiz
+                                                  ? 'text-white/70'
+                                                  : theme === 'dark' ? 'text-gray-400' : 'text-orange-600'
+                                              }`}>
+                                                {quiz.attempts} tries
                                               </div>
                                             )}
                                           </div>
