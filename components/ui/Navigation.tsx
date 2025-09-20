@@ -167,12 +167,6 @@ export default function Navigation({ currentMode, onModeChange }: NavigationProp
     }
   };
 
-  const getScoreColor = (score: number) => {
-    if (score >= 90) return 'text-green-500';
-    if (score >= 80) return 'text-blue-500';
-    if (score >= 70) return 'text-yellow-500';
-    return 'text-orange-500';
-  };
 
   const getScoreIcon = (score: number) => {
     if (score >= 90) return '🌟';
@@ -207,40 +201,40 @@ export default function Navigation({ currentMode, onModeChange }: NavigationProp
 
   return (
     <>
-      {/* Desktop Navigation - Top */}
-      <nav className={`hidden md:block w-full backdrop-blur-md sticky top-0 z-50 ${
-        theme === 'dark' 
-          ? 'bg-slate-800/80 border-b border-slate-600' 
-          : 'bg-white/80 border-b border-gray-200'
+      {/* Desktop Navigation - Top Fixed */}
+      <nav className={`hidden md:block fixed top-0 left-0 right-0 w-full backdrop-blur-md z-50 ${
+        theme === 'dark'
+          ? 'bg-slate-800/90 border-b border-slate-600'
+          : 'bg-white/90 border-b border-gray-200'
       }`}>
-        <div className="flex justify-between items-center py-1 px-4">
+        <div className="flex justify-between items-center py-4 px-6">
           {/* Hamburger Menu Button for Desktop */}
           <motion.button
             onClick={handleMenuToggle}
-            className={`flex flex-col items-center justify-center p-2 rounded transition-all duration-200 ${
+            className={`flex flex-col items-center justify-center p-3 rounded-lg transition-all duration-200 ${
               theme === 'dark' ? 'text-gray-300 hover:text-white hover:bg-slate-700' : 'text-gray-600 hover:text-gray-800 hover:bg-gray-100'
             }`}
             whileTap={{ scale: 0.95 }}
             whileHover={{ scale: 1.05 }}
           >
             <div className="flex flex-col space-y-1">
-              <div className="w-4 h-0.5 bg-current rounded-full"></div>
-              <div className="w-4 h-0.5 bg-current rounded-full"></div>
-              <div className="w-4 h-0.5 bg-current rounded-full"></div>
+              <div className="w-5 h-0.5 bg-current rounded-full"></div>
+              <div className="w-5 h-0.5 bg-current rounded-full"></div>
+              <div className="w-5 h-0.5 bg-current rounded-full"></div>
             </div>
           </motion.button>
 
           {/* Quiz Button */}
-          <div className="flex space-x-1">
+          <div className="flex space-x-2">
             {tabs.map((tab) => (
               <motion.button
                 key={tab.id}
                 onClick={() => handleTabChange(tab.id as any)}
                 className={`
-                  relative px-1.5 py-0.5 rounded font-medium text-xs
-                  transition-all duration-200 flex items-center space-x-1
-                  ${activeTab === tab.id 
-                    ? 'text-white shadow-lg' 
+                  relative px-4 py-3 rounded-lg font-medium text-sm
+                  transition-all duration-200 flex items-center space-x-2
+                  ${activeTab === tab.id
+                    ? 'text-white shadow-lg'
                     : theme === 'dark'
                       ? 'text-gray-300 hover:text-white hover:bg-slate-700'
                       : 'text-gray-600 hover:text-gray-800 hover:bg-gray-50'
@@ -256,8 +250,8 @@ export default function Navigation({ currentMode, onModeChange }: NavigationProp
                     transition={{ duration: 0.3 }}
                   />
                 )}
-                <span className="relative z-10 text-xs">{tab.icon}</span>
-                <span className="relative z-10">{tab.label}</span>
+                <span className="relative z-10 text-lg">{tab.icon}</span>
+                <span className="relative z-10 text-sm font-medium">{tab.label}</span>
               </motion.button>
             ))}
           </div>
@@ -392,7 +386,7 @@ export default function Navigation({ currentMode, onModeChange }: NavigationProp
             <div className="flex-1 p-4 space-y-6 overflow-y-auto">
               {units.map((unit, unitIndex) => {
                 const currentPath = typeof window !== 'undefined' ? window.location.pathname : '/';
-                
+
                 return (
                   <div key={unit.id} className="relative">
                     {/* Unit Header */}
@@ -400,141 +394,164 @@ export default function Navigation({ currentMode, onModeChange }: NavigationProp
                       <div className={`w-8 h-8 rounded-lg bg-gradient-to-r ${unit.color} flex items-center justify-center`}>
                         <span className="text-lg">{unit.icon}</span>
                       </div>
-                      <h3 className={`font-bold text-lg ${
+                      <h3 className={`font-semibold text-lg ${
                         theme === 'dark' ? 'text-white' : 'text-gray-800'
                       }`}>
                         {unit.name}
                       </h3>
                     </div>
 
-                    {/* Vertical Line Container */}
-                    <div className="relative ml-4">
-                      {/* Main vertical line */}
-                      <div className={`absolute left-0 top-0 bottom-0 w-px ${
-                        theme === 'dark' ? 'bg-slate-600' : 'bg-gray-300'
-                      }`} />
-                      
-                      {/* Lessons */}
-                      <div className="space-y-4">
+                    {/* Lessons and Quizzes Container */}
+                    <div className="space-y-3">
                         {unit.lessons.map((lesson, lessonIndex) => {
                           const isCurrentLesson = lesson.route === currentPath;
-                          
-                          return (
-                            <div key={lesson.id} className="relative">
-                              {/* Lesson */}
-                              <div className="flex items-center space-x-3 pl-6">
-                                {/* Lesson dot */}
-                                <div className={`absolute left-0 w-2 h-2 rounded-full -translate-x-1/2 ${
-                                  isCurrentLesson 
-                                    ? 'bg-[#58CC02]' 
-                                    : lesson.isActive
-                                      ? theme === 'dark' ? 'bg-slate-400' : 'bg-gray-400'
-                                      : theme === 'dark' ? 'bg-slate-700' : 'bg-gray-300'
-                                }`} />
-                                
-                                <motion.button
-                                  onClick={() => handleNavigate(lesson.route)}
-                                  disabled={!lesson.isActive}
-                                  className={`text-left transition-all duration-200 ${
-                                    isCurrentLesson
-                                      ? 'text-[#58CC02] font-semibold'
-                                      : lesson.isActive
-                                        ? theme === 'dark'
-                                          ? 'text-white hover:text-gray-300'
-                                          : 'text-gray-800 hover:text-gray-600'
-                                        : theme === 'dark'
-                                          ? 'text-gray-600 cursor-not-allowed'
-                                          : 'text-gray-400 cursor-not-allowed'
-                                  }`}
-                                  initial={{ x: -20, opacity: 0 }}
-                                  animate={{ x: 0, opacity: 1 }}
-                                  transition={{ delay: 0.1 + unitIndex * 0.1 + lessonIndex * 0.05 }}
-                                  whileHover={lesson.isActive ? { x: 2 } : {}}
-                                >
-                                  {lesson.name}
-                                </motion.button>
-                              </div>
 
-                              {/* Quizzes for this lesson */}
+                          return (
+                            <div key={lesson.id} className={`relative rounded-xl border backdrop-blur-sm ${
+                              theme === 'dark'
+                                ? 'bg-slate-800/50 border-slate-700'
+                                : 'bg-white/70 border-gray-200 shadow-sm'
+                            }`}>
+                              {/* Lesson Card */}
+                              <motion.button
+                                onClick={() => handleNavigate(lesson.route)}
+                                disabled={!lesson.isActive}
+                                className={`w-full text-left px-4 py-4 rounded-t-xl transition-all duration-200 group relative overflow-hidden ${
+                                  isCurrentLesson
+                                    ? 'bg-gradient-to-r from-[#58CC02] to-[#4ade80] text-white shadow-lg'
+                                    : lesson.isActive
+                                      ? theme === 'dark'
+                                        ? 'bg-slate-700 hover:bg-slate-600 text-white shadow-sm hover:shadow-md'
+                                        : 'bg-gradient-to-r from-blue-50 to-indigo-50 hover:from-blue-100 hover:to-indigo-100 text-gray-800 shadow-sm hover:shadow-md'
+                                      : theme === 'dark'
+                                        ? 'bg-slate-800 text-gray-500 cursor-not-allowed'
+                                        : 'bg-gray-100 text-gray-400 cursor-not-allowed'
+                                }`}
+                                initial={{ x: -10, opacity: 0 }}
+                                animate={{ x: 0, opacity: 1 }}
+                                transition={{ delay: 0.1 + unitIndex * 0.1 + lessonIndex * 0.05 }}
+                                whileHover={lesson.isActive ? { scale: 1.01 } : {}}
+                                whileTap={lesson.isActive ? { scale: 0.98 } : {}}
+                              >
+                                {/* Subtle shine effect for active lessons */}
+                                {lesson.isActive && !isCurrentLesson && (
+                                  <motion.div
+                                    className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent"
+                                    initial={{ x: '-100%' }}
+                                    whileHover={{ x: '100%' }}
+                                    transition={{ duration: 0.6 }}
+                                  />
+                                )}
+
+                                <div className="flex items-center justify-between relative z-10">
+                                  <div className="flex items-center space-x-3">
+                                    {/* Enhanced status indicator */}
+                                    <div className={`w-3 h-3 rounded-full border-2 ${
+                                      isCurrentLesson
+                                        ? 'bg-white border-white'
+                                        : lesson.isActive
+                                          ? 'bg-[#58CC02] border-[#58CC02]'
+                                          : theme === 'dark' ? 'bg-slate-600 border-slate-600' : 'bg-gray-300 border-gray-300'
+                                    }`} />
+                                    <span className="font-semibold text-base">{lesson.name}</span>
+                                  </div>
+
+                                  {/* Enhanced arrow for active lessons */}
+                                  {lesson.isActive && (
+                                    <div className={`p-1 rounded-full ${
+                                      isCurrentLesson
+                                        ? 'bg-white/20'
+                                        : theme === 'dark'
+                                          ? 'bg-slate-600 group-hover:bg-slate-500'
+                                          : 'bg-blue-100 group-hover:bg-blue-200'
+                                    }`}>
+                                      <svg
+                                        width="16"
+                                        height="16"
+                                        viewBox="0 0 24 24"
+                                        fill="none"
+                                        className={`transition-transform group-hover:translate-x-1 ${
+                                          isCurrentLesson ? 'text-white' : theme === 'dark' ? 'text-white' : 'text-blue-600'
+                                        }`}
+                                      >
+                                        <path d="M9 18l6-6-6-6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                                      </svg>
+                                    </div>
+                                  )}
+                                </div>
+                              </motion.button>
+
+                              {/* Quiz Items for this lesson */}
                               {lesson.quizzes.length > 0 && (
-                                <div className="mt-3 ml-6 space-y-2">
-                                  {/* Quiz branch line */}
-                                  <div className={`absolute left-0 w-4 h-px mt-3 ${
-                                    theme === 'dark' ? 'bg-slate-600' : 'bg-gray-300'
-                                  }`} />
-                                  
+                                <div className={`border-t px-4 py-3 space-y-1 rounded-b-xl ${
+                                  theme === 'dark'
+                                    ? 'border-slate-700 bg-slate-900/30'
+                                    : 'border-gray-200 bg-gray-50/50'
+                                }`}>
                                   {lesson.quizzes.map((quiz, quizIndex) => {
                                     const isCurrentQuiz = quiz.route === currentPath;
-                                    
+
                                     return (
-                                      <div key={quiz.id} className="relative flex items-center justify-between pl-6">
-                                        {/* Quiz dot */}
-                                        <div className={`absolute left-0 w-1.5 h-1.5 rounded-full -translate-x-1/2 ${
-                                          isCurrentQuiz 
-                                            ? 'bg-[#58CC02]' 
+                                      <motion.button
+                                        key={quiz.id}
+                                        onClick={() => handleNavigate(quiz.route)}
+                                        disabled={!quiz.isActive}
+                                        className={`w-full text-left px-3 py-2 rounded-lg transition-all duration-200 text-sm group ${
+                                          isCurrentQuiz
+                                            ? 'bg-orange-500 text-white shadow-sm'
                                             : quiz.isActive
-                                              ? theme === 'dark' ? 'bg-slate-500' : 'bg-gray-500'
-                                              : theme === 'dark' ? 'bg-slate-700' : 'bg-gray-300'
-                                        }`} />
-                                        
-                                        <motion.button
-                                          onClick={() => handleNavigate(quiz.route)}
-                                          disabled={!quiz.isActive}
-                                          className={`text-left transition-all duration-200 text-sm flex-1 ${
-                                            isCurrentQuiz
-                                              ? 'text-[#58CC02] font-medium'
-                                              : quiz.isActive
-                                                ? theme === 'dark'
-                                                  ? 'text-gray-300 hover:text-white'
-                                                  : 'text-gray-600 hover:text-gray-800'
-                                                : theme === 'dark'
-                                                  ? 'text-gray-600 cursor-not-allowed'
-                                                  : 'text-gray-400 cursor-not-allowed'
-                                          }`}
-                                          initial={{ x: -15, opacity: 0 }}
-                                          animate={{ x: 0, opacity: 1 }}
-                                          transition={{ delay: 0.1 + unitIndex * 0.1 + lessonIndex * 0.05 + quizIndex * 0.02 }}
-                                          whileHover={quiz.isActive ? { x: 2 } : {}}
-                                        >
+                                              ? theme === 'dark'
+                                                ? 'hover:bg-slate-700/60 text-gray-300'
+                                                : 'hover:bg-white/80 text-gray-600 hover:shadow-sm'
+                                              : theme === 'dark'
+                                                ? 'text-gray-600 cursor-not-allowed'
+                                                : 'text-gray-400 cursor-not-allowed'
+                                        }`}
+                                        initial={{ x: -10, opacity: 0 }}
+                                        animate={{ x: 0, opacity: 1 }}
+                                        transition={{ delay: 0.1 + unitIndex * 0.1 + lessonIndex * 0.05 + quizIndex * 0.02 }}
+                                        whileHover={quiz.isActive ? { x: 2 } : {}}
+                                        whileTap={quiz.isActive ? { scale: 0.98 } : {}}
+                                      >
+                                        <div className="flex items-center justify-between">
                                           <div className="flex items-center space-x-2">
-                                            <span>{quiz.name}</span>
+                                            {/* Quiz indicator */}
+                                            <div className={`w-1.5 h-1.5 rounded-full ${
+                                              isCurrentQuiz
+                                                ? 'bg-white'
+                                                : quiz.isActive
+                                                  ? 'bg-orange-400'
+                                                  : theme === 'dark' ? 'bg-slate-600' : 'bg-gray-300'
+                                            }`} />
+                                            <span className="font-medium">{quiz.name}</span>
                                             {!quiz.isActive && (
-                                              <span className={`text-xs px-1.5 py-0.5 rounded text-xs ${
+                                              <span className={`text-xs px-1.5 py-0.5 rounded ${
                                                 theme === 'dark' ? 'bg-slate-700 text-gray-500' : 'bg-gray-200 text-gray-500'
                                               }`}>
                                                 Soon
                                               </span>
                                             )}
                                           </div>
-                                        </motion.button>
-                                        
-                                        {/* Score Display */}
-                                        {quiz.bestScore && quiz.isActive && (
-                                          <div className="flex items-center space-x-2 ml-3">
-                                            <div className={`flex items-center space-x-1 px-2 py-0.5 rounded text-xs font-medium ${
-                                              isCurrentQuiz 
-                                                ? 'text-[#58CC02]' 
-                                                : theme === 'dark'
-                                                  ? 'text-gray-400'
-                                                  : 'text-gray-500'
-                                            }`}>
-                                              <span className="text-xs">{getScoreIcon(quiz.bestScore)}</span>
-                                              <span className={`font-bold ${
-                                                isCurrentQuiz ? 'text-[#58CC02]' : getScoreColor(quiz.bestScore)
+
+                                          {/* Score display */}
+                                          <div className="flex items-center space-x-2">
+                                            {quiz.bestScore && quiz.isActive && (
+                                              <div className={`flex items-center space-x-1 ${
+                                                isCurrentQuiz
+                                                  ? 'text-white'
+                                                  : theme === 'dark'
+                                                    ? 'text-gray-400'
+                                                    : 'text-orange-600'
                                               }`}>
-                                                {quiz.bestScore}%
-                                              </span>
-                                            </div>
-                                            {quiz.attempts && quiz.attempts > 1 && (
-                                              <div className={`text-xs ${
-                                                theme === 'dark' ? 'text-gray-500' : 'text-gray-400'
-                                              }`}>
-                                                {quiz.attempts}x
+                                                <span className="text-xs">{getScoreIcon(quiz.bestScore)}</span>
+                                                <span className="font-medium text-xs">
+                                                  {quiz.bestScore}%
+                                                </span>
                                               </div>
                                             )}
                                           </div>
-                                        )}
-                                      </div>
+                                        </div>
+                                      </motion.button>
                                     );
                                   })}
                                 </div>
@@ -542,7 +559,6 @@ export default function Navigation({ currentMode, onModeChange }: NavigationProp
                             </div>
                           );
                         })}
-                      </div>
                     </div>
                   </div>
                 );

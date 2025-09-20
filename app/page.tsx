@@ -5,7 +5,6 @@ import arabicAlphabet from './data/arabic-alphabet.json';
 import AlphabetGrid from '../components/ui/AlphabetGrid';
 import AppHeader from '../components/ui/AppHeader';
 import LottieBackground from '../components/ui/LottieBackground';
-import Navigation from '../components/ui/Navigation';
 import QuizGame from '../components/quiz/QuizGame';
 import QuizStartScreen from '../components/quiz/QuizStartScreen';
 import StatsScreen from '../components/quiz/StatsScreen';
@@ -23,7 +22,6 @@ interface QuizStats {
 export default function Home() {
   const { alphabet } = arabicAlphabet;
   const [currentModule, setCurrentModule] = useState<'learn' | 'forms' | 'quiz'>('learn');
-  const [currentMode, setCurrentMode] = useState<'learn' | 'quiz'>('learn');
   const [quizStats, setQuizStats] = useState<QuizStats | null>(null);
   const [isQuizStarted, setIsQuizStarted] = useState(false);
   const { theme } = useTheme();
@@ -38,10 +36,6 @@ export default function Home() {
   const handleModuleChange = (moduleId: string) => {
     setCurrentModule(moduleId as 'learn' | 'forms' | 'quiz');
     
-    // Handle legacy mode changes for existing components
-    if (moduleId === 'learn' || moduleId === 'quiz') {
-      setCurrentMode(moduleId as 'learn' | 'quiz');
-    }
     
     // Reset quiz state when changing modules
     if (moduleId !== 'quiz') {
@@ -49,14 +43,6 @@ export default function Home() {
     }
   };
 
-  const handleModeChange = (mode: 'learn' | 'quiz') => {
-    setCurrentMode(mode);
-    setCurrentModule(mode);
-    // Reset quiz state when changing modes
-    if (mode !== 'quiz') {
-      setIsQuizStarted(false);
-    }
-  };
 
   const handleStartQuiz = () => {
     setIsQuizStarted(true);
@@ -66,20 +52,19 @@ export default function Home() {
     setQuizStats(stats);
     // Show stats screen temporarily, then auto-return to learn mode
     setTimeout(() => {
-      setCurrentMode('learn');
+      setCurrentModule('learn');
       setQuizStats(null);
       setIsQuizStarted(false);
     }, 5000); // Show stats for 5 seconds then return to learn
   };
 
   const handlePlayAgain = () => {
-    setCurrentMode('quiz');
+    setCurrentModule('quiz');
     setQuizStats(null);
     setIsQuizStarted(false); // Go back to start screen
   };
 
   const handleBackToMenu = () => {
-    setCurrentMode('learn');
     setCurrentModule('learn');
     setQuizStats(null);
     setIsQuizStarted(false);
@@ -149,13 +134,9 @@ export default function Home() {
     <div className={`min-h-screen ${getBackgroundClass()} relative overflow-hidden`}>
       {currentModule === 'learn' && <LottieBackground animationType="floating-stars" />}
       
-      {/* Legacy Navigation for Learn/Quiz modes only */}
-      {(currentModule === 'learn' || currentModule === 'quiz') && (
-        <Navigation currentMode={currentMode} onModeChange={handleModeChange} />
-      )}
       
       <div className={`${currentModule === 'learn' ? 'p-4' : ''} ${
-        (currentModule === 'learn' || currentModule === 'quiz') ? 'pb-24 md:pb-4 md:pt-20' : ''
+        (currentModule === 'learn' || currentModule === 'quiz') ? 'pb-24 md:pb-8 pt-0 md:pt-24' : ''
       }`}>
         {renderContent()}
       </div>

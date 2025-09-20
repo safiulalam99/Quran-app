@@ -4,7 +4,6 @@ import { motion } from 'framer-motion';
 import { useEffect, useState } from 'react';
 import { getStoredStats, getAchievements } from '../../utils/statsStorage';
 import { useTheme } from '../../contexts/ThemeContext';
-import Navigation from '../ui/Navigation';
 
 interface QuizStats {
   totalQuestions: number;
@@ -70,8 +69,7 @@ export default function StatsScreen({ stats, onPlayAgain, onBackToMenu }: StatsS
 
   return (
     <>
-      <Navigation currentMode="quiz" onModeChange={() => {}} />
-      <div className={`min-h-screen p-4 pb-24 md:pb-4 pt-12 md:pt-8 flex items-center justify-center ${
+      <div className={`min-h-screen p-4 pb-24 md:pb-8 pt-12 md:pt-24 flex items-center justify-center ${
         theme === 'dark' ? 'bg-slate-800' : 'bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50'
       }`}>
         <motion.div

@@ -1,9 +1,8 @@
 'use client';
 
 import { useState, useRef, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { useTheme } from '../../contexts/ThemeContext';
-import Navigation from '../ui/Navigation';
 import arabicAlphabet from '../../app/data/arabic-alphabet.json';
 
 interface Letter {
@@ -186,7 +185,7 @@ export default function AlphabetQuiz({ quizId, onQuizComplete }: AlphabetQuizPro
 
   return (
     <>
-      <div className={`min-h-screen flex flex-col p-3 md:p-4 pb-24 md:pb-4 ${
+      <div className={`min-h-screen flex flex-col p-3 md:p-4 pb-24 md:pb-8 pt-0 md:pt-24 ${
         theme === 'dark' ? 'bg-slate-800' : 'bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50'
       }`}>
         
@@ -423,8 +422,6 @@ export default function AlphabetQuiz({ quizId, onQuizComplete }: AlphabetQuizPro
         </div>
       </div>
       
-      {/* Global Bottom Navigation */}
-      <Navigation currentMode="quiz" onModeChange={() => {}} />
     </>
   );
 }

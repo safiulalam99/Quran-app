@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import "./globals.css";
 import { ThemeProvider } from "../contexts/ThemeContext";
+import GlobalNavigation from "../components/ui/GlobalNavigation";
 
 export const metadata: Metadata = {
   title: "Arabic Alphabet Learning - Fun for Kids!",
@@ -52,6 +53,7 @@ export default function RootLayout({
       <body className="antialiased">
         <ThemeProvider>
           {children}
+          <GlobalNavigation />
         </ThemeProvider>
       </body>
     </html>
