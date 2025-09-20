@@ -18,10 +18,7 @@ export default function AlphabetQuiz2Page() {
 
   const handleQuizComplete = (stats: QuizStats) => {
     setQuizStats(stats);
-    // Auto-return to quiz list after 5 seconds
-    setTimeout(() => {
-      window.location.href = '/';
-    }, 5000);
+    // Results stay visible until user chooses an action
   };
 
   const handlePlayAgain = () => {
