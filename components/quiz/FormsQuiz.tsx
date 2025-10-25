@@ -29,7 +29,7 @@ interface QuizQuestion {
   options: LetterForm[];
   questionType: 'form-recognition' | 'position-identification' | 'connection-rules' | 'form-matching' | 'word-building' | 'form-sequence';
   questionData?: {
-    targetForm?: string;
+    targetForm?: 'isolated' | 'initial' | 'medial' | 'final';
     position?: 'isolated' | 'initial' | 'medial' | 'final';
     connectionRule?: boolean;
     wordExample?: string;
@@ -369,7 +369,7 @@ export default function FormsQuiz({ quizId, onQuizComplete }: FormsQuizProps) {
               theme === 'dark' ? 'text-white' : 'text-gray-800'
             }`} style={{ fontFamily: 'Noto Sans Arabic, sans-serif' }}>
               {currentQuestion.questionData?.targetForm && 
-                currentQuestion.correctAnswer.forms[currentQuestion.questionData.targetForm]
+                currentQuestion.correctAnswer.forms[currentQuestion.questionData.targetForm as keyof typeof currentQuestion.correctAnswer.forms]
               }
             </div>
           </div>
@@ -387,7 +387,7 @@ export default function FormsQuiz({ quizId, onQuizComplete }: FormsQuizProps) {
               theme === 'dark' ? 'text-white' : 'text-gray-800'
             }`} style={{ fontFamily: 'Noto Sans Arabic, sans-serif' }}>
               {currentQuestion.questionData?.position && 
-                currentQuestion.correctAnswer.forms[currentQuestion.questionData.position]
+                currentQuestion.correctAnswer.forms[currentQuestion.questionData.position as keyof typeof currentQuestion.correctAnswer.forms]
               }
             </div>
           </div>
@@ -422,7 +422,7 @@ export default function FormsQuiz({ quizId, onQuizComplete }: FormsQuizProps) {
               theme === 'dark' ? 'text-white' : 'text-gray-800'
             }`} style={{ fontFamily: 'Noto Sans Arabic, sans-serif' }}>
               {currentQuestion.questionData?.targetForm && 
-                currentQuestion.correctAnswer.forms[currentQuestion.questionData.targetForm]
+                currentQuestion.correctAnswer.forms[currentQuestion.questionData.targetForm as keyof typeof currentQuestion.correctAnswer.forms]
               }
             </div>
           </div>
