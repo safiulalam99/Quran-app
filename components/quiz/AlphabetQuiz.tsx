@@ -61,7 +61,9 @@ const quizConfigs = {
 export default function AlphabetQuiz({ quizId, onQuizComplete }: AlphabetQuizProps) {
   const { theme } = useTheme();
   const audioRef = useRef<HTMLAudioElement>(null);
-  
+  const correctAudioRef = useRef<HTMLAudioElement>(null);
+  const wrongAudioRef = useRef<HTMLAudioElement>(null);
+
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [questions, setQuestions] = useState<QuizQuestion[]>([]);
   const [selectedAnswer, setSelectedAnswer] = useState<Letter | null>(null);
@@ -125,6 +127,15 @@ export default function AlphabetQuiz({ quizId, onQuizComplete }: AlphabetQuizPro
     }
   };
 
+  // Play feedback audio
+  const playFeedbackAudio = (isCorrect: boolean) => {
+    const audioElement = isCorrect ? correctAudioRef.current : wrongAudioRef.current;
+    if (audioElement) {
+      audioElement.currentTime = 0;
+      audioElement.play().catch(console.error);
+    }
+  };
+
   // Auto-play audio for audio questions when question changes
   useEffect(() => {
     if (currentQuestion && currentQuestion.questionType === 'audio') {
@@ -137,11 +148,14 @@ export default function AlphabetQuiz({ quizId, onQuizComplete }: AlphabetQuizPro
 
   const handleAnswerSelect = (selectedLetter: Letter) => {
     if (showFeedback) return;
-    
+
     setSelectedAnswer(selectedLetter);
     const correct = selectedLetter.letter === currentQuestion.correctLetter.letter;
     setIsCorrect(correct);
     setShowFeedback(true);
+
+    // Play feedback audio
+    playFeedbackAudio(correct);
 
     // Update stats
     setStats(prev => ({
@@ -196,6 +210,19 @@ export default function AlphabetQuiz({ quizId, onQuizComplete }: AlphabetQuizPro
           onEnded={() => setIsAudioPlaying(false)}
           onPause={() => setIsAudioPlaying(false)}
           onPlay={() => setIsAudioPlaying(true)}
+        />
+
+        {/* Feedback audio elements */}
+        <audio
+          ref={correctAudioRef}
+          src="/audio/correct.mp3"
+          preload="metadata"
+        />
+
+        <audio
+          ref={wrongAudioRef}
+          src="/audio/wrong.mp3"
+          preload="metadata"
         />
 
         {/* Header */}

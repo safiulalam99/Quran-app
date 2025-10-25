@@ -42,6 +42,11 @@ const getQuizScore = (quizId: string) => {
     'alphabet-2': { bestScore: 94, attempts: 1 },
     'alphabet-3': { bestScore: 76, attempts: 3 },
     'forms-recognition': { bestScore: 78, attempts: 2 },
+    'position-quiz': { bestScore: 85, attempts: 1 },
+    'connection-quiz': { bestScore: 92, attempts: 1 },
+    'form-matching': { bestScore: 88, attempts: 2 },
+    'word-building': { bestScore: 91, attempts: 1 },
+    'form-sequence': { bestScore: 87, attempts: 2 },
   };
   return scores[quizId as keyof typeof scores];
 };
@@ -92,14 +97,43 @@ const units: Unit[] = [
             id: 'forms-recognition',
             name: 'Forms Recognition',
             route: '/quiz/forms',
-            isActive: false,
+            isActive: true,
             ...getQuizScore('forms-recognition')
           },
           {
             id: 'position-quiz',
             name: 'Position Quiz',
             route: '/quiz/positions',
-            isActive: false
+            isActive: true,
+            ...getQuizScore('position-quiz')
+          },
+          {
+            id: 'connection-quiz',
+            name: 'Connection Rules',
+            route: '/quiz/connections',
+            isActive: true,
+            ...getQuizScore('connection-quiz')
+          },
+          {
+            id: 'form-matching',
+            name: 'Form Matching',
+            route: '/quiz/form-matching',
+            isActive: true,
+            ...getQuizScore('form-matching')
+          },
+          {
+            id: 'word-building',
+            name: 'Word Building',
+            route: '/quiz/word-building',
+            isActive: true,
+            ...getQuizScore('word-building')
+          },
+          {
+            id: 'form-sequence',
+            name: 'Form Sequence',
+            route: '/quiz/form-sequence',
+            isActive: true,
+            ...getQuizScore('form-sequence')
           }
         ]
       }
