@@ -5,6 +5,7 @@ import { useState, useEffect } from 'react';
 import { useTheme } from '../../contexts/ThemeContext';
 import ThemeToggle from './ThemeToggle';
 import { getQuizStats } from '../../utils/statsStorage';
+import { getQuizStatsCompat } from '../../utils/quiz/compatibility';
 
 interface NavigationProps {
   currentMode: 'learn' | 'quiz';
@@ -44,13 +45,17 @@ const useQuizScores = () => {
     // Load all quiz scores
     const quizIds = [
       'alphabet-1', 'alphabet-2', 'alphabet-3',
+      'fatha-quiz',
       'forms-recognition', 'position-quiz', 'connection-quiz',
       'form-matching', 'word-building', 'form-sequence'
     ];
 
     const loadedScores: Record<string, { bestScore: number; attempts: number }> = {};
     quizIds.forEach(quizId => {
-      loadedScores[quizId] = getQuizStats(quizId);
+      // Use new system for fatha-quiz, old system for others
+      loadedScores[quizId] = quizId === 'fatha-quiz'
+        ? getQuizStatsCompat(quizId)
+        : getQuizStats(quizId);
     });
 
     setScores(loadedScores);
@@ -98,7 +103,14 @@ const unitsConfig: Unit[] = [
         name: 'Learn Fatha',
         route: '/fatha',
         isActive: true,
-        quizzes: []
+        quizzes: [
+          {
+            id: 'fatha-quiz',
+            name: 'Fatha Quiz',
+            route: '/fatha/quiz',
+            isActive: true
+          }
+        ]
       },
       {
         id: 'letter-forms',
