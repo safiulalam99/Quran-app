@@ -18,6 +18,7 @@ interface QuizGameProps {
   letters: Letter[];
   onQuizComplete: (stats: QuizStats) => void;
   onBackToMenu?: () => void;
+  quizId?: string;
 }
 
 interface QuizStats {
@@ -34,7 +35,7 @@ interface Question {
   attempts: number;
 }
 
-export default function QuizGame({ letters, onQuizComplete, onBackToMenu }: QuizGameProps) {
+export default function QuizGame({ letters, onQuizComplete, onBackToMenu, quizId = 'general-quiz' }: QuizGameProps) {
   const [currentQuestion, setCurrentQuestion] = useState<Question | null>(null);
   const [questionIndex, setQuestionIndex] = useState(0);
   const [progress, setProgress] = useState(0);
@@ -209,7 +210,7 @@ export default function QuizGame({ letters, onQuizComplete, onBackToMenu }: Quiz
         wrongAnswers: finalStats.wrongAnswers,
         accuracy: finalStats.accuracy,
         timeSpent: finalStats.timeSpent,
-      });
+      }, quizId);
       
       onQuizComplete(finalStats);
     }

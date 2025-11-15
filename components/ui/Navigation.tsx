@@ -1,9 +1,10 @@
 'use client';
 
 import { motion, AnimatePresence } from 'framer-motion';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useTheme } from '../../contexts/ThemeContext';
 import ThemeToggle from './ThemeToggle';
+import { getQuizStats } from '../../utils/statsStorage';
 
 interface NavigationProps {
   currentMode: 'learn' | 'quiz';
@@ -35,23 +36,31 @@ interface Unit {
   lessons: Lesson[];
 }
 
-// Mock function to get quiz scores - replace with actual storage later
-const getQuizScore = (quizId: string) => {
-  const scores = {
-    'alphabet-1': { bestScore: 89, attempts: 2 },
-    'alphabet-2': { bestScore: 94, attempts: 1 },
-    'alphabet-3': { bestScore: 76, attempts: 3 },
-    'forms-recognition': { bestScore: 78, attempts: 2 },
-    'position-quiz': { bestScore: 85, attempts: 1 },
-    'connection-quiz': { bestScore: 92, attempts: 1 },
-    'form-matching': { bestScore: 88, attempts: 2 },
-    'word-building': { bestScore: 91, attempts: 1 },
-    'form-sequence': { bestScore: 87, attempts: 2 },
-  };
-  return scores[quizId as keyof typeof scores];
+// Get real quiz scores from localStorage
+const useQuizScores = () => {
+  const [scores, setScores] = useState<Record<string, { bestScore: number; attempts: number }>>({});
+
+  useEffect(() => {
+    // Load all quiz scores
+    const quizIds = [
+      'alphabet-1', 'alphabet-2', 'alphabet-3',
+      'forms-recognition', 'position-quiz', 'connection-quiz',
+      'form-matching', 'word-building', 'form-sequence'
+    ];
+
+    const loadedScores: Record<string, { bestScore: number; attempts: number }> = {};
+    quizIds.forEach(quizId => {
+      loadedScores[quizId] = getQuizStats(quizId);
+    });
+
+    setScores(loadedScores);
+  }, []);
+
+  return scores;
 };
 
-const units: Unit[] = [
+// Base units structure without scores (scores added dynamically from localStorage)
+const unitsConfig: Unit[] = [
   {
     id: 'alphabet',
     name: 'Alphabet',
@@ -68,24 +77,28 @@ const units: Unit[] = [
             id: 'alphabet-1',
             name: 'Alphabet Quiz 1',
             route: '/quiz/alphabet-1',
-            isActive: true,
-            ...getQuizScore('alphabet-1')
+            isActive: true
           },
           {
             id: 'alphabet-2',
             name: 'Alphabet Quiz 2',
             route: '/quiz/alphabet-2',
-            isActive: true,
-            ...getQuizScore('alphabet-2')
+            isActive: true
           },
           {
             id: 'alphabet-3',
             name: 'Alphabet Quiz 3',
             route: '/quiz/alphabet-3',
-            isActive: true,
-            ...getQuizScore('alphabet-3')
+            isActive: true
           }
         ]
+      },
+      {
+        id: 'learn-fatha',
+        name: 'Learn Fatha',
+        route: '/fatha',
+        isActive: true,
+        quizzes: []
       },
       {
         id: 'letter-forms',
@@ -97,43 +110,37 @@ const units: Unit[] = [
             id: 'forms-recognition',
             name: 'Forms Recognition',
             route: '/quiz/forms',
-            isActive: true,
-            ...getQuizScore('forms-recognition')
+            isActive: true
           },
           {
             id: 'position-quiz',
             name: 'Position Quiz',
             route: '/quiz/positions',
-            isActive: true,
-            ...getQuizScore('position-quiz')
+            isActive: true
           },
           {
             id: 'connection-quiz',
             name: 'Connection Rules',
             route: '/quiz/connections',
-            isActive: true,
-            ...getQuizScore('connection-quiz')
+            isActive: true
           },
           {
             id: 'form-matching',
             name: 'Form Matching',
             route: '/quiz/form-matching',
-            isActive: true,
-            ...getQuizScore('form-matching')
+            isActive: true
           },
           {
             id: 'word-building',
             name: 'Word Building',
             route: '/quiz/word-building',
-            isActive: true,
-            ...getQuizScore('word-building')
+            isActive: true
           },
           {
             id: 'form-sequence',
             name: 'Form Sequence',
             route: '/quiz/form-sequence',
-            isActive: true,
-            ...getQuizScore('form-sequence')
+            isActive: true
           }
         ]
       }
@@ -152,7 +159,7 @@ const units: Unit[] = [
         isActive: false,
         quizzes: [
           {
-            id: 'word-building',
+            id: 'word-building-words',
             name: 'Word Building',
             route: '/quiz/words',
             isActive: false
@@ -166,9 +173,22 @@ const units: Unit[] = [
 export default function Navigation({ currentMode, onModeChange }: NavigationProps) {
   const [activeTab, setActiveTab] = useState(currentMode);
   const { theme } = useTheme();
-  
+  const quizScores = useQuizScores();
+
   const isDesktop = typeof window !== 'undefined' && window.innerWidth >= 768;
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+  // Merge quiz scores with units config
+  const units = unitsConfig.map(unit => ({
+    ...unit,
+    lessons: unit.lessons.map(lesson => ({
+      ...lesson,
+      quizzes: lesson.quizzes.map(quiz => ({
+        ...quiz,
+        ...quizScores[quiz.id]
+      }))
+    }))
+  }));
 
   const handleTabChange = (mode: 'learn' | 'quiz') => {
     setActiveTab(mode);
@@ -417,111 +437,79 @@ export default function Navigation({ currentMode, onModeChange }: NavigationProp
             </div>
 
             {/* Units > Lessons > Quizzes */}
-            <div className="flex-1 p-4 space-y-6 overflow-y-auto">
+            <div className="flex-1 p-4 space-y-8 overflow-y-auto">
               {units.map((unit, unitIndex) => {
                 const currentPath = typeof window !== 'undefined' ? window.location.pathname : '/';
 
                 return (
                   <div key={unit.id} className="relative">
-                    {/* Unit Header */}
-                    <div className="flex items-center space-x-3 mb-4">
-                      <div className={`w-8 h-8 rounded-lg bg-gradient-to-r ${unit.color} flex items-center justify-center`}>
-                        <span className="text-lg">{unit.icon}</span>
+                    {/* Unit Header - Non-clickable Section Label */}
+                    <div className={`flex items-center space-x-3 mb-4 pb-2 border-b-2 ${
+                      theme === 'dark' ? 'border-slate-700' : 'border-gray-200'
+                    }`}>
+                      <div className={`w-10 h-10 rounded-xl bg-gradient-to-r ${unit.color} flex items-center justify-center shadow-lg`}>
+                        <span className="text-xl">{unit.icon}</span>
                       </div>
-                      <h3 className={`font-semibold text-lg ${
+                      <h3 className={`font-bold text-xl uppercase tracking-wide ${
                         theme === 'dark' ? 'text-white' : 'text-gray-800'
                       }`}>
                         {unit.name}
                       </h3>
                     </div>
 
-                    {/* Lessons and Quizzes Container */}
-                    <div className="space-y-3">
+                    {/* Lessons and Quizzes */}
+                    <div className="space-y-4 pl-2">
                         {unit.lessons.map((lesson, lessonIndex) => {
                           const isCurrentLesson = lesson.route === currentPath;
 
                           return (
-                            <div key={lesson.id} className={`relative rounded-xl border backdrop-blur-sm ${
-                              theme === 'dark'
-                                ? 'bg-slate-800/50 border-slate-700'
-                                : 'bg-white/70 border-gray-200 shadow-sm'
-                            }`}>
-                              {/* Lesson Card */}
+                            <div key={lesson.id} className="space-y-2">
+                              {/* Lesson Button - Direct Navigation */}
                               <motion.button
                                 onClick={() => handleNavigate(lesson.route)}
                                 disabled={!lesson.isActive}
-                                className={`w-full text-left px-4 py-4 rounded-t-xl transition-all duration-200 group relative overflow-hidden ${
+                                className={`w-full text-left px-4 py-3 rounded-lg transition-all duration-200 group relative overflow-hidden ${
                                   isCurrentLesson
                                     ? 'bg-gradient-to-r from-[#58CC02] to-[#4ade80] text-white shadow-lg'
                                     : lesson.isActive
                                       ? theme === 'dark'
                                         ? 'bg-slate-700 hover:bg-slate-600 text-white shadow-sm hover:shadow-md'
-                                        : 'bg-gradient-to-r from-blue-50 to-indigo-50 hover:from-blue-100 hover:to-indigo-100 text-gray-800 shadow-sm hover:shadow-md'
+                                        : 'bg-gradient-to-r from-blue-50 to-indigo-50 hover:from-blue-100 hover:to-indigo-100 text-gray-800 shadow-sm hover:shadow-md border border-blue-200'
                                       : theme === 'dark'
                                         ? 'bg-slate-800 text-gray-500 cursor-not-allowed'
-                                        : 'bg-gray-100 text-gray-400 cursor-not-allowed'
+                                        : 'bg-gray-100 text-gray-400 cursor-not-allowed border border-gray-300'
                                 }`}
                                 initial={{ x: -10, opacity: 0 }}
                                 animate={{ x: 0, opacity: 1 }}
                                 transition={{ delay: 0.1 + unitIndex * 0.1 + lessonIndex * 0.05 }}
-                                whileHover={lesson.isActive ? { scale: 1.01 } : {}}
+                                whileHover={lesson.isActive ? { scale: 1.02 } : {}}
                                 whileTap={lesson.isActive ? { scale: 0.98 } : {}}
                               >
-                                {/* Subtle shine effect for active lessons */}
-                                {lesson.isActive && !isCurrentLesson && (
-                                  <motion.div
-                                    className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent"
-                                    initial={{ x: '-100%' }}
-                                    whileHover={{ x: '100%' }}
-                                    transition={{ duration: 0.6 }}
-                                  />
-                                )}
-
                                 <div className="flex items-center justify-between relative z-10">
                                   <div className="flex items-center space-x-3">
-                                    {/* Enhanced status indicator */}
-                                    <div className={`w-3 h-3 rounded-full border-2 ${
-                                      isCurrentLesson
-                                        ? 'bg-white border-white'
-                                        : lesson.isActive
-                                          ? 'bg-[#58CC02] border-[#58CC02]'
-                                          : theme === 'dark' ? 'bg-slate-600 border-slate-600' : 'bg-gray-300 border-gray-300'
-                                    }`} />
-                                    <span className="font-semibold text-base">{lesson.name}</span>
+                                    <span className="text-xl">📖</span>
+                                    <span className="font-bold text-base">{lesson.name}</span>
                                   </div>
 
-                                  {/* Enhanced arrow for active lessons */}
                                   {lesson.isActive && (
-                                    <div className={`p-1 rounded-full ${
-                                      isCurrentLesson
-                                        ? 'bg-white/20'
-                                        : theme === 'dark'
-                                          ? 'bg-slate-600 group-hover:bg-slate-500'
-                                          : 'bg-blue-100 group-hover:bg-blue-200'
-                                    }`}>
-                                      <svg
-                                        width="16"
-                                        height="16"
-                                        viewBox="0 0 24 24"
-                                        fill="none"
-                                        className={`transition-transform group-hover:translate-x-1 ${
-                                          isCurrentLesson ? 'text-white' : theme === 'dark' ? 'text-white' : 'text-blue-600'
-                                        }`}
-                                      >
-                                        <path d="M9 18l6-6-6-6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                                      </svg>
-                                    </div>
+                                    <svg
+                                      width="18"
+                                      height="18"
+                                      viewBox="0 0 24 24"
+                                      fill="none"
+                                      className={`transition-transform group-hover:translate-x-1 ${
+                                        isCurrentLesson ? 'text-white' : theme === 'dark' ? 'text-gray-400' : 'text-blue-600'
+                                      }`}
+                                    >
+                                      <path d="M9 18l6-6-6-6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                                    </svg>
                                   )}
                                 </div>
                               </motion.button>
 
-                              {/* Quiz Items for this lesson */}
+                              {/* Quiz Items - Always Visible */}
                               {lesson.quizzes.length > 0 && (
-                                <div className={`border-t px-3 py-3 space-y-2 rounded-b-xl ${
-                                  theme === 'dark'
-                                    ? 'border-slate-700 bg-slate-900/30'
-                                    : 'border-gray-200 bg-gray-50/50'
-                                }`}>
+                                <div className="pl-6 space-y-2">
                                   {lesson.quizzes.map((quiz, quizIndex) => {
                                     const isCurrentQuiz = quiz.route === currentPath;
 
@@ -530,86 +518,40 @@ export default function Navigation({ currentMode, onModeChange }: NavigationProp
                                         key={quiz.id}
                                         onClick={() => handleNavigate(quiz.route)}
                                         disabled={!quiz.isActive}
-                                        className={`w-full text-left px-4 py-3 rounded-lg transition-all duration-200 group relative min-h-[52px] ${
+                                        className={`w-full text-left px-3 py-2.5 rounded-lg transition-all duration-200 group relative ${
                                           isCurrentQuiz
                                             ? 'bg-gradient-to-r from-orange-500 to-orange-600 text-white shadow-md'
                                             : quiz.isActive
                                               ? theme === 'dark'
-                                                ? 'bg-slate-700 hover:bg-slate-600 text-white shadow-sm hover:shadow-md'
-                                                : 'bg-white hover:bg-orange-50 text-gray-700 shadow-sm hover:shadow-md border border-orange-100'
+                                                ? 'bg-slate-800 hover:bg-slate-700 text-white shadow-sm hover:shadow-md'
+                                                : 'bg-white hover:bg-orange-50 text-gray-700 shadow-sm hover:shadow-md border border-gray-200 hover:border-orange-200'
                                               : theme === 'dark'
-                                                ? 'bg-slate-800 text-gray-500 cursor-not-allowed'
-                                                : 'bg-gray-100 text-gray-400 cursor-not-allowed'
+                                                ? 'bg-slate-900 text-gray-600 cursor-not-allowed'
+                                                : 'bg-gray-50 text-gray-400 cursor-not-allowed border border-gray-200'
                                         }`}
                                         initial={{ x: -10, opacity: 0 }}
                                         animate={{ x: 0, opacity: 1 }}
-                                        transition={{ delay: 0.1 + unitIndex * 0.1 + lessonIndex * 0.05 + quizIndex * 0.02 }}
-                                        whileHover={quiz.isActive ? { scale: 1.02 } : {}}
+                                        transition={{ delay: 0.15 + unitIndex * 0.1 + lessonIndex * 0.05 + quizIndex * 0.03 }}
+                                        whileHover={quiz.isActive ? { scale: 1.02, x: 2 } : {}}
                                         whileTap={quiz.isActive ? { scale: 0.98 } : {}}
                                       >
                                         <div className="flex items-center justify-between">
-                                          <div className="flex items-center space-x-3">
-                                            {/* Enhanced Quiz icon */}
-                                            <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${
-                                              isCurrentQuiz
-                                                ? 'bg-white/20'
-                                                : quiz.isActive
-                                                  ? theme === 'dark'
-                                                    ? 'bg-slate-600'
-                                                    : 'bg-orange-100'
-                                                  : theme === 'dark'
-                                                    ? 'bg-slate-700'
-                                                    : 'bg-gray-200'
+                                          <div className="flex items-center space-x-2.5">
+                                            <span className={`text-base ${
+                                              isCurrentQuiz ? 'text-white' : quiz.isActive ? 'opacity-80' : 'opacity-50'
                                             }`}>
-                                              <span className={`text-lg ${
-                                                isCurrentQuiz
-                                                  ? 'text-white'
-                                                  : quiz.isActive
-                                                    ? theme === 'dark' ? 'text-white' : 'text-orange-600'
-                                                    : 'text-gray-400'
-                                              }`}>
-                                                🧠
-                                              </span>
-                                            </div>
-
-                                            <div className="flex flex-col">
-                                              <span className="font-semibold text-base">{quiz.name}</span>
-                                              {!quiz.isActive && (
-                                                <span className={`text-xs px-2 py-1 rounded-full mt-1 w-fit ${
-                                                  theme === 'dark' ? 'bg-slate-700 text-gray-400' : 'bg-gray-200 text-gray-500'
-                                                }`}>
-                                                  Coming Soon
-                                                </span>
-                                              )}
-                                            </div>
+                                              🧠
+                                            </span>
+                                            <span className="font-medium text-sm">{quiz.name}</span>
                                           </div>
 
-                                          {/* Enhanced Score display */}
-                                          <div className="flex flex-col items-end space-y-1">
-                                            {quiz.bestScore && quiz.isActive && (
-                                              <div className={`flex items-center space-x-1 px-2 py-1 rounded-lg ${
-                                                isCurrentQuiz
-                                                  ? 'bg-white/20 text-white'
-                                                  : theme === 'dark'
-                                                    ? 'bg-slate-600 text-gray-200'
-                                                    : 'bg-orange-100 text-orange-700'
-                                              }`}>
-                                                <span className="text-sm">{getScoreIcon(quiz.bestScore)}</span>
-                                                <span className="font-bold text-sm">
-                                                  {quiz.bestScore}%
-                                                </span>
-                                              </div>
-                                            )}
-                                            {quiz.attempts && quiz.attempts > 1 && (
-                                              <div className={`text-xs ${
-                                                isCurrentQuiz
-                                                  ? 'text-white/70'
-                                                  : theme === 'dark' ? 'text-gray-400' : 'text-orange-600'
-                                              }`}>
-                                                {quiz.attempts} tries
-                                              </div>
-                                            )}
-                                          </div>
+                                          {/* Score Display */}
+                                          {quiz.bestScore && quiz.bestScore > 0 && quiz.isActive && (
+                                            <div className="flex items-center space-x-1.5">
+                                              <span className="text-xs">{getScoreIcon(quiz.bestScore)}</span>
+                                              <span className="font-bold text-xs">{quiz.bestScore}%</span>
+                                            </div>
+                                          )}
                                         </div>
                                       </motion.button>
                                     );

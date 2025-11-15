@@ -1,0 +1,320 @@
+{
+  "fathaLetters": [
+    {
+      "letter": "ا",
+      "letterWithFatha": "أَ",
+      "name": "Alif with Fatha",
+      "englishName": "Alif with Fatha",
+      "sound": "a",
+      "baseColor": "#00d4ff",
+      "fathaColor": "#ff6b9d",
+      "category": "vowels",
+      "examples": ["أَسَد", "أَرْنَب"]
+    },
+    {
+      "letter": "ب",
+      "letterWithFatha": "بَ",
+      "name": "Baa with Fatha",
+      "englishName": "Baa with Fatha",
+      "sound": "ba",
+      "baseColor": "#ff4757",
+      "fathaColor": "#ff6b9d",
+      "category": "consonants",
+      "examples": ["بَطَّة", "بَقَرَة"]
+    },
+    {
+      "letter": "ت",
+      "letterWithFatha": "تَ",
+      "name": "Taa with Fatha",
+      "englishName": "Taa with Fatha",
+      "sound": "ta",
+      "baseColor": "#00ff88",
+      "fathaColor": "#ff6b9d",
+      "category": "consonants",
+      "examples": ["تَمْر", "تُفَّاح"]
+    },
+    {
+      "letter": "ث",
+      "letterWithFatha": "ثَ",
+      "name": "Thaa with Fatha",
+      "englishName": "Thaa with Fatha",
+      "sound": "tha",
+      "baseColor": "#ff9f43",
+      "fathaColor": "#ff6b9d",
+      "category": "consonants",
+      "examples": ["ثَعْلَب", "ثَوْم"]
+    },
+    {
+      "letter": "ج",
+      "letterWithFatha": "جَ",
+      "name": "Jeem with Fatha",
+      "englishName": "Jeem with Fatha",
+      "sound": "ja",
+      "baseColor": "#a55eea",
+      "fathaColor": "#ff6b9d",
+      "category": "consonants",
+      "examples": ["جَمَل", "جَزَر"]
+    },
+    {
+      "letter": "ح",
+      "letterWithFatha": "حَ",
+      "name": "Haa with Fatha",
+      "englishName": "Haa with Fatha",
+      "sound": "ha",
+      "baseColor": "#26de81",
+      "fathaColor": "#ff6b9d",
+      "category": "consonants",
+      "examples": ["حَلِيب", "حُوت"]
+    },
+    {
+      "letter": "خ",
+      "letterWithFatha": "خَ",
+      "name": "Khaa with Fatha",
+      "englishName": "Khaa with Fatha",
+      "sound": "kha",
+      "baseColor": "#ff6b6b",
+      "fathaColor": "#ff6b9d",
+      "category": "consonants",
+      "examples": ["خَرُوف", "خِيَار"]
+    },
+    {
+      "letter": "د",
+      "letterWithFatha": "دَ",
+      "name": "Dal with Fatha",
+      "englishName": "Dal with Fatha",
+      "sound": "da",
+      "baseColor": "#ff3838",
+      "fathaColor": "#ff6b9d",
+      "category": "consonants",
+      "examples": ["دَب", "دَجَاج"]
+    },
+    {
+      "letter": "ذ",
+      "letterWithFatha": "ذَ",
+      "name": "Thal with Fatha",
+      "englishName": "Thal with Fatha",
+      "sound": "tha",
+      "baseColor": "#ffd700",
+      "fathaColor": "#ff6b9d",
+      "category": "consonants",
+      "examples": ["ذِئْب", "ذَهَب"]
+    },
+    {
+      "letter": "ر",
+      "letterWithFatha": "رَ",
+      "name": "Raa with Fatha",
+      "englishName": "Raa with Fatha",
+      "sound": "ra",
+      "baseColor": "#4dabf7",
+      "fathaColor": "#ff6b9d",
+      "category": "consonants",
+      "examples": ["رَجُل", "رُمَّان"]
+    },
+    {
+      "letter": "ز",
+      "letterWithFatha": "زَ",
+      "name": "Zay with Fatha",
+      "englishName": "Zay with Fatha",
+      "sound": "za",
+      "baseColor": "#be4bdb",
+      "fathaColor": "#ff6b9d",
+      "category": "consonants",
+      "examples": ["زَرَافَة", "زَيْتُون"]
+    },
+    {
+      "letter": "س",
+      "letterWithFatha": "سَ",
+      "name": "Seen with Fatha",
+      "englishName": "Seen with Fatha",
+      "sound": "sa",
+      "baseColor": "#20bf6b",
+      "fathaColor": "#ff6b9d",
+      "category": "consonants",
+      "examples": ["سَمَك", "سُكَّر"]
+    },
+    {
+      "letter": "ش",
+      "letterWithFatha": "شَ",
+      "name": "Sheen with Fatha",
+      "englishName": "Sheen with Fatha",
+      "sound": "sha",
+      "baseColor": "#ff7675",
+      "fathaColor": "#ff6b9d",
+      "category": "consonants",
+      "examples": ["شَمْس", "شَجَرَة"]
+    },
+    {
+      "letter": "ص",
+      "letterWithFatha": "صَ",
+      "name": "Saad with Fatha",
+      "englishName": "Saad with Fatha",
+      "sound": "sa",
+      "baseColor": "#74b9ff",
+      "fathaColor": "#ff6b9d",
+      "category": "consonants",
+      "examples": ["صَقْر", "صَابُون"]
+    },
+    {
+      "letter": "ض",
+      "letterWithFatha": "ضَ",
+      "name": "Daad with Fatha",
+      "englishName": "Daad with Fatha",
+      "sound": "da",
+      "baseColor": "#8c7ae6",
+      "fathaColor": "#ff6b9d",
+      "category": "consonants",
+      "examples": ["ضِفْدَع", "ضَبَاب"]
+    },
+    {
+      "letter": "ط",
+      "letterWithFatha": "طَ",
+      "name": "Taa with Fatha",
+      "englishName": "Taa with Fatha",
+      "sound": "ta",
+      "baseColor": "#f39c12",
+      "fathaColor": "#ff6b9d",
+      "category": "consonants",
+      "examples": ["طَائِر", "طَمَاطِم"]
+    },
+    {
+      "letter": "ظ",
+      "letterWithFatha": "ظَ",
+      "name": "Thaa with Fatha",
+      "englishName": "Thaa with Fatha",
+      "sound": "tha",
+      "baseColor": "#fd79a8",
+      "fathaColor": "#ff6b9d",
+      "category": "consonants",
+      "examples": ["ظَبْي", "ظَلَام"]
+    },
+    {
+      "letter": "ع",
+      "letterWithFatha": "عَ",
+      "name": "Ayn with Fatha",
+      "englishName": "Ayn with Fatha",
+      "sound": "aa",
+      "baseColor": "#00b894",
+      "fathaColor": "#ff6b9d",
+      "category": "consonants",
+      "examples": ["عَيْن", "عَسَل"]
+    },
+    {
+      "letter": "غ",
+      "letterWithFatha": "غَ",
+      "name": "Ghayn with Fatha",
+      "englishName": "Ghayn with Fatha",
+      "sound": "gha",
+      "baseColor": "#fdcb6e",
+      "fathaColor": "#ff6b9d",
+      "category": "consonants",
+      "examples": ["غَزَال", "غَيْمَة"]
+    },
+    {
+      "letter": "ف",
+      "letterWithFatha": "فَ",
+      "name": "Faa with Fatha",
+      "englishName": "Faa with Fatha",
+      "sound": "fa",
+      "baseColor": "#e84393",
+      "fathaColor": "#ff6b9d",
+      "category": "consonants",
+      "examples": ["فِيل", "فَرَاوْلَة"]
+    },
+    {
+      "letter": "ق",
+      "letterWithFatha": "قَ",
+      "name": "Qaaf with Fatha",
+      "englishName": "Qaaf with Fatha",
+      "sound": "qa",
+      "baseColor": "#6c5ce7",
+      "fathaColor": "#ff6b9d",
+      "category": "consonants",
+      "examples": ["قِرْد", "قَمَر"]
+    },
+    {
+      "letter": "ك",
+      "letterWithFatha": "كَ",
+      "name": "Kaaf with Fatha",
+      "englishName": "Kaaf with Fatha",
+      "sound": "ka",
+      "baseColor": "#ff6348",
+      "fathaColor": "#ff6b9d",
+      "category": "consonants",
+      "examples": ["كَلْب", "كُوب"]
+    },
+    {
+      "letter": "ل",
+      "letterWithFatha": "لَ",
+      "name": "Laam with Fatha",
+      "englishName": "Laam with Fatha",
+      "sound": "la",
+      "baseColor": "#00cec9",
+      "fathaColor": "#ff6b9d",
+      "category": "consonants",
+      "examples": ["لَبُؤَة", "لَيْمُون"]
+    },
+    {
+      "letter": "م",
+      "letterWithFatha": "مَ",
+      "name": "Meem with Fatha",
+      "englishName": "Meem with Fatha",
+      "sound": "ma",
+      "baseColor": "#e17055",
+      "fathaColor": "#ff6b9d",
+      "category": "consonants",
+      "examples": ["مَاعِز", "مَوْز"]
+    },
+    {
+      "letter": "ن",
+      "letterWithFatha": "نَ",
+      "name": "Noon with Fatha",
+      "englishName": "Noon with Fatha",
+      "sound": "na",
+      "baseColor": "#0984e3",
+      "fathaColor": "#ff6b9d",
+      "category": "consonants",
+      "examples": ["نَمِر", "نَعْنَاع"]
+    },
+    {
+      "letter": "ه",
+      "letterWithFatha": "هَ",
+      "name": "Haa with Fatha",
+      "englishName": "Haa with Fatha",
+      "sound": "ha",
+      "baseColor": "#f8b500",
+      "fathaColor": "#ff6b9d",
+      "category": "consonants",
+      "examples": ["هُدْهُد", "هِنْدِبَاء"]
+    },
+    {
+      "letter": "و",
+      "letterWithFatha": "وَ",
+      "name": "Waw with Fatha",
+      "englishName": "Waw with Fatha",
+      "sound": "wa",
+      "baseColor": "#55a3ff",
+      "fathaColor": "#ff6b9d",
+      "category": "vowels",
+      "examples": ["وَزَّة", "وَرْدَة"]
+    },
+    {
+      "letter": "ي",
+      "letterWithFatha": "يَ",
+      "name": "Yaa with Fatha",
+      "englishName": "Yaa with Fatha",
+      "sound": "ya",
+      "baseColor": "#ff9ff3",
+      "fathaColor": "#ff6b9d",
+      "category": "vowels",
+      "examples": ["يَمَامَة", "يَاسَمِين"]
+    }
+  ],
+  "metadata": {
+    "title": "Arabic Fatha Learning",
+    "description": "Learn Arabic letters with Fatha (َ) - the short 'a' sound",
+    "targetAge": "3-8",
+    "difficulty": "beginner",
+    "totalLetters": 28,
+    "audioPath": "/audio/Fatha/"
+  }
+}

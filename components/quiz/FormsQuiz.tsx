@@ -4,6 +4,7 @@ import { useState, useRef, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { useTheme } from '../../contexts/ThemeContext';
 import arabicLetterForms from '../../app/data/arabic-letter-forms.json';
+import { addQuizSession } from '../../utils/statsStorage';
 
 interface LetterForm {
   letter: string;
@@ -348,6 +349,16 @@ export default function FormsQuiz({ quizId, onQuizComplete }: FormsQuizProps) {
           timeSpent: Math.round((Date.now() - startTime) / 1000),
           accuracy: Math.round(((correct ? stats.correctAnswers + 1 : stats.correctAnswers) / questions.length) * 100)
         };
+
+        // Save to localStorage with quizId
+        addQuizSession({
+          totalQuestions: finalStats.totalQuestions,
+          correctAnswers: finalStats.correctAnswers,
+          wrongAnswers: finalStats.wrongAnswers,
+          accuracy: finalStats.accuracy,
+          timeSpent: finalStats.timeSpent,
+        }, quizId);
+
         onQuizComplete(finalStats);
       }
     }, 2500);

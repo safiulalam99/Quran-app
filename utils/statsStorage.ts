@@ -3,6 +3,7 @@
 interface QuizSession {
   id: string;
   date: string;
+  quizId?: string; // Optional for backwards compatibility
   totalQuestions: number;
   correctAnswers: number;
   wrongAnswers: number;
@@ -105,12 +106,13 @@ const getDefaultStats = (): UserStats => ({
 });
 
 // Add a new quiz session and update stats
-export const addQuizSession = (sessionData: Omit<QuizSession, 'id' | 'date'>): UserStats => {
+export const addQuizSession = (sessionData: Omit<QuizSession, 'id' | 'date'>, quizId?: string): UserStats => {
   const currentStats = getStoredStats();
-  
+
   const newSession: QuizSession = {
     id: Date.now().toString(),
     date: new Date().toISOString(),
+    quizId,
     ...sessionData,
   };
 
@@ -148,10 +150,25 @@ export const getAchievements = (stats: UserStats) => {
   return achievements;
 };
 
+// Get stats for a specific quiz
+export const getQuizStats = (quizId: string): { bestScore: number; attempts: number } => {
+  const stats = getStoredStats();
+  const quizSessions = stats.recentSessions.filter(session => session.quizId === quizId);
+
+  if (quizSessions.length === 0) {
+    return { bestScore: 0, attempts: 0 };
+  }
+
+  const bestScore = Math.max(...quizSessions.map(session => session.accuracy));
+  const attempts = quizSessions.length;
+
+  return { bestScore: Math.round(bestScore), attempts };
+};
+
 // Clear all stats (for testing or reset)
 export const clearStats = (): void => {
   if (!isLocalStorageAvailable()) return;
-  
+
   try {
     localStorage.removeItem(STORAGE_KEY);
   } catch (error) {
