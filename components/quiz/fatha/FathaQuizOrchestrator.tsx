@@ -73,6 +73,8 @@ export default function FathaQuizOrchestrator({
   // UI state
   const [showFeedback, setShowFeedback] = useState(false);
   const [isCorrect, setIsCorrect] = useState<boolean | null>(null);
+  const [isAudioPlaying, setIsAudioPlaying] = useState(false);
+  const [selectedAnswer, setSelectedAnswer] = useState<FathaLetter | null>(null);
 
   // Audio refs
   const audioRef = useRef<HTMLAudioElement>(null);
@@ -148,13 +150,19 @@ export default function FathaQuizOrchestrator({
   }, [currentQuestionIndex, totalQuestions]);
 
   // Play audio
-  const playAudio = () => {
-    if (audioRef.current && !showFeedback) {
-      audioRef.current.currentTime = 0;
-      audioRef.current.play().catch(console.error);
+  const playAudio = async () => {
+    if (audioRef.current) {
+      try {
+        setIsAudioPlaying(true);
+        audioRef.current.currentTime = 0;
+        await audioRef.current.play();
 
-      if ('vibrate' in navigator) {
-        navigator.vibrate(40);
+        if ('vibrate' in navigator) {
+          navigator.vibrate(40);
+        }
+      } catch (error) {
+        console.log('Audio play failed:', error);
+        setIsAudioPlaying(false);
       }
     }
   };
@@ -163,6 +171,7 @@ export default function FathaQuizOrchestrator({
   const handleAnswer = async (selectedLetter: FathaLetter) => {
     if (!currentQuestion || showFeedback) return;
 
+    setSelectedAnswer(selectedLetter);
     const correct = selectedLetter.letter === currentQuestion.targetLetter.letter;
     const responseTime = Date.now() - sessionStats.startTime;
 
@@ -234,6 +243,7 @@ export default function FathaQuizOrchestrator({
     setTimeout(() => {
       setShowFeedback(false);
       setIsCorrect(null);
+      setSelectedAnswer(null);
 
       if (currentQuestionIndex + 1 >= totalQuestions) {
         completeQuiz(updatedProgress);
@@ -244,12 +254,12 @@ export default function FathaQuizOrchestrator({
 
         // Auto-play next question audio
         setTimeout(() => {
-          if (nextQuestion && audioRef.current) {
-            audioRef.current.play().catch(console.error);
+          if (nextQuestion) {
+            playAudio();
           }
-        }, 500);
+        }, 400);
       }
-    }, 1500);
+    }, 2000);
   };
 
   // Complete quiz
@@ -284,228 +294,248 @@ export default function FathaQuizOrchestrator({
   if (!currentQuestion) return null;
 
   return (
-    <div className={`h-screen flex flex-col p-3 pb-24 md:pb-8 pt-12 md:pt-24 overflow-hidden ${
-      theme === 'dark' ? 'bg-slate-800' : 'bg-gradient-to-br from-emerald-50 via-teal-50 to-cyan-50'
-    }`}>
-      {/* Audio elements */}
-      <audio
-        ref={audioRef}
-        src={`/audio/Fatha/${currentQuestion.targetLetter.letter}.m4a`}
-        preload="metadata"
-      />
-      <audio ref={correctAudioRef} src="/audio/correct.mp3" preload="metadata" />
-      <audio ref={wrongAudioRef} src="/audio/wrong.mp3" preload="metadata" />
-
-      {/* Progress Bar */}
-      <div className={`fixed top-0 left-0 right-0 z-50 backdrop-blur-sm ${
-        theme === 'dark' ? 'bg-slate-700/90' : 'bg-white/90'
+    <>
+      <div className={`min-h-screen flex flex-col p-3 md:p-4 pb-24 md:pb-8 pt-0 md:pt-24 ${
+        theme === 'dark' ? 'bg-slate-800' : 'bg-gradient-to-br from-emerald-50 via-teal-50 to-cyan-50'
       }`}>
-        <div className={`h-3 w-full ${theme === 'dark' ? 'bg-gray-600' : 'bg-gray-200'}`}>
-          <motion.div
-            className="bg-gradient-to-r from-emerald-500 to-teal-500 h-full"
-            initial={{ width: 0 }}
-            animate={{ width: `${progress}%` }}
-            transition={{ duration: 0.5 }}
-          />
-        </div>
-      </div>
 
-      {/* Spacer */}
-      <div className="h-12 flex-shrink-0"></div>
+        {/* Audio elements */}
+        <audio
+          ref={audioRef}
+          src={`/audio/Fatha/${currentQuestion.targetLetter.letter}.m4a`}
+          preload="metadata"
+          onEnded={() => setIsAudioPlaying(false)}
+          onPause={() => setIsAudioPlaying(false)}
+          onPlay={() => setIsAudioPlaying(true)}
+        />
+        <audio ref={correctAudioRef} src="/audio/correct.mp3" preload="metadata" />
+        <audio ref={wrongAudioRef} src="/audio/wrong.mp3" preload="metadata" />
 
-      {/* Close button */}
-      <div className="flex justify-start mb-4">
-        <button
-          onClick={onExit}
-          className={`transition-colors ${
-            theme === 'dark' ? 'text-gray-400 hover:text-white' : 'text-gray-600 hover:text-gray-800'
-          }`}
-        >
-          <svg width="32" height="32" viewBox="0 0 24 24" fill="currentColor">
-            <path d="M18 6L6 18M6 6l12 12" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
-          </svg>
-        </button>
-      </div>
-
-      {/* Title */}
-      <div className="text-left mb-8">
-        <h1 className={`text-3xl font-bold ${theme === 'dark' ? 'text-white' : 'text-gray-800'}`}>
-          {currentQuestion.type === QuestionType.TAP_WHAT_YOU_HEAR
-            ? 'Tap what you hear'
-            : 'Which sound does this make?'}
-        </h1>
-      </div>
-
-      {/* Main Content */}
-      <div className="flex-1 flex items-center px-4">
-        <div className="w-full flex items-center justify-between">
-          {/* Left side */}
-          <div className="w-1/2 flex justify-center">
-            <div className="w-36 h-36 flex items-center justify-center">
-              <div className={`w-32 h-32 rounded-full flex items-center justify-center ${
-                theme === 'dark' ? 'bg-slate-700 border-2 border-slate-600' : 'bg-white border-2 border-gray-200 shadow-md'
-              }`}>
-                {currentQuestion.type === QuestionType.TAP_WHAT_YOU_HEAR ? (
-                  <span className="text-6xl">👂</span>
-                ) : (
-                  <span className="text-6xl" style={{ fontFamily: 'Noto Sans Arabic, sans-serif' }}>
-                    {currentQuestion.targetLetter.letterWithFatha}
-                  </span>
-                )}
-              </div>
-            </div>
+        {/* Header */}
+        <div className="text-center mb-2">
+          <h1 className={`text-2xl md:text-3xl font-bold mb-1 ${
+            theme === 'dark' ? 'text-white' : 'text-gray-800'
+          }`}>
+            Fatha Quiz
+          </h1>
+          <div className={`text-sm md:text-sm ${
+            theme === 'dark' ? 'text-gray-400' : 'text-gray-600'
+          }`}>
+            Question {currentQuestionIndex + 1} of {totalQuestions}
           </div>
 
-          {/* Right side - Audio Button (only for audio questions) */}
-          {currentQuestion.type === QuestionType.TAP_WHAT_YOU_HEAR && (
-            <div className="w-1/2 flex justify-center">
-              <motion.button
-                onClick={playAudio}
-                className={`border-2 rounded-xl p-8 flex items-center justify-center transition-colors w-32 h-20 ${
-                  theme === 'dark' ? 'bg-slate-700 border-slate-600 hover:bg-slate-600' : 'bg-white border-gray-300 hover:bg-gray-50 shadow-md'
-                }`}
-                whileTap={{ scale: 0.95 }}
-                whileHover={{ scale: 1.02 }}
-              >
-                <svg width="40" height="40" viewBox="0 0 24 24" fill="#10b981">
-                  <path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/>
-                </svg>
-              </motion.button>
-            </div>
-          )}
+          {/* Progress bar */}
+          <div className={`w-full max-w-md mx-auto mt-3 h-2 md:h-2 rounded-full overflow-hidden ${
+            theme === 'dark' ? 'bg-slate-700' : 'bg-gray-200'
+          }`}>
+            <motion.div
+              className="h-full bg-gradient-to-r from-emerald-500 to-teal-500"
+              initial={{ width: 0 }}
+              animate={{ width: `${progress}%` }}
+              transition={{ duration: 0.5 }}
+            />
+          </div>
         </div>
-      </div>
 
-      {/* Answer Choices */}
-      <div className="pb-8">
-        <div className="grid grid-cols-2 gap-3 w-full max-w-md mx-auto px-4">
-          {currentQuestion.choices.map((choice, index) => {
-            const isTarget = choice.letter === currentQuestion.targetLetter.letter;
-            const showCorrect = showFeedback && isTarget;
-            const showWrong = showFeedback && !isCorrect && !isTarget;
+        {/* Question Display */}
+        <div className="flex-1 flex flex-col items-center justify-center max-w-2xl mx-auto py-2 md:py-0">
 
-            return (
-              <motion.button
-                key={`${currentQuestion.targetLetter.letter}-${choice.letter}`}
-                onClick={() => handleAnswer(choice)}
-                disabled={showFeedback}
-                className={`
-                  relative aspect-square p-4 border-2 rounded-xl
-                  overflow-hidden flex flex-col items-center justify-center transition-all duration-200
-                  ${theme === 'dark' ? 'bg-slate-700 border-slate-600' : 'bg-white border-gray-300 shadow-md'}
-                  ${showFeedback ? 'pointer-events-none' : theme === 'dark' ? 'hover:bg-slate-600 cursor-pointer' : 'hover:bg-gray-50 cursor-pointer'}
-                  ${showCorrect ? (theme === 'dark' ? 'ring-4 ring-emerald-500 bg-green-800' : 'ring-4 ring-emerald-500 bg-green-100') : ''}
-                  ${showWrong ? (theme === 'dark' ? 'ring-4 ring-red-400 bg-red-800' : 'ring-4 ring-red-400 bg-red-100') : ''}
-                `}
-                initial={{ opacity: 0, scale: 0.9 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ duration: 0.3, delay: index * 0.1, ease: "easeOut" }}
-                whileTap={{ scale: 0.95 }}
-                whileHover={{ scale: showFeedback ? 1 : 1.05 }}
+          {/* Audio Question - Show speaker icon */}
+          {currentQuestion.type === QuestionType.TAP_WHAT_YOU_HEAR && (
+            <div className="mb-4 md:mb-12">
+              <motion.div
+                className={`w-56 h-56 md:w-80 md:h-80 rounded-3xl shadow-2xl flex flex-col items-center justify-center relative overflow-hidden ${
+                  theme === 'dark'
+                    ? 'bg-slate-700 border border-slate-600'
+                    : 'bg-white border border-gray-200'
+                } ${isAudioPlaying ? 'ring-4 ring-emerald-500 ring-opacity-60' : ''}`}
+                initial={{ scale: 0.8, opacity: 0 }}
+                animate={{
+                  scale: 1,
+                  opacity: 1,
+                  ...(isAudioPlaying && {
+                    scale: [1, 1.05, 1],
+                  })
+                }}
+                transition={{
+                  duration: isAudioPlaying ? 0.8 : 0.6,
+                  repeat: isAudioPlaying ? Infinity : 0,
+                  ease: "easeInOut"
+                }}
               >
-                {showCorrect && (
+                {/* Pulsing background when playing */}
+                {isAudioPlaying && (
                   <motion.div
-                    className="absolute inset-0 bg-emerald-500 rounded-xl"
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: [0, 0.3, 0.2] }}
-                    transition={{ duration: 0.6 }}
+                    className="absolute inset-0 rounded-3xl bg-emerald-500"
+                    animate={{
+                      opacity: [0, 0.2, 0],
+                      scale: [0.95, 1.05, 0.95],
+                    }}
+                    transition={{
+                      duration: 1,
+                      repeat: Infinity,
+                      ease: "easeInOut"
+                    }}
                   />
                 )}
 
-                <motion.div
-                  className={`text-5xl font-bold pointer-events-none select-none ${
-                    theme === 'dark' ? 'text-white' : 'text-gray-800'
-                  }`}
-                  style={{ fontFamily: 'Noto Sans Arabic, sans-serif' }}
-                  animate={{ scale: showCorrect ? 1.1 : 1 }}
-                  transition={{ duration: 0.3 }}
+                {/* Large Audio Icon */}
+                <motion.button
+                  onClick={playAudio}
+                  className="relative z-10 mb-4"
+                  whileTap={{ scale: 0.95 }}
+                  whileHover={{ scale: 1.05 }}
+                  animate={{
+                    scale: isAudioPlaying ? [1, 1.1, 1] : 1,
+                  }}
+                  transition={{
+                    duration: 0.8,
+                    repeat: isAudioPlaying ? Infinity : 0,
+                    ease: "easeInOut"
+                  }}
                 >
-                  {currentQuestion.type === QuestionType.TAP_WHAT_YOU_HEAR
-                    ? choice.letterWithFatha
-                    : ''}
-                </motion.div>
+                  <svg
+                    width="80"
+                    height="80"
+                    viewBox="0 0 24 24"
+                    fill={theme === 'dark' ? '#34d399' : '#10b981'}
+                    className="drop-shadow-lg"
+                  >
+                    <path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/>
+                  </svg>
+                </motion.button>
 
-                <div className={`text-sm font-medium mt-2 ${theme === 'dark' ? 'text-gray-300' : 'text-gray-600'}`}>
-                  {currentQuestion.type === QuestionType.TAP_WHAT_YOU_HEAR
-                    ? choice.sound
-                    : choice.sound}
+                {/* Sound waves animation when playing */}
+                {isAudioPlaying && (
+                  <div className="absolute right-8 top-1/2 transform -translate-y-1/2 flex space-x-1">
+                    <motion.div
+                      className={`w-1 h-8 rounded-full ${
+                        theme === 'dark' ? 'bg-emerald-400' : 'bg-emerald-500'
+                      }`}
+                      animate={{
+                        scaleY: [0.5, 1.5, 0.5],
+                      }}
+                      transition={{
+                        duration: 0.6,
+                        repeat: Infinity,
+                        ease: "easeInOut"
+                      }}
+                    />
+                    <motion.div
+                      className={`w-1 h-6 rounded-full ${
+                        theme === 'dark' ? 'bg-emerald-400' : 'bg-emerald-500'
+                      }`}
+                      animate={{
+                        scaleY: [1, 0.5, 1],
+                      }}
+                      transition={{
+                        duration: 0.6,
+                        repeat: Infinity,
+                        ease: "easeInOut",
+                        delay: 0.2
+                      }}
+                    />
+                    <motion.div
+                      className={`w-1 h-4 rounded-full ${
+                        theme === 'dark' ? 'bg-emerald-400' : 'bg-emerald-500'
+                      }`}
+                      animate={{
+                        scaleY: [0.7, 1.3, 0.7],
+                      }}
+                      transition={{
+                        duration: 0.6,
+                        repeat: Infinity,
+                        ease: "easeInOut",
+                        delay: 0.4
+                      }}
+                    />
+                  </div>
+                )}
+
+                <div className={`text-center relative z-10 ${theme === 'dark' ? 'text-gray-300' : 'text-gray-600'}`}>
+                  <div className="text-base md:text-lg font-medium mb-1">Listen and choose</div>
+                  <div className="text-sm md:text-sm opacity-75">Tap to replay sound</div>
                 </div>
+              </motion.div>
+            </div>
+          )}
 
-                {showCorrect && (
+          {/* Answer Options */}
+          <motion.div
+            className="grid grid-cols-2 gap-4 w-full max-w-md md:max-w-md"
+            initial={{ opacity: 0, y: 50 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.5, duration: 0.6 }}
+          >
+            {currentQuestion.choices.map((option, index) => (
+              <motion.button
+                key={option.letter}
+                onClick={() => handleAnswer(option)}
+                disabled={showFeedback}
+                className={`relative aspect-square rounded-2xl shadow-lg flex flex-col items-center justify-center p-3 md:p-4 transition-all duration-200 ${
+                  showFeedback && selectedAnswer?.letter === option.letter
+                    ? isCorrect
+                      ? 'bg-green-500 text-white ring-4 ring-green-300'
+                      : 'bg-red-500 text-white ring-4 ring-red-300'
+                    : showFeedback && option.letter === currentQuestion.targetLetter.letter
+                      ? 'bg-green-500 text-white ring-4 ring-green-300'
+                      : theme === 'dark'
+                        ? 'bg-slate-700 hover:bg-slate-600 border border-slate-600 text-white'
+                        : 'bg-white hover:bg-gray-50 border border-gray-200 text-gray-800'
+                } ${showFeedback ? 'cursor-not-allowed' : 'cursor-pointer'}`}
+                style={{
+                  borderColor: !showFeedback ? option.baseColor + '20' : undefined
+                }}
+                whileTap={!showFeedback ? { scale: 0.95 } : {}}
+                whileHover={!showFeedback ? { scale: 1.02 } : {}}
+                initial={{ opacity: 0, scale: 0.8 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ delay: 0.7 + index * 0.1, duration: 0.4 }}
+              >
+                {/* Letter */}
+                <span
+                  className="text-2xl md:text-3xl font-bold mb-2"
+                  style={{
+                    fontFamily: 'Noto Sans Arabic, sans-serif',
+                    color: showFeedback ? 'inherit' : option.baseColor
+                  }}
+                >
+                  {option.letterWithFatha}
+                </span>
+
+                {/* Sound */}
+                <span className="text-sm md:text-sm font-medium text-center">
+                  {option.sound}
+                </span>
+
+                {/* Feedback Icons */}
+                {showFeedback && selectedAnswer?.letter === option.letter && (
                   <motion.div
-                    className="absolute top-1 right-1 w-8 h-8 bg-emerald-500 rounded-full flex items-center justify-center"
+                    className="absolute -top-2 -right-2 w-8 h-8 rounded-full flex items-center justify-center text-white"
+                    style={{ backgroundColor: isCorrect ? '#22c55e' : '#ef4444' }}
                     initial={{ scale: 0 }}
                     animate={{ scale: 1 }}
-                    transition={{ delay: 0.1, duration: 0.3, ease: "backOut" }}
+                    transition={{ delay: 0.1, type: "spring", stiffness: 300 }}
                   >
-                    <span className="text-lg">✅</span>
+                    {isCorrect ? '✓' : '✗'}
+                  </motion.div>
+                )}
+
+                {showFeedback && selectedAnswer?.letter !== option.letter && option.letter === currentQuestion.targetLetter.letter && (
+                  <motion.div
+                    className="absolute -top-2 -right-2 w-8 h-8 rounded-full bg-green-500 flex items-center justify-center text-white"
+                    initial={{ scale: 0 }}
+                    animate={{ scale: 1 }}
+                    transition={{ delay: 0.3, type: "spring", stiffness: 300 }}
+                  >
+                    ✓
                   </motion.div>
                 )}
               </motion.button>
-            );
-          })}
+            ))}
+          </motion.div>
         </div>
       </div>
-
-      {/* Visual Feedback Messages */}
-      <AnimatePresence>
-        {showFeedback && (
-          <motion.div
-            className="fixed inset-0 flex items-center justify-center pointer-events-none z-40"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.2 }}
-          >
-            <motion.div
-              className={`
-                text-8xl px-6 py-4 rounded-2xl
-                ${isCorrect ? 'bg-green-100/90' : 'bg-red-100/90'}
-              `}
-              initial={{ scale: 0.5, y: 20 }}
-              animate={{ scale: 1, y: 0 }}
-              exit={{ scale: 0.5, y: -20 }}
-              transition={{
-                type: "spring",
-                damping: 20,
-                stiffness: 300,
-                duration: 0.3
-              }}
-            >
-              {isCorrect ? '🎉' : '🤔'}
-            </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-
-      {/* Celebration particles for correct answers */}
-      {isCorrect && showFeedback && (
-        <div className="fixed inset-0 pointer-events-none z-40">
-          {[...Array(12)].map((_, i) => (
-            <motion.div
-              key={i}
-              className="absolute w-3 h-3 rounded-full"
-              style={{
-                backgroundColor: ['#10b981', '#14b8a6', '#06b6d4', '#0ea5e9', '#8b5cf6'][i % 5],
-                left: `${20 + Math.random() * 60}%`,
-                top: `${20 + Math.random() * 60}%`,
-              }}
-              animate={{
-                y: [-20, -60, -20],
-                x: [0, Math.random() * 40 - 20, 0],
-                opacity: [0, 1, 0],
-                scale: [0, 1, 0],
-                rotate: [0, 360, 720],
-              }}
-              transition={{
-                duration: 2,
-                delay: Math.random() * 0.5,
-                ease: "easeInOut"
-              }}
-            />
-          ))}
-        </div>
-      )}
-    </div>
+    </>
   );
 }
