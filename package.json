@@ -3,7 +3,6 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-
     "dev": "next dev --turbopack --port 3002",
     "build": "next build",
     "start": "next start",
@@ -13,7 +12,7 @@
     "@lottiefiles/dotlottie-react": "^0.15.0",
     "framer-motion": "^12.23.12",
     "lottie-react": "^2.4.1",
-    "next": "15.4.6",
+    "next": "15.4.10",
     "react": "19.1.0",
     "react-dom": "19.1.0",
     "use-sound": "^5.0.0"
